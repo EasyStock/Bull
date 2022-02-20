@@ -30,4 +30,4 @@ def AutoDownload():
 
 
 if __name__ == "__main__":
-    AutoDownload()
+    GetFromJisiluAndWriteToDB()

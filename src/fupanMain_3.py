@@ -258,7 +258,9 @@ def FuPanFun():
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
     FuPan = CFuPan(logger,dbConnection,-1)
+    FuPan.MarketingData()
     FuPan.FuPan()
+    FuPan.FormatFuPanSqlAndToDB()
     logger.info(str(FuPan))
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
@@ -278,4 +280,4 @@ def Test():
     print(FuPan)
     
 if __name__ == "__main__":
-    Test()
+    FuPanFun()

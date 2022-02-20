@@ -51,7 +51,7 @@ def tushareFun():
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     StartToInitLogger("TuShare日常数据")
     UpdateTradingDate()
-    FetchAllInOne()
+    #FetchAllInOne()
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 def AutoDownload():

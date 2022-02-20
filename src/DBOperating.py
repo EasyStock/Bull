@@ -1,5 +1,6 @@
+import re
 from sqlparse import sql
-from mysql.connect2DB import ConnectToDB
+from mysql.connect2DB import ConnectToDB,ConnectToDB_AliYun,DataFrameToSqls_INSERT_OR_IGNORE
 import datetime
 import pandas as pd
 
@@ -206,10 +207,62 @@ def GetTodayMarketingData(dbConnection,today):
     df = pd.DataFrame(results,columns=columns)
     return df
 
+def isTableExist(dbConnection,tableName):
+    str.replace
+    newName = tableName.replace("`",'')
+    names = newName.split('.')
+    sql = f''' select * from information_schema.TABLES where TABLE_NAME = "{names[1]}" and TABLE_SCHEMA = "{names[0]}";  '''
+    print(sql)
+    results, _ = dbConnection.Query(sql)
+    return (len(results) > 0)
+
+
+def migrateDataFrom(srcConnection,destConnection,tableName,drop = False):
+    isDestTableExist = isTableExist(destConnection,tableName)
+    if isDestTableExist:
+        if drop:
+            truncateSql = f''' TRUNCATE {tableName}; '''
+            print(truncateSql)
+            destConnection.Execute(truncateSql)
+            
+        querySql = f" select * from {tableName}; "
+        results1, columns1 = srcConnection.Query(querySql)
+        df = pd.DataFrame(results1,columns=columns1)
+        sqls = DataFrameToSqls_INSERT_OR_IGNORE(df,tableName)
+        for sql in sqls:
+            print(sql)
+            destConnection.Execute(sql)
+    else:
+        createSql = f'''show create table {tableName};'''
+        querySql = f" select * from {tableName}; "
+        print(createSql)
+        results,_ = srcConnection.Query(createSql)
+        results1, columns1 = srcConnection.Query(querySql)
+        df = pd.DataFrame(results1,columns=columns1)
+        sqls = DataFrameToSqls_INSERT_OR_IGNORE(df,tableName)
+        destConnection.Execute(results[0][1])
+        for sql in sqls:
+            print(sql)
+            destConnection.Execute(sql)
+        
+
+def OneKeyMigrateData(dbConnection,destConnection):
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`treadingday`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockZhangting`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockDailyInfo`",True) # 数据量大
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockBasicInfo`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`nameMapping`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`kezhuanzhai`",True)
+    migrateDataFrom(dbConnection, destConnection, "`stock`.`fuPan`",True)
+    
+    
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockDailyInfo_Tushare`",True)
+
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
-    result = GetTradingDateLastN(dbConnection,15)
-    print(result)
+    destConnection = ConnectToDB_AliYun()
+    # result = GetTradingDateLastN(dbConnection,15)
+    # print(result)
     #GetZhangTingDataBy(dbConnection,result[-1],["中药","电子纸"],[])
     #GetZhangTingDataBy(dbConnection,result[-1],[],["中医药","电子纸"])
     
@@ -223,4 +276,8 @@ if __name__ == "__main__":
     # Get3LianBan(dbConnection,result[-1])
     # Get4AndMoreLianBan(dbConnection,result[-1])
     # GaoWeiFailed(dbConnection,result[-2],result[-1])
-    print(DongNeng(dbConnection,result[-2],result[-1]))
+    # print(DongNeng(dbConnection,result[-2],result[-1]))
+    # print(isTableExist(dbConnection,"stock.treadingDay"))
+    OneKeyMigrateData(dbConnection,destConnection)
+
+    
