@@ -53,6 +53,7 @@ class CFetchDataFromTHS(object):
                 }
         requestURL = 'http://x.iwencai.com/stockpick/cache?token='+ self.token +'&p=1&perpage=6000&changeperpage=1&showType=[%22%22,%22%22,%22onTable%22,%22onTable%22,%22onTable%22,%22onTable%22,%22onTable%22]'
         response = requests.get(url=requestURL,headers=sse_head)
+        # print(response.text)
         data = json.loads(response.text)
         self.dataFrame = pd.DataFrame(data['result'],columns = data['title'])
         logger.info(f'{self.dataFrame.columns}')

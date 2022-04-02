@@ -102,7 +102,7 @@ class CJiSiLu(object):
             #newDf['流通市值小于50亿'] = (newDf['流通市值（亿元)']<=50)
             #newDf['剩余规模<=3'] = (newDf['剩余规模']<=3)
             newDf.to_excel('/tmp/aa.xlsx',index=False)
-            newDf = newDf[newDf['现价']<=135]
+            newDf = newDf[newDf['现价']<=125]
             newDf = newDf[newDf['PB']>=1.2]
             newDf = newDf[newDf['有息负债率']>0]
             newDf = newDf[newDf['有息负债率']<70]
