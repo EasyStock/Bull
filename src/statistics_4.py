@@ -86,6 +86,20 @@ def AnalysisZhangTingReason(dbConnection):
     for r in ret:
         print(r)
 
+
+
+def ConvertDataFrameToJPG(df,fullPath):
+    from pandas.plotting import table
+    import matplotlib.pyplot as plt
+    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+    high = int(0.174 * df.shape[0]+0.5)+1
+    fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
+    ax = fig.add_subplot(111, frame_on=False) 
+    ax.xaxis.set_visible(False)  # hide the x axis
+    ax.yaxis.set_visible(False)  # hide the y axis
+    table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
+    plt.savefig(fullPath)
+    
 def categrateZhangTing(dbConnection):
     import pandas as pd
     pd.set_option('display.max_rows', None)
@@ -99,7 +113,12 @@ def categrateZhangTing(dbConnection):
         df = GetZhangTingDataBy(dbConnection,date,CATEGRAGTE[key][0],CATEGRAGTE[key][1])
         remain.extend(CATEGRAGTE[key][0])
         remain1.extend(CATEGRAGTE[key][1])
+        if df.shape[0] >=5:
+            fullPath = f"/Users/jianpinh/Desktop/复盘/{date}_{key}.jpg"
+            jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
+            ConvertDataFrameToJPG(jpgDataFrame,fullPath)
         print(df)
+        
     
     print(f"\n==========剩余=============")
     df = GetRemainZhangTingDataBy(dbConnection,date,remain,remain1)

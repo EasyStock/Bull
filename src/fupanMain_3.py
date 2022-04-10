@@ -298,7 +298,7 @@ def GetRecording():
         'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
     }
     maxNone = 0
-    start = 10089739
+    start = 10090931
     result = []
     res = {}
     for i in range(5000):
@@ -332,5 +332,5 @@ def GetRecording():
         print(key, res[key])
     
 if __name__ == "__main__":
-    #FuPanFun()
-    GetRecording()
+    FuPanFun()
+    #GetRecording()

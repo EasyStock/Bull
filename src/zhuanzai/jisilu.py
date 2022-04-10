@@ -117,7 +117,19 @@ class CJiSiLu(object):
             self.logger.info(f'{newDf.shape}')
             self.logger.info(f'==============end:{datetime.datetime.now()}==============================')
             return newDf
-        
+
+    def ConvertDataFrameToJPG(self,df,fullPath):
+        from pandas.plotting import table
+        import matplotlib.pyplot as plt
+        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+        high = int(0.174 * df.shape[0]+0.5) +1
+        fig = plt.figure(figsize=(3, high), dpi=400)#dpi表示清晰度
+        ax = fig.add_subplot(111, frame_on=False) 
+        ax.xaxis.set_visible(False)  # hide the x axis
+        ax.yaxis.set_visible(False)  # hide the y axis
+        table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
+        plt.savefig(fullPath)
+    
     def GetFromJisiluAndWriteToDB(self):
         today = datetime.date.today()
         dates = GetTradingDateLastN(self.dbConnection,10)
@@ -126,6 +138,23 @@ class CJiSiLu(object):
         self.logger.info(today)
         self.request1_login()
         df = self.jisilu()
+        df.reset_index(drop=True,inplace=True)
+        
+        jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
+        self.ConvertDataFrameToJPG(jpgDataFrame,f"/Volumes/Data/Downloads/可转债每日选股/{today}_all.jpg")
+        
+        size = df.shape[0]
+        step = 40
+        if size > step:
+            for index in range(0,size,step):
+                tmp = df.iloc[index:,]
+                if index + step <= size:
+                    tmp = df.iloc[index:index+step,]
+                fullPath = f"/Volumes/Data/Downloads/可转债每日选股/{today}_{int(index/step+1)}.jpg"
+                print(fullPath)
+                jpgDataFrame = pd.DataFrame(tmp,columns=["转债代码","转债名称"])
+                self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+
         if df is not None:
             df['日期'] = today
             sqls = DataFrameToSqls_REPLACE(df,"kezhuanzhai")
