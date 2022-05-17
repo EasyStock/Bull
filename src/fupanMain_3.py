@@ -37,6 +37,7 @@ class CFuPan(object):
         self.lianBan1 = []
         self.lianBan2 = []
         self.lianBan3 = []
+        self.lianBan4 = []
         self.lianBan4AndMore = []
         self.hongPan = 0
         self.lvPan = 0
@@ -256,6 +257,7 @@ class CFuPan(object):
         else:
             return "unKnown"
 
+
 def FuPanFun():
     logger = StartToInitLogger("复盘")
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
@@ -265,6 +267,7 @@ def FuPanFun():
     FuPan.FuPan()
     FuPan.FormatFuPanSqlAndToDB()
     logger.info(str(FuPan))
+    NewGaiNian(dbConnection)
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 def AutoDownload():
@@ -281,7 +284,8 @@ def Test():
     FuPan.FuPan()
     FuPan.FormatFuPanSqlAndToDB()
     print(FuPan)
-    
+    NewGaiNian(dbConnection)
+
 def GetRecording():
     headers = {
         'sec-ch-ua': 'Not A;Brand;v=99, Chromium;v=98, Google Chrome;v=98 ',
@@ -298,7 +302,7 @@ def GetRecording():
         'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
     }
     maxNone = 0
-    start = 10090931
+    start = 10098161
     result = []
     res = {}
     for i in range(5000):
@@ -321,7 +325,7 @@ def GetRecording():
             if "盯盘抓板" in name or "复盘寻龙" in name or "大师直播课" in name:
                 res[name] = index
                 print(url)  
-            print(f"{i:<4d} :   {api}")
+            print(f"{i:<4d} :   {name}  {api}")
         else:
             print(response.text)
             
@@ -330,7 +334,34 @@ def GetRecording():
     
     for key in res:
         print(key, res[key])
+
+
+def NewGaiNian(dbConnection=None):
+    sql = "SELECT `所属概念`,`更新日期` FROM stock.stockbasicinfo;"
+    datas,columns = dbConnection.Query(sql)
+    #print(datas,columns)
+    allGaiNian = []
+    date = ""
+    for data in datas:
+        gaiNians = data[0]
+        date = data[1]
+        gaiNians = gaiNians.replace("--","")  
+        gaiNian = gaiNians.split(";")
+        allGaiNian.extend(gaiNian)
     
+    allGaiNian = list(set(allGaiNian))
+
+    tmp = []
+    for gainian in allGaiNian:
+        if len(gaiNian) == 0 or gaiNian == "":
+            continue
+        tmp.append(f'''("{gainian}","{date}")''')
+
+    value_str = ''','''.join(tmp)
+    sql = f'''INSERT IGNORE INTO `stock`.`gainian` (`概念名称`,`更新日期`) VALUES {value_str};'''
+    print(sql)
+    dbConnection.Execute(sql)
+
 if __name__ == "__main__":
     FuPanFun()
     #GetRecording()

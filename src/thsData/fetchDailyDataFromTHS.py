@@ -27,9 +27,9 @@ class CFetchDailyDataFromTHS(object):
     def __init__(self,cookie,v):
         self.dataFrame = None
         self.date = None
-        self.keyWords = '前复权开盘价，前复权收盘价，前复权最高价，前复权最低价，前复权涨跌幅, 成交量，成交额，上市日期,所属概念'
-        self.url = 'http://x.iwencai.com/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E5%89%8D%E5%A4%8D%E6%9D%83%E5%BC%80%E7%9B%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%94%B6%E7%9B%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%9C%80%E9%AB%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%9C%80%E4%BD%8E%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%B6%A8%E8%B7%8C%E5%B9%85%2C%20%E6%88%90%E4%BA%A4%E9%87%8F%EF%BC%8C%E6%88%90%E4%BA%A4%E9%A2%9D%EF%BC%8C%E4%B8%8A%E5%B8%82%E6%97%A5%E6%9C%9F%2C%E6%89%80%E5%B1%9E%E6%A6%82%E5%BF%B5&queryarea='
-        self.referer = 'http://x.iwencai.com/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E5%BC%80%E7%9B%98%E4%BB%B7%EF%BC%8C%E6%94%B6%E7%9B%98%E4%BB%B7%EF%BC%8C%E6%9C%80%E9%AB%98%E4%BB%B7%EF%BC%8C%E6%9C%80%E4%BD%8E%E4%BB%B7%EF%BC%8C%E6%B6%A8%E8%B7%8C%E5%B9%85%2C%20%E6%88%90%E4%BA%A4%E9%87%8F%EF%BC%8C%E6%88%90%E4%BA%A4%E9%A2%9D%EF%BC%8C%E4%B8%8A%E5%B8%82%E6%97%A5%E6%9C%9F%2C%E6%89%80%E5%B1%9E%E6%A6%82%E5%BF%B5&queryarea='
+        self.keyWords = '前复权开盘价，前复权收盘价，前复权最高价，前复权最低价，前复权涨跌幅, 成交量，成交额，上市天数,所属概念'
+        self.url = 'http://x.iwencai.com/stockpick/search?ts=1&f=1&qs=stockhome_topbar_click&w=%E5%89%8D%E5%A4%8D%E6%9D%83%E5%BC%80%E7%9B%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%94%B6%E7%9B%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%9C%80%E9%AB%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%9C%80%E4%BD%8E%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%B6%A8%E8%B7%8C%E5%B9%85,%20%E6%88%90%E4%BA%A4%E9%87%8F%EF%BC%8C%E6%88%90%E4%BA%A4%E9%A2%9D%EF%BC%8C%E4%B8%8A%E5%B8%82%E5%A4%A9%E6%95%B0,%E6%89%80%E5%B1%9E%E6%A6%82%E5%BF%B5'
+        self.referer = 'http://x.iwencai.com/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E5%89%8D%E5%A4%8D%E6%9D%83%E5%BC%80%E7%9B%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%94%B6%E7%9B%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%9C%80%E9%AB%98%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%9C%80%E4%BD%8E%E4%BB%B7%EF%BC%8C%E5%89%8D%E5%A4%8D%E6%9D%83%E6%B6%A8%E8%B7%8C%E5%B9%85%2C%20%E6%88%90%E4%BA%A4%E9%87%8F%EF%BC%8C%E6%88%90%E4%BA%A4%E9%A2%9D%EF%BC%8C%E4%B8%8A%E5%B8%82%E6%97%A5%E6%9C%9F%2C%E6%89%80%E5%B1%9E%E6%A6%82%E5%BF%B5&queryarea='
         self.cookie = cookie
         self.v = v
         
@@ -41,6 +41,7 @@ class CFetchDailyDataFromTHS(object):
         for key in map:
             self.dataFrame[key] = result[map[key]]
         
+        print(self.dataFrame)
         self.dataFrame = self.dataFrame[self.dataFrame['上市天数'] != '--'] #删除未上市的
         
         logger.info(str(self.dataFrame[:10]))

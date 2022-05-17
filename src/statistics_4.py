@@ -114,7 +114,7 @@ def categrateZhangTing(dbConnection):
         remain.extend(CATEGRAGTE[key][0])
         remain1.extend(CATEGRAGTE[key][1])
         if df.shape[0] >=5:
-            fullPath = f"/Users/jianpinh/Desktop/复盘/{date}_{key}.jpg"
+            fullPath = f"/Volumes/Data/复盘/股票/{date}_{key}.jpg"
             jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
             ConvertDataFrameToJPG(jpgDataFrame,fullPath)
         print(df)

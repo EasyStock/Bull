@@ -31,8 +31,11 @@ class CJiSiLu(object):
         super().__init__()
         self.logger = logger
         self.dbConnection = dbConnection
-        self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; kbzw_r_uname=%E6%9E%97%E6%9E%97%E5%AD%90; Hm_lvt_164fe01b1433a19b507595a43bf58262=1641813690; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KKor5Ogk9irp5qp0Nmaq8WuqaTbmqiW2rCmnLCdrZSomJiyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6Nncka-YpaehrJepk6KwponMzd3D6MqmrKavj6OX; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1644239925"
-    
+        #self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; kbzw_r_uname=%E6%9E%97%E6%9E%97%E5%AD%90; Hm_lvt_164fe01b1433a19b507595a43bf58262=1641813690; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KKor5Ogk9irp5qp0Nmaq8WuqaTbmqiW2rCmnLCdrZSomJiyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6Nncka-YpaehrJepk6KwponMzd3D6MqmrKavj6OX; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1644239925"
+        #self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652352736; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68"
+        self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68.; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652426600"
+        #self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652352736"
+
     def request1_login(self):
         self.logger.info(f'==============begin:{datetime.datetime.now()}==============================')
         head = {
@@ -101,7 +104,9 @@ class CJiSiLu(object):
             newDf['PB-溢价率'] = (newDf['PB'] - newDf['溢价率']/100.0)
             #newDf['流通市值小于50亿'] = (newDf['流通市值（亿元)']<=50)
             #newDf['剩余规模<=3'] = (newDf['剩余规模']<=3)
-            newDf.to_excel('/tmp/aa.xlsx',index=False)
+            today = datetime.date.today()
+            fName = f"/Volumes/Data/可转债/每日原始数据/{today}.xlsx"
+            newDf.to_excel(fName,index=False)
             newDf = newDf[newDf['现价']<=125]
             newDf = newDf[newDf['PB']>=1.2]
             newDf = newDf[newDf['有息负债率']>0]
@@ -141,7 +146,7 @@ class CJiSiLu(object):
         df.reset_index(drop=True,inplace=True)
         
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
-        self.ConvertDataFrameToJPG(jpgDataFrame,f"/Volumes/Data/Downloads/可转债每日选股/{today}_all.jpg")
+        self.ConvertDataFrameToJPG(jpgDataFrame,f"/Volumes/Data/可转债/可转债每日选股/{today}_all.jpg")
         
         size = df.shape[0]
         step = 40
@@ -150,7 +155,7 @@ class CJiSiLu(object):
                 tmp = df.iloc[index:,]
                 if index + step <= size:
                     tmp = df.iloc[index:index+step,]
-                fullPath = f"/Volumes/Data/Downloads/可转债每日选股/{today}_{int(index/step+1)}.jpg"
+                fullPath = f"/Volumes/Data/可转债/复盘/{today}_{int(index/step+1)}.jpg"
                 print(fullPath)
                 jpgDataFrame = pd.DataFrame(tmp,columns=["转债代码","转债名称"])
                 self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
@@ -170,7 +175,7 @@ class CJiSiLu(object):
         sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{today}') order by `PB` DESC;"
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
-        name = '/Volumes/Data/Downloads/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())
+        name = '/Volumes/Data/可转债/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())
         excelWriter = pd.ExcelWriter(name)
         newDf1.to_excel(excelWriter,"今日增加",index=False)
         newDf2.to_excel(excelWriter,"今日减少",index=False)
