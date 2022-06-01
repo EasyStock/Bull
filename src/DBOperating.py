@@ -217,6 +217,17 @@ def isTableExist(dbConnection,tableName):
     return (len(results) > 0)
 
 
+
+def zhuanqianxiaoying_yestoday(dbConnection,yestoday,today):
+    # 昨日的赚钱效应， 即昨日涨停股票今天的表现
+    sql = f'''SELECT A.*,B.`股票简称`, B.`连续涨停天数` As `昨日连续涨停天数`,B.`涨停原因类别` As `昨日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别` FROM stock.stockzhangting where `日期` = "{yestoday}") As B where A.`日期` = "{today}" and A.`股票代码` = B.`股票代码` order by A.`股票代码`DESC;'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    return df
+
+
+
+
 def migrateDataFrom(srcConnection,destConnection,tableName,drop = False):
     isDestTableExist = isTableExist(destConnection,tableName)
     if isDestTableExist:

@@ -33,15 +33,17 @@ class CJiSiLu(object):
         self.dbConnection = dbConnection
         #self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; kbzw_r_uname=%E6%9E%97%E6%9E%97%E5%AD%90; Hm_lvt_164fe01b1433a19b507595a43bf58262=1641813690; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KKor5Ogk9irp5qp0Nmaq8WuqaTbmqiW2rCmnLCdrZSomJiyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6Nncka-YpaehrJepk6KwponMzd3D6MqmrKavj6OX; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1644239925"
         #self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652352736; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68"
-        self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68.; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652426600"
+        #self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68.; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652426600"
         #self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652352736"
-
+        #self.cookie = "kbz_newcookie=1; kbzw__Session=egt3hsaj2rk5tgq71rbeb0sm15; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734,1653046909; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRqKWjppWplqWnq52Zv9jI19PgpqirmJ6Uqg..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1653046943"
+        self.cookie = "kbz_newcookie=1; kbzw__Session=egt3hsaj2rk5tgq71rbeb0sm15; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734,1653046909; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRqKWjppWplqWnq52Zv9jI19PgpqirmJ6Uqg..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1653391535"
     def request1_login(self):
         self.logger.info(f'==============begin:{datetime.datetime.now()}==============================')
         head = {
         "Connection": "keep-alive",
         "Cache-Control": "max-age=0",
-        "sec-ch-ua": "Not;A Brand;v=99, Google Chrome;v=97, Chromium;v=97",
+        
+        "sec-ch-ua": "Not A;Brand;v=99, Chromium;v=101, Google Chrome;v=101",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "macOS",
         "Upgrade-Insecure-Requests": "1",
@@ -55,7 +57,7 @@ class CJiSiLu(object):
         "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Cookie":f"{self.cookie}",
         }
-        url='https://www.jisilu.cn/'
+        url='https://www.jisilu.cn/account/login/'
         response = requests.request("GET",url,headers=head)
         self.logger.info(response.status_code)
         self.logger.info(response.text)
@@ -72,7 +74,7 @@ class CJiSiLu(object):
         "Host": "www.jisilu.cn",
         "Init": "1",
         'Referer': 'https://www.jisilu.cn/web/data/cb/list',
-        "sec-ch-ua": "Not;A Brand;v=99, Google Chrome;v=97, Chromium;v=97",
+        "sec-ch-ua": "Not A;Brand;v=99, Chromium;v=101, Google Chrome;v=101",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "macOS",
         "Sec-Fetch-Dest": "empty",
@@ -105,7 +107,7 @@ class CJiSiLu(object):
             #newDf['流通市值小于50亿'] = (newDf['流通市值（亿元)']<=50)
             #newDf['剩余规模<=3'] = (newDf['剩余规模']<=3)
             today = datetime.date.today()
-            fName = f"/Volumes/Data/可转债/每日原始数据/{today}.xlsx"
+            fName = f"/Volumes/Data/复盘/可转债/每日原始数据/{today}.xlsx"
             newDf.to_excel(fName,index=False)
             newDf = newDf[newDf['现价']<=125]
             newDf = newDf[newDf['PB']>=1.2]
@@ -146,7 +148,7 @@ class CJiSiLu(object):
         df.reset_index(drop=True,inplace=True)
         
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
-        self.ConvertDataFrameToJPG(jpgDataFrame,f"/Volumes/Data/可转债/可转债每日选股/{today}_all.jpg")
+        self.ConvertDataFrameToJPG(jpgDataFrame,f"/Volumes/Data/复盘/可转债/可转债每日选股/{today}_all.jpg")
         
         size = df.shape[0]
         step = 40
@@ -155,7 +157,7 @@ class CJiSiLu(object):
                 tmp = df.iloc[index:,]
                 if index + step <= size:
                     tmp = df.iloc[index:index+step,]
-                fullPath = f"/Volumes/Data/可转债/复盘/{today}_{int(index/step+1)}.jpg"
+                fullPath = f"/Volumes/Data//复盘/可转债/复盘/{today}_{int(index/step+1)}.jpg"
                 print(fullPath)
                 jpgDataFrame = pd.DataFrame(tmp,columns=["转债代码","转债名称"])
                 self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
@@ -175,7 +177,7 @@ class CJiSiLu(object):
         sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{today}') order by `PB` DESC;"
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
-        name = '/Volumes/Data/可转债/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())
+        name = '/Volumes/Data/复盘/可转债/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())
         excelWriter = pd.ExcelWriter(name)
         newDf1.to_excel(excelWriter,"今日增加",index=False)
         newDf2.to_excel(excelWriter,"今日减少",index=False)

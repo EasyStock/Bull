@@ -1,4 +1,5 @@
 from re import S
+from unittest import result
 import requests
 import pandas as pd
 import json
@@ -42,15 +43,21 @@ class CDragonFetcher(object):
 
     def _baseRequest(self,tableName, url):
         response = requests.request("GET",url,headers=self.requestHead)
-        print(response.status_code)
+        #print(response.status_code)
         data = response.text[response.text.find(tableName)+len(tableName)+1:-2]
-        print(data)
+        #print(data)
         return json.loads(data)
     
 
+    def FetchDailyDataAndToDB(self,date,tableName,dbConnection):
+        stockID_NameMaps = self.FetchDailyData(date)
+        for stockID in stockID_NameMaps:
+            stockName = stockID_NameMaps[stockID]
+            self.FetchByStockIDAndToDB(stockID,stockName,date,tableName,dbConnection)
+
     def FetchDailyData(self,date):
         tableName = "jQuery1123040640807664934187_1652615619385"
-        url = self.formateDailyURL(date,tableName)
+        url = self._formateDailyURL(date,tableName)
         j = self._baseRequest(tableName,url)
         #print(json.dumps(j,sort_keys=True,indent=4,separators=(",",": ")))
         reasons = [
@@ -59,27 +66,64 @@ class CDragonFetcher(object):
         '退市整理期', 
         '连续三个交易日内，跌幅偏离值累计达到12%的ST证券、*ST证券', 
         'ST、*ST和S证券连续三个交易日内收盘价格跌幅偏离值累计达到15%的证券',
+        "退市整理的证券",
         ]
-        stockIDs = [k["SECUCODE"] for k in j["result"]["data"] if k["EXPLANATION"] not in reasons]
-        print(sorted(list(set(stockIDs))))
-    
+        stockID_NameMaps = {k["SECURITY_CODE"]:k["SECURITY_NAME_ABBR"] for k in j["result"]["data"] if k["EXPLANATION"] not in reasons}
+        #print(stockID_NameMaps)
+        return stockID_NameMaps
 
-    def FetchByStockID(self,stockID,date):
+    
+    def _DataFrameToSqls_REPLACE_INTO(self,datas,tableName):
+        sqls = []
+        for _, row in datas.iterrows():
+            index_str = '''`,`'''.join(row.index)
+            value_str = '''","'''.join(str(x) for x in row.values)
+            sql = '''REPLACE INTO {0} (`{1}`) VALUES ("{2}");'''.format(tableName,index_str,value_str)
+            sqls.append(sql)
+        return sqls
+
+
+    def FetchByStockIDAndToDB(self,stockID,stockName,date,tableName,dbConnection):
+        df = self.FetchByStockID(stockID,stockName,date)
+        sqls = self._DataFrameToSqls_REPLACE_INTO(df,tableName)
+        for sql in sqls:
+            dbConnection.Execute(sql)
+            #print(sql)
+
+    def FetchByStockID(self,stockID,stockName,date):
         tableNameBuy = "jQuery112305166739778248102_1652606811698"
         tableNameSell = "jQuery112305166739778248102_1652606811696"
         buyUrl = self._formatBuyURL(date,tableNameBuy,stockID)
         sellUrl = self._formatSELLURL(date,tableNameSell,stockID)
-        print(buyUrl)
-        print(sellUrl)
+        # print(buyUrl)
+        # print(sellUrl)
 
         buyRes = self._baseRequest(tableNameBuy,buyUrl)
         sellRes = self._baseRequest(tableNameSell,sellUrl)
-        self.ParserResult(buyRes)
-        self.ParserResult(sellRes)
 
-
-    def ParserResult(self,result):
         results = []
+        res_buy = self.ParserResult(date, buyRes,"B")
+        if len(res_buy) == 0:
+            print(stockID,stockName,date,"B")
+
+        res_sell = self.ParserResult(date, sellRes,"S")
+        if(len(res_sell) == 0):
+            print(stockID,stockName,date,"S")
+
+        results.extend(res_buy)
+        results.extend(res_sell)
+        
+        df = pd.DataFrame(results,columns=("date","stockID","operator_ID","operator_Name","buy","sell","NET","flag","reason"))
+        df["stockName"] = stockName
+        # print(df)
+        return df 
+
+    def ParserResult(self,date,result,flag):
+        results = []
+        r = result["result"]
+        if r == None:
+            return results
+
         datas = result["result"]["data"]
         for data in datas:
             stockID = data["SECUCODE"]
@@ -89,10 +133,14 @@ class CDragonFetcher(object):
             b = data["BUY"]
             s = data["SELL"]
             n = data["NET"]
-            print(operID, operName,reason,b,s,n)
+            res = (date,stockID,operID,operName,b,s,n,flag,reason)
+            results.append(res)
+
+        return results
 
 
 if __name__ == "__main__":
     f = CDragonFetcher()
-    #f.FetchDailyData("2022-05-13")
-    f.FetchByStockID("000736","2022-05-13")
+    #f.FetchDailyData("2022-05-20")
+    #f.FetchByStockID("000736","2022-05-13")
+    f.FetchDailyDataAndToDB("2022-05-06","`stock`.`dragon`",None)

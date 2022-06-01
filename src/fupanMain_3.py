@@ -146,10 +146,10 @@ class CFuPan(object):
                   self.countOfZhangTing,
                   self.countOfDieTing,
                   self.lianbanCount,
-                  self.shouBan10CMRatio,
-                  self.shouBan20CMRatio,
-                  self.lianBan10CMRatio,
-                  self.lianBan20CMRatio,
+                  f"{self.shouBan10CMRatio:.2f}",
+                  f"{self.shouBan20CMRatio:.2f}",
+                  f"{self.lianBan10CMRatio:.2f}",
+                  f"{self.lianBan20CMRatio:.2f}",
                   len(self.lianBan1),
                   len(self.lianBan2),
                   len(self.lianBan3),
@@ -157,7 +157,7 @@ class CFuPan(object):
                   len(self.lianBan4),
                   ";".join(self.lianBan4),
                   self.gaoDuBan,
-                  self.dongNeng,
+                  f"{self.dongNeng:.2f}",
                   self.shiNeng,
                   )
         index_str = '''`,`'''.join(row)
@@ -176,7 +176,7 @@ class CFuPan(object):
         跌停家数:{self.countOfDieTing},
         高度板:{self.gaoDuBan},
         势能:{self.shiNeng},
-        动能:{self.dongNeng},
+        动能:{self.dongNeng:.2f},
         首板:               个数:{len(self.lianBan1)},
         2连板:              个数:{len(self.lianBan2)},
         3连板:              个数:{len(self.lianBan3)},          {";".join(self.lianBan3)},
@@ -302,7 +302,7 @@ def GetRecording():
         'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
     }
     maxNone = 0
-    start = 10098161
+    start = 10101343
     result = []
     res = {}
     for i in range(5000):
@@ -363,5 +363,5 @@ def NewGaiNian(dbConnection=None):
     dbConnection.Execute(sql)
 
 if __name__ == "__main__":
-    FuPanFun()
-    #GetRecording()
+    #FuPanFun()
+    GetRecording()
