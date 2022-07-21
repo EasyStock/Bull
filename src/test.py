@@ -1,5 +1,7 @@
 from mysql.connect2DB import ConnectToDB
 import pandas as pd
+from thsData.fetchZhangTingFromTHS import CFetchZhangTingDataFromTHS
+
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))

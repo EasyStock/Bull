@@ -62,7 +62,7 @@ class CZhuanQianXiaoXing(object):
 
     def zhuanqianxiaoying_yestoday(self):
         # 昨日的赚钱效应， 即昨日涨停股票今天的表现
-        sql = f'''SELECT A.*,B.`股票简称`, B.`连续涨停天数` As `昨日连续涨停天数`,B.`涨停原因类别` As `昨日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别` FROM stock.stockzhangting where `日期` = "{self.yestoday}") As B where A.`日期` = "{self.today}" and A.`股票代码` = B.`股票代码` and A.`股票代码` REGEXP '^60|^00' order by B.`连续涨停天数`DESC;'''
+        sql = f'''SELECT A.*,B.`股票简称`, B.`连续涨停天数` As `昨日连续涨停天数`,B.`涨停原因类别` As `昨日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别` FROM stock.stockzhangting where `日期` = "{self.yestoday}") As B where A.`日期` = "{self.today}" and A.`股票代码` = B.`股票代码` and A.`股票代码` REGEXP '^60|^00' order by B.`连续涨停天数` DESC;'''
         #print(sql)
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
@@ -219,7 +219,7 @@ class CZhuanQianXiaoXing(object):
                 `复盘笔记` = "{self.fuPanBiji}"
                 WHERE `日期` = "{self.today}";
                 '''
-        #print(sql)
+        print(sql)
         self.dbConnection.Execute(sql)
 
 
@@ -345,7 +345,7 @@ class CZhuanQianXiaoXing(object):
         self.dongNeng_lianBanRatio = count_lianban_today/lianban_total
         s4 = f'''连板比例(>0.6):{count_lianban_today}/{lianban_total} = {self.dongNeng_lianBanRatio:.2f}'''
         self.dongNengStr.append(s4)
-        if self.dongNeng_lianBanRatio >=0.6:
+        if self.dongNeng_lianBanRatio >0.6:
             self.dongNeng = self.dongNeng +2
         else:
             self.dongNeng  = self.dongNeng -2
