@@ -18,7 +18,6 @@ def NewHigh(data,N=100):
         return False
 
 
-
 def moshi1(data):
     listDate = data["上市天数"].astype(int)
     listDate1 =  listDate.iloc[-1]

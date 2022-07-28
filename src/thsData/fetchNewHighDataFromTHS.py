@@ -10,6 +10,7 @@ import pandas as pd
 import logging
 import datetime
 import json
+import os
 
 logger = logging.getLogger()
 
@@ -43,7 +44,11 @@ class CNewHighDataFromTHS(object):
         
         self.ParserGaiNian()
         logger.info(f'{self.dataFrame}')
-        fullPath = f"/Volumes/Data/复盘/股票/{self.date}_新高.jpg"
+        rootFolder = f"/Volumes/Data/复盘/股票/{self.date}/"
+        if os.path.exists(rootFolder) == False:
+            os.makedirs(rootFolder)
+
+        fullPath = f"{rootFolder}{self.date}_新高.jpg"
         jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
         self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
 

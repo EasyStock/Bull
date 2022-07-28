@@ -4,6 +4,7 @@ import pandas as pd
 import datetime
 from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
 from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
+import os
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -148,7 +149,12 @@ class CJiSiLu(object):
         df.reset_index(drop=True,inplace=True)
         
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
-        self.ConvertDataFrameToJPG(jpgDataFrame,f"/Volumes/Data/复盘/可转债/可转债每日选股/{today}_all.jpg")
+
+        folderRoot= f'''/Volumes/Data/复盘/可转债/{today}/'''
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
+
+        self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{today}_all.jpg")
         
         size = df.shape[0]
         step = 40
@@ -157,7 +163,7 @@ class CJiSiLu(object):
                 tmp = df.iloc[index:,]
                 if index + step <= size:
                     tmp = df.iloc[index:index+step,]
-                fullPath = f"/Volumes/Data//复盘/可转债/复盘/{today}_{int(index/step+1)}.jpg"
+                fullPath = f"{folderRoot}{today}_{int(index/step+1)}.jpg"
                 print(fullPath)
                 jpgDataFrame = pd.DataFrame(tmp,columns=["转债代码","转债名称"])
                 self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
@@ -177,7 +183,7 @@ class CJiSiLu(object):
         sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{today}') order by `PB` DESC;"
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
-        name = '/Volumes/Data/复盘/可转债/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())
+        name = f'{folderRoot}/{today}_变化量.xlsx'
         excelWriter = pd.ExcelWriter(name)
         newDf1.to_excel(excelWriter,"今日增加",index=False)
         newDf2.to_excel(excelWriter,"今日减少",index=False)

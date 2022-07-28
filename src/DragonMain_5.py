@@ -40,7 +40,16 @@ def DragonDuplicate_ALL(tradingDays,dbConnection):
         index = index + 1
 
 
-if __name__ == "__main__":
+
+def DragonDaily():
+    dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,599)
+    FetchDragonDataByDate(tradingDays[-1],dbConnection)
+    DragonMonitor(tradingDays[-1],dbConnection)
+    DragonDuplicate(tradingDays[-1],dbConnection)
+
+
+def Test():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,599)
     #print(tradingDays)
@@ -58,5 +67,8 @@ if __name__ == "__main__":
 
     #DragonMonitor_ALL(tradingDays,dbConnection)
     #DragonDuplicate_ALL(tradingDays,dbConnection)
+    #   
+if __name__ == "__main__":
+    DragonDaily()
 
     

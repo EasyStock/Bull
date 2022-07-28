@@ -1,3 +1,4 @@
+import os
 from DBOperating import GetTradingDateLastN,GetZhangTingDataBy,GetZhangTingData,GetRemainZhangTingDataBy
 from mysql.connect2DB import ConnectToDB
 from categrate import CATEGRAGTE
@@ -108,13 +109,17 @@ def categrateZhangTing(dbConnection):
         
     remain = []
     remain1 = []
+    rootFolder = f'''/Volumes/Data/复盘/股票/{date}/'''
+    if os.path.exists(rootFolder) == False:
+        os.makedirs(rootFolder)
+
     for key in CATEGRAGTE:
         print(f"\n=========={key}=============")
         df = GetZhangTingDataBy(dbConnection,date,CATEGRAGTE[key][0],CATEGRAGTE[key][1])
         remain.extend(CATEGRAGTE[key][0])
         remain1.extend(CATEGRAGTE[key][1])
         if df.shape[0] >=5:
-            fullPath = f"/Volumes/Data/复盘/股票/{date}_{key}.jpg"
+            fullPath = f"{rootFolder}{date}_{key}.jpg"
             jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
             ConvertDataFrameToJPG(jpgDataFrame,fullPath)
         print(df)
@@ -123,8 +128,13 @@ def categrateZhangTing(dbConnection):
     print(f"\n==========剩余=============")
     df = GetRemainZhangTingDataBy(dbConnection,date,remain,remain1)
     print(df)
-    
-if __name__ == "__main__":
+
+
+def Statics():
     dbConnection = ConnectToDB()
     AnalysisZhangTingReason(dbConnection)
     categrateZhangTing(dbConnection)
+
+    
+if __name__ == "__main__":
+    Statics()

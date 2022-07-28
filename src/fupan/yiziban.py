@@ -44,15 +44,16 @@ class CYizhiban(object):
             self.dbConnection.Execute(sql)
             #print(sql)
 
-    def WriteToLocalFile(self,path = "/Volumes/Data/复盘/股票/一字板/"):
+    def WriteToLocalFile(self,path = "/Volumes/Data/复盘/股票/"):
         if self.yiziban is None:
             return
 
-        if os.path.exists(path) == False:
-            os.makedirs(path)
+        subPath = f'''{path}/{self.date}/'''
+        if os.path.exists(subPath) == False:
+            os.makedirs(subPath)
 
-        fileName = f'''{self.date}.xlsx'''
-        full = os.path.join(path,fileName)
+        fileName = f'''一字板_{self.date}.xlsx'''
+        full = os.path.join(subPath,fileName)
         self.yiziban.to_excel(full)
 
 

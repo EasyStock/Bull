@@ -9,6 +9,7 @@ DRAGON_CONFIG = [
             "10657404":"中国银河证券股份有限公司大连金马路证券营业部",
             "10787117":"申港证券股份有限公司深圳分公司",
             "10747429":"申港证券股份有限公司深圳深南东路证券营业部",
+            "10948136":"申港证券股份有限公司浙江分公司",  #陈小群好基友老余
         },
         "description":"陈小群 和他的好基友们",
     },
@@ -71,7 +72,7 @@ class CDragonMonitor(object):
 
     def Monitor2(self):
         #东北证券股份有限公司绍兴金柯桥大道证券营业部,中国银河证券股份有限公司大连金马路证券营业部,财信证券股份有限公司杭州西湖国贸中心证券营业部,天风证券股份有限公司上海浦东分公司
-        sql = f'''select * from `stock`.`dragon` where operator_ID in (10638005,10657404,10656871,10944812) and date = "{self.tradingDay}"; '''
+        sql = f'''select * from `stock`.`dragon` where operator_ID in (10638005,10657404,10656871,10944812,10948136) and date = "{self.tradingDay}"; '''
         data, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(data,columns=columns)
         print(df)

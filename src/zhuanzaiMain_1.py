@@ -7,9 +7,7 @@ import schedule
 import time
 from ColoredLog import StartToInitLogger
 from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
-import os
-import re
-from DBOperating import GetTradingDateLastN
+
 from zhuanzai.jisilu import CJiSiLu
 from categrate import CATEGRAGTE_KE_ZHUAN_ZAI
 

@@ -48,27 +48,68 @@ def PrintSQLs(tradingDays):
         f'''SELECT * FROM stock.stockbasicinfo where `所属概念` like "%超临界发电%";''',
         f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='2022-06-10' and (B.`所属概念` like '%比亚迪%'  OR B.`所属概念` like '%比亚迪概念%' ) order by `PB` DESC;''',
 
+        f"\n#========================以下是{tradingDays[-45]} 之后周期内的高标==============================",
+        f'''select A.`股票代码`,B.`股票简称`,A.`最大连板天数` from (SELECT `股票代码`,max(`连续涨停天数`) As `最大连板天数` FROM stock.stockzhangting where `日期`> "{tradingDays[-45]}" and `连续涨停天数`>=4 group by `股票代码` order by `最大连板天数` DESC) As A, `stockBasicInfo` as B where A.`股票代码`=B.`股票代码`''',
     ]
 
     for sql in sqls:
         print(sql)
     
 
+def ConvertDataFrameToJPG(df,fullPath):
+    from pandas.plotting import table
+    import matplotlib.pyplot as plt
+    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+    high = int(0.174 * df.shape[0]+0.5)+1
+    fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
+    ax = fig.add_subplot(111, frame_on=False) 
+    ax.xaxis.set_visible(False)  # hide the x axis
+    ax.yaxis.set_visible(False)  # hide the y axis
+    table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
+    plt.savefig(fullPath)
+
+
+def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
+    sql = f'''select A.`股票代码`,B.`股票简称`,A.`最大连板天数` from (SELECT `股票代码`,max(`连续涨停天数`) As `最大连板天数` FROM stock.stockzhangting where `日期`> "{tradingDay}" and `连续涨停天数`>=4 group by `股票代码` order by `最大连板天数` DESC) As A, `stockBasicInfo` as B where A.`股票代码`=B.`股票代码`'''
+    data, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(data,columns=columns)
+    fodler = f'/Volumes/Data/复盘/股票/{today}/'
+    if os.path.exists(fodler) == False:
+        os.makedirs(fodler)
+    fullPath = f'''{fodler}周期高标_{today}.xlsx'''
+    df.to_excel(fullPath,index=False)
+
+    rootDir = f"/Volumes/Data/复盘/股票/{today}/"
+    if os.path.exists(rootDir) == False:
+        os.makedirs(rootDir)
+
+    fullPath = f"{rootDir}周期高标_{today}.jpg"
+    jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
+    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+
+
 def GetFuPanList(dbConnection,tradingDay):
-    sql = f'''SELECT * FROM stock.stockzhangting where 日期 = "{tradingDay}" order by `连续涨停天数` DESC, `首次涨停时间` ASC;'''
+    sql = f'''SELECT * FROM stock.stockzhangting where 日期 = "{tradingDay}" order by `连续涨停天数` DESC, `首次涨停时间` ASC ,`最终涨停时间` ASC;'''
     data, columns = dbConnection.Query(sql)
     df = pd.DataFrame(data,columns=columns)
     df["明日预期"] = ""
-    fodler = f'/Volumes/Data/复盘/股票/没日涨停复盘/'
-    if os.path.exists(fodler) == False:
-        os.makedirs(fodler)
-    fullPath = f'''{fodler}{tradingDay}.xlsx'''
+
+    rootDir = f"/Volumes/Data/复盘/股票/{tradingDay}/"
+    if os.path.exists(rootDir) == False:
+        os.makedirs(rootDir)
+
+    fullPath = f'''{rootDir}明日预期_{tradingDay}.xlsx'''
     df.to_excel(fullPath,index=False)
 
-if __name__ == "__main__":
+    fullPath = f"{rootDir}明日预期_{tradingDay}.jpg"
+    jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
+    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+    
+
+def FupanDaily():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,70)
-    #print(tradingDays)
+    # #print(tradingDays)
     
     yiziban = CYizhiban(dbConnection,tradingDays[-1])
     yiziban.YiZhiBan()
@@ -76,9 +117,14 @@ if __name__ == "__main__":
     zhuanq.ZhuanQianXiaoYing()
     PrintSQLs(tradingDays)
     GetFuPanList(dbConnection,tradingDays[-1])
+    GetZhouqiGaoBiao(dbConnection,tradingDays[-45],tradingDays[-1])
 
     # for i in range(2,len(tradingDays)):
     #     print(tradingDays[i])
     #     zhuanq = CZhuanQianXiaoXing(dbConnection,tradingDays[i-1],tradingDays[i])
     #     zhuanq.ZhuanQianXiaoYing()
     #     #input()
+    # 
+    #   
+if __name__ == "__main__":
+    FupanDaily()
