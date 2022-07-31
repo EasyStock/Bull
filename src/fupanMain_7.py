@@ -101,7 +101,7 @@ def GetFuPanList(dbConnection,tradingDay):
     fullPath = f'''{rootDir}明日预期_{tradingDay}.xlsx'''
     df.to_excel(fullPath,index=False)
 
-    fullPath = f"{rootDir}明日预期_{tradingDay}.jpg"
+    fullPath = f"{rootDir}高标_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     
