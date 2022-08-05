@@ -46,10 +46,11 @@ def PrintSQLs(tradingDays):
         f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-2]}") and `更新日期`="{tradingDays[-1]}";''',
         f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-1]}") and `更新日期`="{tradingDays[-2]}";''',
         f'''SELECT * FROM stock.stockbasicinfo where `所属概念` like "%超临界发电%";''',
-        f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='2022-06-10' and (B.`所属概念` like '%比亚迪%'  OR B.`所属概念` like '%比亚迪概念%' ) order by `PB` DESC;''',
+        f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and (B.`所属概念` like '%比亚迪%'  OR B.`所属概念` like '%比亚迪概念%' ) order by `PB` DESC;''',
 
         f"\n#========================以下是{tradingDays[-45]} 之后周期内的高标==============================",
         f'''select A.`股票代码`,B.`股票简称`,A.`最大连板天数` from (SELECT `股票代码`,max(`连续涨停天数`) As `最大连板天数` FROM stock.stockzhangting where `日期`> "{tradingDays[-45]}" and `连续涨停天数`>=4 group by `股票代码` order by `最大连板天数` DESC) As A, `stockBasicInfo` as B where A.`股票代码`=B.`股票代码`''',
+        f'''\n\n\n\n''',
     ]
 
     for sql in sqls:

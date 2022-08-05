@@ -59,6 +59,32 @@ class CFetchDataFromTHS(object):
         logger.info(f'{self.dataFrame.columns}')
         return self.dataFrame
 
+    def GetCache_rawData(self):
+        requestsCookie = self.cookie+"v="+self.v
+        sse_head = {
+                "Host": "x.iwencai.com",
+                "Accept": "application/json, text/javascript, */*; q=0.01",
+                "X-Requested-With": "XMLHttpRequest",
+                "hexin-v": self.v,
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+                "Referer": self.referer,
+                "Accept-Encoding": "gzip, deflate",
+                "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Cookie": requestsCookie,
+                "Connection": "keep-alive",
+                }
+        requestURL = 'http://x.iwencai.com/stockpick/cache?token='+ self.token +'&p=1&perpage=6000&changeperpage=1&showType=[%22%22,%22%22,%22onTable%22,%22onTable%22,%22onTable%22,%22onTable%22,%22onTable%22]'
+        response = requests.get(url=requestURL,headers=sse_head)
+        # print(response.text)
+        data = json.loads(response.text)
+        return (data['result'],data['title'])
+
+
     def FetchAllInOne(self):
         self.Search()
         return self.GetCache()
+
+    
+    def FetchAllInOne_rawData(self): 
+        self.Search()
+        return self.GetCache_rawData()

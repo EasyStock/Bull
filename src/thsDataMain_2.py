@@ -13,6 +13,8 @@ import datetime
 import base64
 from urllib.parse import quote
 from thsData.fetchZhangTingLanBanFromTHS import CFetchZhangTingLanBanFromTHS
+from thsData.fetchDaliangDataFromTHS import CFetchDaLiangFromTHS
+from thsData.fetchDaliang_LanBanDataFromTHS import CFetchDaLiangAndLanBanFromTHS
 
 
 
@@ -24,7 +26,7 @@ ZHANGTING_REASON_TABLE_NAME = 'zhangtingreason'
 
 
 cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjU4MzY0MzgzOjo6MTQzMDEzNjkwMDo0MDA0MTc6MDoxMjRiZmQ1ZTc5ODBkNTU4MGIxN2JlNmYwMjlhMmQ1MjE6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=320dd44c4bb53749369a65274368f53a; user_status=0; utk=eeb0549bcf3de92c942f9b1183adb72b;"
-cookie ="ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjU5MDkxODcxOjo6MTQzMDEzNjkwMDo0MDAxMjk6MDoxYjVmY2UwMjVkMzY2OGNiMGRlOGQ1MDc2NTMyMWUyMzE6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=20dd8ad5809358e66c6cf07e0a8d52c4; user_status=0; utk=dab8b9c0d9dbab3a0a427451e7076971;"
+cookie ="ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjU5NTI0ODU3Ojo6MTQzMDEzNjkwMDo0MDI3NDM6MDoxZGRlNmYwNmY1M2FiZDlkMzI5NzM4ZjdiODYzNTJjNjY6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=240b5cb9cd8fc15fcf52bd3137d16c64; user_status=0; utk=0f3ed8c1f3707af24e84e247d5c81d41;"
 
 def GetTHS_V():
     size = len(eng_10jqka_CookieList)
@@ -59,8 +61,27 @@ def GetZhangTingData(dbConnection,logger):
     zhangTingSql = dailyFetcher.FormateZhangTingInfoToSQL('stockZhangting') 
     for sql in zhangTingSql:
         logger.info(sql)
-        dbConnection.Execute(sql)    
-    
+        dbConnection.Execute(sql) 
+
+def GetZhangTingLanBanData(dbConnection,logger):
+    #烂板
+    v = GetTHS_V()
+    dailyFetcher = CFetchZhangTingLanBanFromTHS(cookie,v)
+    dailyFetcher.GetZhangTingLanBanData()
+
+def GetLiangDaData(dbConnection,logger):
+    #成家量急剧放大
+    v = GetTHS_V()
+    dailyFetcher = CFetchDaLiangFromTHS(cookie,v)
+    dailyFetcher.GetDaLiangData()
+
+def GetLiangDaLanBanDaData(dbConnection,logger):
+    #成家量急剧放大 并且收了一个烂板
+    v = GetTHS_V()
+    dailyFetcher = CFetchDaLiangAndLanBanFromTHS(cookie,v)
+    dailyFetcher.GetDaLiangLanBanData()
+
+
 def Test(dbConnection):
     sql = 'select `股票代码`,`所属概念` from `stockBasicInfo`;'
     results,_ = dbConnection.Query(sql)
@@ -85,6 +106,9 @@ def GetTHSData():
     GetDailyData(dbConnection,logger)
     GetZhangTingData(dbConnection,logger)
     GetNewHighData(dbConnection,logger)
+    GetLiangDaData(dbConnection,logger)
+    GetLiangDaLanBanDaData(dbConnection,logger)
+    GetZhangTingLanBanData(dbConnection,logger)
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
     
 def AutoDownload():
@@ -104,15 +128,28 @@ def GenerateCookie():
     return cookie
 
 
-def GetZhangTingLanBan():
+def GetZhangTingLanBanTest():
     logger = StartToInitLogger("test")
     v = GetTHS_V()
     dailyFetcher = CFetchZhangTingLanBanFromTHS(cookie,v)
     dailyFetcher.GetZhangTingLanBanData()
  
+def GetDaliangTest():
+    logger = StartToInitLogger("test")
+    v = GetTHS_V()
+    dailyFetcher = CFetchDaLiangFromTHS(cookie,v)
+    dailyFetcher.GetDaLiangData()
+
+
+def GetDaliangLanBanTest():
+    logger = StartToInitLogger("test")
+    v = GetTHS_V()
+    dailyFetcher = CFetchDaLiangAndLanBanFromTHS(cookie,v)
+    dailyFetcher.GetDaLiangLanBanData()
 
 if __name__ == "__main__":
     #loggerAutoDownload()
     #cookie = GenerateCookie()
     GetTHSData()
-    GetZhangTingLanBan()
+    # GetDaliangLanBanTest()
+    #GetDaliangTest()

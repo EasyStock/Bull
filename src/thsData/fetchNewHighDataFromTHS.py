@@ -48,7 +48,7 @@ class CNewHighDataFromTHS(object):
         if os.path.exists(rootFolder) == False:
             os.makedirs(rootFolder)
 
-        fullPath = f"{rootFolder}{self.date}_新高.jpg"
+        fullPath = f"{rootFolder}新高_{self.date}.jpg"
         jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
         self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
 
