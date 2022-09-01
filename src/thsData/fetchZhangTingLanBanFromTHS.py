@@ -21,6 +21,7 @@ ZHANGTING_COLUMNS_MAP= {
       
 class CFetchZhangTingLanBanFromTHS(object):
     def __init__(self,cookie,v):
+        # 涨停烂板数据
         self.dataFrame = None
         self.date = None
         self.keyWords = '非st 涨停打开次数大于等于1 非退市,涨停，涨停开板次数，涨停封单额'

@@ -42,6 +42,8 @@ def PrintSQLs(tradingDays):
         "\n#========================以下是今日赚钱效应SQL==============================",
         f'''SELECT A.*,B.`股票简称`, B.`连续涨停天数` As `昨日连续涨停天数`,B.`涨停原因类别` As `昨日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别` FROM stock.stockzhangting where `日期` = "{tradingDays[-2]}") As B where A.`日期` = "{tradingDays[-1]}" and A.`股票代码` = B.`股票代码` order by A.`股票代码`DESC;''',
 
+        f'''SELECT A.`日期`,A.`股票代码`,B.`股票简称`, B.`连续涨停天数` As `涨停天数`,B.`首次涨停时间`,B.`涨停原因类别` As `今日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别`,`首次涨停时间` FROM stock.stockzhangting where `日期` = "{tradingDays[-1]}") As B where A.`日期` = "{tradingDays[-1]}" and A.`股票代码` = B.`股票代码` order by B.`连续涨停天数`DESC,B.`首次涨停时间`ASC ;''',
+
         "\n#========================以下是新增概念查询==============================",
         f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-2]}") and `更新日期`="{tradingDays[-1]}";''',
         f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-1]}") and `更新日期`="{tradingDays[-2]}";''',

@@ -58,12 +58,13 @@ class CZhuanQianXiaoXing(object):
         self.dongNeng_lianBanWeiZhangtingLvpanRatio = 0
         self.fuPanBiji = ""
         self.daMianData = None
+        self.beizhu = ""
 
 
     def zhuanqianxiaoying_yestoday(self):
         # 昨日的赚钱效应， 即昨日涨停股票今天的表现
         sql = f'''SELECT A.*,B.`股票简称`, B.`连续涨停天数` As `昨日连续涨停天数`,B.`涨停原因类别` As `昨日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别` FROM stock.stockzhangting where `日期` = "{self.yestoday}") As B where A.`日期` = "{self.today}" and A.`股票代码` = B.`股票代码` and A.`股票代码` REGEXP '^60|^00' order by B.`连续涨停天数` DESC;'''
-        #print(sql)
+        print(sql)
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         df["涨跌幅"] = df["涨跌幅"].astype('double')
@@ -216,7 +217,8 @@ class CZhuanQianXiaoXing(object):
                 `昨日连板未涨停数的绿盘比` = {self.dongNeng_lianBanWeiZhangtingLvpanRatio :.2f},
                 `势能EX` = {self.shiNeng},
                 `动能EX` = {self.dongNeng},
-                `复盘笔记` = "{self.fuPanBiji}"
+                `复盘笔记` = "{self.fuPanBiji}",
+                `备注` = "{self.beizhu}"
                 WHERE `日期` = "{self.today}";
                 '''
         print(sql)
@@ -374,12 +376,15 @@ class CZhuanQianXiaoXing(object):
 
     
     def isGaoChao(self):
-        if self.shiNeng == 10 and self.dongNeng == 12 and self.dongNeng_shouBanHongPanRatio >0.8 and self.dongNeng_lianBanHongPanRatio >0.8:
+        if self.shiNeng == 10 and self.dongNeng == 12 and self.dongNeng_shouBanHongPanRatio >0.75 and self.dongNeng_lianBanHongPanRatio >0.75:
             self.dongNengStr.append("今日短线情绪《高潮》了！！！！")
-        elif self.dongNeng_lianBanHongPanRatio >0.8:
+            self.beizhu = "高潮"
+        elif self.dongNeng_lianBanHongPanRatio >0.75:
             self.dongNengStr.append("今日短线情绪 《半高潮》了！！！！")
+            self.beizhu = "半高潮"
         elif self.dongNeng == -12 and self.shiNeng <= -2:
             self.dongNengStr.append("今日短线情绪 《冰点》了！！！！")
+            self.beizhu = "冰点"
             
 
     def WriteFuPanBiJi(self):

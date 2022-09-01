@@ -12,7 +12,7 @@ logger = logging.getLogger()
 ZHANGTING_COLUMNS_MAP= {
     '股票代码' : '^股票代码',
     '股票简称' :'^股票简称',
-    '上市天数':"^上市天数",
+    '上市天数':"^上市天数(天)<br>",
 }
 
       
@@ -33,8 +33,8 @@ class CFetchDaLiangFromTHS(object):
         fetcher = CFetchDataFromTHS(self.cookie,self.url, self.referer, self.v)
         result = fetcher.FetchAllInOne_rawData()
 
-        newData = [[data[0],data[1],data[2],data[-2],data[-1]] for data in  result[0]]
-        newColumn = [result[1][0],result[1][1],result[1][2],result[1][-2],result[1][-1]]
+        newData = [[data[0],data[1],data[2],data[-5],data[-4]] for data in  result[0]]
+        newColumn = [result[1][0],result[1][1],result[1][2],result[1][-5],result[1][-4]]
         result = pd.DataFrame(newData,columns = newColumn)
 
         map = self.keywordTranslator(result)

@@ -21,7 +21,7 @@ class CFetchDaLiangAndLanBanFromTHS(object):
     def __init__(self,cookie,v):
         self.dataFrame = None
         self.date = None
-        self.keyWords = '上市天数 今日成交量是昨日成交量的2.5倍以上 今日成家量是前一日成交量的2.5倍以上 今日成交量是5日平均成交量的2倍以上 非st 非退市，涨停打开次数大于等于1'
+        self.keyWords = '上市天数 今日成交量是昨日成交量的2.5倍以上 今日成交量是前一日成交量的2.5倍以上 今日成交量是5日平均成交量的2倍以上 非st 非退市，涨停打开次数大于等于1'
         self.url = 'http://x.iwencai.com/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E4%B8%8A%E5%B8%82%E5%A4%A9%E6%95%B0%20%E4%BB%8A%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E6%98%AF%E6%98%A8%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E7%9A%842.5%E5%80%8D%E4%BB%A5%E4%B8%8A%20%E4%BB%8A%E6%97%A5%E6%88%90%E5%AE%B6%E9%87%8F%E6%98%AF%E5%89%8D%E4%B8%80%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E7%9A%842.5%E5%80%8D%E4%BB%A5%E4%B8%8A%20%E4%BB%8A%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E6%98%AF5%E6%97%A5%E5%B9%B3%E5%9D%87%E6%88%90%E4%BA%A4%E9%87%8F%E7%9A%842%E5%80%8D%E4%BB%A5%E4%B8%8A%20%E9%9D%9Est%20%E9%9D%9E%E9%80%80%E5%B8%82%EF%BC%8C%E6%B6%A8%E5%81%9C%E6%89%93%E5%BC%80%E6%AC%A1%E6%95%B0%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E1&queryarea='
         self.referer = 'http://x.iwencai.com/stockpick/search?ts=1&f=1&qs=stockhome_topbar_click&w=%E4%B8%8A%E5%B8%82%E5%A4%A9%E6%95%B0%20%E4%BB%8A%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E6%98%AF%E6%98%A8%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E7%9A%842.5%E5%80%8D%E4%BB%A5%E4%B8%8A%20%E4%BB%8A%E6%97%A5%E6%88%90%E5%AE%B6%E9%87%8F%E6%98%AF%E5%89%8D%E4%B8%80%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E7%9A%842.5%E5%80%8D%E4%BB%A5%E4%B8%8A%20%E4%BB%8A%E6%97%A5%E6%88%90%E4%BA%A4%E9%87%8F%E6%98%AF5%E6%97%A5%E5%B9%B3%E5%9D%87%E6%88%90%E4%BA%A4%E9%87%8F%E7%9A%842%E5%80%8D%E4%BB%A5%E4%B8%8A%20%E9%9D%9Est%20%E9%9D%9E%E9%80%80%E5%B8%82'
         self.cookie = cookie
@@ -33,8 +33,8 @@ class CFetchDaLiangAndLanBanFromTHS(object):
         fetcher = CFetchDataFromTHS(self.cookie,self.url, self.referer, self.v)
         result = fetcher.FetchAllInOne_rawData()
 
-        newData = [[data[0],data[1],data[2],data[-2],data[-1]] for data in  result[0]]
-        newColumn = [result[1][0],result[1][1],result[1][2],result[1][-2],result[1][-1]]
+        newData = [[data[0],data[1],data[2],data[-4],data[-3]] for data in  result[0]]
+        newColumn = [result[1][0],result[1][1],result[1][2],result[1][-4],result[1][-3]]
         result = pd.DataFrame(newData,columns = newColumn)
 
         map = self.keywordTranslator(result)

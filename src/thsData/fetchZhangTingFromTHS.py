@@ -51,6 +51,7 @@ class CZhangTingResult(object):
         }
         
 class CFetchZhangTingDataFromTHS(object):
+    #涨停数据
     def __init__(self,cookie,v):
         self.dataFrame = None
         self.date = None
@@ -95,7 +96,7 @@ class CFetchZhangTingDataFromTHS(object):
         return result
     
     def FormateZhangTingReasonInfoToSQL(self,tableName):
-        columns = ['涨停原因','数量',"股票代码s",'股票名称s']
+        columns = ['涨停原因','数量',"股票代码",'股票名称']
         result = []
         if self.dataFrame is None:
             return result
