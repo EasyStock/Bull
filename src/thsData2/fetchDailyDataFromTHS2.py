@@ -27,6 +27,7 @@ class CFetchDailyDataFromTHS2(object):
         self.dataFrame = None
         self.date = date
         self.v = v
+        self.dataSize = 0
 
     def RequestDailyData(self,page = 1,perPage = 100):
         query = '前复权开盘价，前复权收盘价，前复权最高价，前复权最低价，前复权涨跌幅, 成交量，成交额，上市天数,所属概念'
@@ -42,6 +43,7 @@ class CFetchDailyDataFromTHS2(object):
         ths.dateRange1 = newDate
 
         df = ths.RequstData(self.v)
+        self.dataSize = df.shape[0]  #记录总共获取了多少条数据
         map = self.keywordTranslator(df)
         self.dataFrame = pd.DataFrame()
         for key in map:
@@ -53,6 +55,7 @@ class CFetchDailyDataFromTHS2(object):
         self.dataFrame['成交额'] = self.dataFrame['成交额'].astype(float).astype(str)
         self.dataFrame['涨跌幅'] = self.dataFrame['涨跌幅'].astype(float).apply(lambda x:'''%.3f'''%x)
         logger.info(str(self.dataFrame))
+        logger.info(str(self.dataFrame.shape))
 
 
     def keywordTranslator(self,dataframe):
@@ -107,6 +110,8 @@ def GetDailyDataMgr(date,v,stockBasicInfo,stockDailyInfo):
     step = 100
     sql_Basic = []
     sql_Daily = []
+    threshold = 4500
+    totalSize = 0
     for pageID in range(1,5000):
         logger.error(f"ready to fetch page:{pageID}")
         dailyFetcher = CFetchDailyDataFromTHS2(date,v)
@@ -117,7 +122,10 @@ def GetDailyDataMgr(date,v,stockBasicInfo,stockDailyInfo):
         dailySqls = dailyFetcher.FormateDailyInfoToSQL(stockDailyInfo)
         sql_Daily.extend(dailySqls)
 
-        if dailyFetcher.dataFrame.shape[0] != step:
+        totalSize  = totalSize + dailyFetcher.dataSize
+        #起码要获取4500个信息以上
+        if totalSize>threshold and (dailyFetcher.dataSize != step):
             break
+
     
     return (sql_Basic,sql_Daily)

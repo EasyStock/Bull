@@ -24,12 +24,12 @@ def GetDailyData(dbConnection,date,logger):
     for index, sql in enumerate(stockBasicInfo_sqls):
         msg = f'''BasicInfo index: {index+1},{sql}''' 
         logger.info(msg)
-        #dbConnection.Execute(sql)
+        dbConnection.Execute(sql)
 
     for index, sql in enumerate(stockDailyInfo_sql): 
         msg = f'''DailyData index: {index+1},{sql}''' 
         logger.info(msg)
-        #dbConnection.Execute(sql)
+        dbConnection.Execute(sql)
 
 def GetNewHighData(dbConnection,date,logger):
     v = "A1-cbY4HQBnleEQFv_Aujk746LjsxKa2zQa3CPGS-YtXsHGm-ZRDtt3oR-IC"
@@ -78,10 +78,10 @@ def Test():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,15)
     GetDailyData(dbConnection,tradingDays[-1],logger)
-    #GetNewHighData(dbConnection,tradingDays[-1],logger)
-    #GetZhangTingData(dbConnection,tradingDays[-1],logger)
-    # GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
-    # GetDaLiangData(dbConnection,tradingDays,logger)
+    GetNewHighData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
+    GetDaLiangData(dbConnection,tradingDays,logger)
     #GetDaLiangLanbBanData(dbConnection,tradingDays,logger)  # 待验证
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 

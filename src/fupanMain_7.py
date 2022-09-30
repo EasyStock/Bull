@@ -42,7 +42,7 @@ def PrintSQLs(tradingDays):
         "\n#========================以下是今日赚钱效应SQL==============================",
         f'''SELECT A.*,B.`股票简称`, B.`连续涨停天数` As `昨日连续涨停天数`,B.`涨停原因类别` As `昨日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别` FROM stock.stockzhangting where `日期` = "{tradingDays[-2]}") As B where A.`日期` = "{tradingDays[-1]}" and A.`股票代码` = B.`股票代码` order by A.`股票代码`DESC;''',
 
-        f'''SELECT A.`日期`,A.`股票代码`,B.`股票简称`, B.`连续涨停天数` As `涨停天数`,B.`首次涨停时间`,B.`涨停原因类别` As `今日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别`,`首次涨停时间` FROM stock.stockzhangting where `日期` = "{tradingDays[-1]}") As B where A.`日期` = "{tradingDays[-1]}" and A.`股票代码` = B.`股票代码` order by B.`连续涨停天数`DESC,B.`首次涨停时间`ASC ;''',
+        f'''SELECT A.`日期`,A.`股票代码`,B.`股票简称`, A.`成交量`, A.`成交额`, B.`连续涨停天数` As `涨停天数`,B.`首次涨停时间`,B.`涨停原因类别` As `今日涨停原因类别` FROM stock.stockdailyinfo As A, (SELECT `股票代码`,`股票简称`,`连续涨停天数`,`涨停原因类别`,`首次涨停时间` FROM stock.stockzhangting where `日期` = "{tradingDays[-1]}") As B where A.`日期` = "{tradingDays[-1]}" and A.`股票代码` = B.`股票代码` order by B.`连续涨停天数`DESC,B.`首次涨停时间`ASC ;''',
 
         "\n#========================以下是新增概念查询==============================",
         f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-2]}") and `更新日期`="{tradingDays[-1]}";''',
@@ -52,6 +52,9 @@ def PrintSQLs(tradingDays):
 
         f"\n#========================以下是{tradingDays[-45]} 之后周期内的高标==============================",
         f'''select A.`股票代码`,B.`股票简称`,A.`最大连板天数` from (SELECT `股票代码`,max(`连续涨停天数`) As `最大连板天数` FROM stock.stockzhangting where `日期`> "{tradingDays[-45]}" and `连续涨停天数`>=4 group by `股票代码` order by `最大连板天数` DESC) As A, `stockBasicInfo` as B where A.`股票代码`=B.`股票代码`''',
+        
+        f"\n#========================以下是 反包==============================",
+        f'''select * from  stock.stockzhangting where `日期` in ("{tradingDays[-3]}","{tradingDays[-4]}","{tradingDays[-5]}","{tradingDays[-6]}") and `股票代码` in (select `股票代码` from stock.stockzhangting where `日期` = "{tradingDays[-1]}") and `股票代码` not in (select `股票代码` from stock.stockzhangting where `日期` = "{tradingDays[-2]}") order by `日期` DESC;'''
         f'''\n\n\n\n''',
     ]
 

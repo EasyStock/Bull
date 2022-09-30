@@ -62,14 +62,15 @@ class CFetchDataFromTHS2(object):
         thirdPart = f'''uuids%5B0%5D={self.uuids}&query_type={self.query_type}&comp_id={self.comp_id}&business_cat={self.business_cat}&uuid={self.uuid}'''
         self.queryString = f'''{firstpart}&{secondpart}&{thirdPart}'''
         self.queryLength = len(self.queryString)
-        #print(self.queryString)
+        # print(self.queryString)
         # print(self.queryLength)
         return self.queryString
 
 
     def RequstData(self,v):
         #url = "https://ai.iwencai.com/urp/v7/landing/getDataList"
-        url = "https://ai.iwencai.com/urp/v7/landing/getDataList?hexin-v={v}"
+        url = "http://www.iwencai.com/gateway/urp/v7/landing/getDataList?hexin-v={v}"
+        #url = "https://ai.iwencai.com/urp/v7/landing/getDataList?hexin-v={v}"
         payload = self.formatQueryString()
         headers = self.QueryHead()
         response = requests.request("POST", url, headers=headers, data=payload)

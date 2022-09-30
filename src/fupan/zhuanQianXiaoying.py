@@ -366,7 +366,10 @@ class CZhuanQianXiaoXing(object):
         #6. 昨日连扳未涨停股的绿盘比
         lvpan_size = dianban[dianban["涨跌幅"] < 0].shape[0]
         size1 = self.zhangTing_today[self.zhangTing_today['连续涨停天数']>=3].shape[0] # 昨日连板今日涨停数
-        self.dongNeng_lianBanWeiZhangtingLvpanRatio = lvpan_size/(lianban_total - size1)
+        if lvpan_size == 0:
+            self.dongNeng_lianBanWeiZhangtingLvpanRatio = 0
+        else:
+            self.dongNeng_lianBanWeiZhangtingLvpanRatio = lvpan_size/(lianban_total - size1)
         s6 = f"昨日{self.yestoday}连板涨停,今日未涨停的绿盘数比(<0.5): {lvpan_size}/{lianban_total - size1} = {self.dongNeng_lianBanWeiZhangtingLvpanRatio:.2f}"
         self.dongNengStr.append(s6)
         if self.dongNeng_lianBanWeiZhangtingLvpanRatio < 0.5:
