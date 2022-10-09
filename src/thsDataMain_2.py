@@ -32,7 +32,8 @@ cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b
 cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjYwOTA3MjI1Ojo6MTQzMDEzNjkwMDo0MDI3NzU6MDoxMjUyNmJjZDU2ZDIxY2ZkNmI2NTlmYzEwOTJjN2U5YWU6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=030aefa0b3b3d7ff9f27db2b54141715; user_status=0; utk=f27680f08badd40f39ba37acbf46424f;"
 cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; wencai_pc_version=0; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjYxMzM4ODc0Ojo6MTQzMDEzNjkwMDo0MDMxMjY6MDoxN2I4YTdhYjM2YmMwNTYyZTczNDE1MzgyOWU0OWE5NzI6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=2544b730d8e3c51634172292da1e1477; user_status=0; utk=d46c8fe1a902c8d40fbe9eb5eaf0380f;"
 cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; other_uid=Ths_iwencai_Xuangu_cc2f5n5mrn3aluslmseghuc0pp5jfwlb; wencai_pc_version=0; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjY0NTIxNzE4Ojo6MTQzMDEzNjkwMDo2MDQ4MDA6MDoxNjZmM2IyMjc1MTg0ODgzMjMzMDM4YWU0YmYxM2MyNmY6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=5293ca25f92a8363287c5789a3f62890; user_status=0; utk=d15b33519175068f329ab5ac1269e7d5;"
-
+cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; other_uid=Ths_iwencai_Xuangu_cc2f5n5mrn3aluslmseghuc0pp5jfwlb; wencai_pc_version=0; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjY1MjAwMDI4Ojo6MTQzMDEzNjkwMDozMTQ3NzI6MDoxNDcyYzc5ODYwZmZkNTJjY2JmNDAyZmFlMzY5MWQ0ZGM6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=208fed8eaec8442d1596d40b02700237; user_status=0; utk=735aa8c4027cbf096418418ebbd04bc1;"
+cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; other_uid=Ths_iwencai_Xuangu_cc2f5n5mrn3aluslmseghuc0pp5jfwlb; wencai_pc_version=0; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjY1MjAwMDI4Ojo6MTQzMDEzNjkwMDozMTQ3NzI6MDoxNDcyYzc5ODYwZmZkNTJjY2JmNDAyZmFlMzY5MWQ0ZGM6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=208fed8eaec8442d1596d40b02700237; user_status=0; utk=735aa8c4027cbf096418418ebbd04bc1;"
 
 def GetTHS_V():
     size = len(eng_10jqka_CookieList)
@@ -40,6 +41,7 @@ def GetTHS_V():
     return eng_10jqka_CookieList[index]
 
 def GetDailyData(dbConnection,logger):
+    logger.error("开始获取每日收盘数据")
     v = GetTHS_V()
     dailyFetcher = CFetchDailyDataFromTHS(cookie,v)
     dailyFetcher.GetDailyData()
@@ -55,12 +57,14 @@ def GetDailyData(dbConnection,logger):
 
 
 def GetNewHighData(dbConnection,logger):
+    logger.error("开始获取每日新高数据")
     v = GetTHS_V()
     newHighFetcher = CNewHighDataFromTHS(cookie,v)
     newHighFetcher.GetNewHighData()
 
         
 def GetZhangTingData(dbConnection,logger):
+    logger.error("开始获取每日涨停数据")
     v = GetTHS_V()
     dailyFetcher = CFetchZhangTingDataFromTHS(cookie,v)
     dailyFetcher.GetZhangTingData()
@@ -70,18 +74,21 @@ def GetZhangTingData(dbConnection,logger):
         dbConnection.Execute(sql) 
 
 def GetZhangTingLanBanData(dbConnection,logger):
+    logger.error("开始获取每日涨停烂板数据")
     #烂板
     v = GetTHS_V()
     dailyFetcher = CFetchZhangTingLanBanFromTHS(cookie,v)
     dailyFetcher.GetZhangTingLanBanData()
 
 def GetLiangDaData(dbConnection,logger):
+    logger.error("开始获取每日放大量数据")
     #成家量急剧放大
     v = GetTHS_V()
     dailyFetcher = CFetchDaLiangFromTHS(cookie,v)
     dailyFetcher.GetDaLiangData()
 
 def GetLiangDaLanBanDaData(dbConnection,logger):
+    logger.error("开始获取每日放大量数据并且是烂板数据")
     #成家量急剧放大 并且收了一个烂板
     v = GetTHS_V()
     dailyFetcher = CFetchDaLiangAndLanBanFromTHS(cookie,v)
@@ -109,9 +116,9 @@ def GetTHSData():
     logger = StartToInitLogger("同花顺日常数据")
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
-    GetDailyData(dbConnection,logger)
-    GetZhangTingData(dbConnection,logger)
-    GetNewHighData(dbConnection,logger)
+    #GetDailyData(dbConnection,logger)
+    #GetZhangTingData(dbConnection,logger)
+    #GetNewHighData(dbConnection,logger)
     GetLiangDaData(dbConnection,logger)
     GetLiangDaLanBanDaData(dbConnection,logger)
     GetZhangTingLanBanData(dbConnection,logger)

@@ -33,10 +33,11 @@ class CFetchNewHighDataFromTHS2(object):
             ths.perPage = perPage
             ths.dateRange0 = newDate
             ths.dateRange1 = newDate
-            print(query)
-            print(Condition)
+            ths.iwc_token = "0ac9666116652356504797468"
+            logger.warning(query)
+            #print(Condition)
             df = ths.RequstData(self.v)
-            print(df)
+            #print(df)
             map = self.keywordTranslator(df)
             self.dataFrame = pd.DataFrame()
             for key in map:
@@ -44,17 +45,18 @@ class CFetchNewHighDataFromTHS2(object):
             
             self.dataFrame = self.dataFrame[self.dataFrame['上市天数'].isna().values != True] #删除未上市的
             self.dataFrame['上市天数'] = self.dataFrame['上市天数'].apply(lambda x:int(x)).astype(int)
-            logger.info(str(self.dataFrame))
+
 
             self.ParserGaiNian()
-            logger.info(f'{self.dataFrame}')
-            rootFolder = f"/Volumes/Data/复盘/股票1/{self.date}/"
+
+            rootFolder = f"/Volumes/Data/复盘/股票_New/{self.date}/"
             if os.path.exists(rootFolder) == False:
                 os.makedirs(rootFolder)
 
             fullPath = f"{rootFolder}新高_{self.date}.jpg"
             jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
             self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+            logger.info(fullPath)
 
 
     def ConvertDataFrameToJPG(self, df,fullPath):

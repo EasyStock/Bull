@@ -19,8 +19,11 @@ def GetTHS_V():
 
 
 def GetDailyData(dbConnection,date,logger):
+    #Validated
+    logger.error("======开始获取每日复盘数据=====")
     v = "A1-cbY4HQBnleEQFv_Aujk746LjsxKa2zQa3CPGS-YtXsHGm-ZRDtt3oR-IC"
-    stockBasicInfo_sqls, stockDailyInfo_sql= GetDailyDataMgr(date,v,'stockBasicInfo_Test','stockDailyInfo_test')
+    #v = GetTHS_V()
+    stockBasicInfo_sqls, stockDailyInfo_sql= GetDailyDataMgr(date,v,'stockBasicInfo','stockDailyInfo')
     for index, sql in enumerate(stockBasicInfo_sqls):
         msg = f'''BasicInfo index: {index+1},{sql}''' 
         logger.info(msg)
@@ -32,15 +35,20 @@ def GetDailyData(dbConnection,date,logger):
         dbConnection.Execute(sql)
 
 def GetNewHighData(dbConnection,date,logger):
+    #Validated
+    logger.error("======开始获取新高数据=====")
     v = "A1-cbY4HQBnleEQFv_Aujk746LjsxKa2zQa3CPGS-YtXsHGm-ZRDtt3oR-IC"
+    v = GetTHS_V()
     newHigh = CFetchNewHighDataFromTHS2(date,v)
     newHigh.RequestDailyData()
     
 def GetZhangTingData(dbConnection,date,logger):
-    v = "A1-cbY4HQBnleEQFv_Aujk746LjsxKa2zQa3CPGS-YtXsHGm-ZRDtt3oR-IC"
+    #Validated
+    logger.error("======开始获取涨停数据=====")
+    v = "A1GippsR1lzvyzo121oWDUULZlfqv9w8b29rSDN6TWE1gH-Iew7VAP-CeIvA"
     zhagngTing = CFetchZhangTingDataFromTHS2(date,v)
     zhagngTing.RequestDailyData()
-    zhangTingSql = zhagngTing.FormateZhangTingInfoToSQL('stockzhangting_test') 
+    zhangTingSql = zhagngTing.FormateZhangTingInfoToSQL('stockzhangting') 
     for sql in zhangTingSql:
         logger.info(sql)
         dbConnection.Execute(sql) 
@@ -51,23 +59,31 @@ def oneKeyDailyData():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,15)
     GetDailyData(dbConnection,tradingDays[-1],logger)
-    # GetNewHighData(dbConnection,tradingDays[-1],logger)
-    # GetZhangTingData(dbConnection,tradingDays[-1],logger)
-    #GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
+    GetNewHighData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
+    GetDaLiangData(dbConnection,tradingDays,logger)
+    GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 def GetZhangTingLanBanData(dbConnection,date,logger):
+    #Validated
+    logger.error("======开始获取涨停烂板数据=====")
     v = GetTHS_V()
     zhangTingLanBan = CFetchZhangTingLanBanDataFromTHS2(date,v)
     zhangTingLanBan.RequestDailyData() 
 
 def GetDaLiangData(dbConnection,dates,logger):
+    #Validated
+    logger.error("======开始获取大量数据=====")
     v = GetTHS_V()
     daliang = CFetchDaliangDataFromTHS2(dates,v)
     daliang.RequestDailyData() 
 
 
 def GetDaLiangLanbBanData(dbConnection,dates,logger):
+    #Validated
+    logger.error("======开始获取大量 并且烂板数据=====")
     v = GetTHS_V()
     daliang = CFetchDaliangLanBanDataFromTHS2(dates,v)
     daliang.RequestDailyData() 
@@ -82,7 +98,7 @@ def Test():
     GetZhangTingData(dbConnection,tradingDays[-1],logger)
     GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
     GetDaLiangData(dbConnection,tradingDays,logger)
-    #GetDaLiangLanbBanData(dbConnection,tradingDays,logger)  # 待验证
+    GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 if __name__ == '__main__':

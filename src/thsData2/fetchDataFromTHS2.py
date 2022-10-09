@@ -35,7 +35,7 @@ class CFetchDataFromTHS2(object):
         self.queryString = None
         self.queryLength = 0
        
-    def QueryHead(self):
+    def QueryHead(self,v):
         headers = {
         'Accept': 'application/json, text/plain, */*',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -48,7 +48,8 @@ class CFetchDataFromTHS2(object):
         'Origin': 'http://www.iwencai.com',
         'Pragma': 'no-cache',
         'Referer': 'http://www.iwencai.com',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)'
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)',
+        "hexin-v":v
         }
         return headers
 
@@ -69,17 +70,18 @@ class CFetchDataFromTHS2(object):
 
     def RequstData(self,v):
         #url = "https://ai.iwencai.com/urp/v7/landing/getDataList"
-        url = "http://www.iwencai.com/gateway/urp/v7/landing/getDataList?hexin-v={v}"
+        #url = "http://www.iwencai.com/gateway/urp/v7/landing/getDataList?hexin-v={v}"
         #url = "https://ai.iwencai.com/urp/v7/landing/getDataList?hexin-v={v}"
+        url = "http://www.iwencai.com/gateway/urp/v7/landing/getDataList"
         payload = self.formatQueryString()
-        headers = self.QueryHead()
+        headers = self.QueryHead(v)
         response = requests.request("POST", url, headers=headers, data=payload)
         js =json.loads(response.text)
         components = js["answer"]["components"]
         component = components[0]
         datas = component["data"]["datas"]
         df = pd.DataFrame(datas)
-        logger.info(f"共获取{df.shape[0]}条数据")
+        logger.error(f"共获取{df.shape[0]}条数据")
         return df
 
 

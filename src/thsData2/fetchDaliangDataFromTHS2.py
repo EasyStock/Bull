@@ -19,7 +19,7 @@ class CFetchDaliangDataFromTHS2(object):
         self.dates = dates
         self.v = v
 
-    def RequestDailyData(self,page = 1,perPage = 5000):
+    def RequestDailyData(self,page = 1,perPage = 100):
             query = '今天AAA成交量是昨天BBB成交量的1.8倍以上 今天AAA成交量是前天CCC成交量的1.8倍以上 今天AAA成交量是5日平均成交量的1.8倍以上 非st 非退市'
             Condition = '''[{"chunkedResult":"今天AAA成交量是昨天BBB成交量的1.8倍以上 _&_今天AAA成交量是前天CCC成交量的1.8倍以上 _&_今天AAA成交量是5日平均成交量的1.8倍以上 _&_非st _&_非退市","opName":"and","opProperty":"","sonSize":14,"relatedSize":0},{"opName":"/","opProperty":"(=1.8","uiText":"（AAA今天的成交量/BBB昨天的成交量）>=1.8倍","sonSize":2,"queryText":"（AAA今天的成交量/BBB昨天的成交量）>=1.8倍","relatedSize":2},{"dateText":"今天AAA","indexName":"成交量","indexProperties":["交易日期 今天AAA"],"dateUnit":"日","source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"今天AAA"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_浮点型数值(股)","domain":"abs_股票领域","sonSize":0,"relatedSize":0,"tag":"[今天AAA]成交量"},{"dateText":"昨天BBB","indexName":"成交量","indexProperties":["交易日期 昨天BBB"],"dateUnit":"日","source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"昨天BBB"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_浮点型数值(股)","domain":"abs_股票领域","sonSize":0,"relatedSize":0,"tag":"[今天AAA]成交量"},{"opName":"and","opProperty":"","sonSize":10,"relatedSize":0},{"opName":"/","opProperty":"(=1.8","uiText":"（AAA今天的成交量/CCC前天的成交量）>=1.8倍","sonSize":2,"queryText":"（AAA今天的成交量/CCC前天的成交量）>=1.8倍","relatedSize":2},{"dateText":"今天AAA","indexName":"成交量","indexProperties":["交易日期 今天AAA"],"dateUnit":"日","source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"今天AAA"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_浮点型数值(股)","domain":"abs_股票领域","sonSize":0,"relatedSize":0,"tag":"[今天AAA]成交量"},{"dateText":"前天CCC","indexName":"成交量","indexProperties":["交易日期 前天CCC"],"dateUnit":"日","source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"前天CCC"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_浮点型数值(股)","domain":"abs_股票领域","sonSize":0,"relatedSize":0,"tag":"[今天AAA]成交量"},{"opName":"and","opProperty":"","sonSize":6,"relatedSize":0},{"opName":"/","opProperty":"(=1.8","uiText":"（AAA今天的成交量/5日的区间日均成交量）>=1.8倍","sonSize":2,"queryText":"（AAA今天的成交量/5日的区间日均成交量）>=1.8倍","relatedSize":2},{"dateText":"今天AAA","indexName":"成交量","indexProperties":["交易日期 今天AAA"],"dateUnit":"日","source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"今天AAA"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_浮点型数值(股)","domain":"abs_股票领域","sonSize":0,"relatedSize":0,"tag":"[今天AAA]成交量"},{"dateText":"5日","indexName":"区间日均成交量","indexProperties":["起始交易日期 EEE","截止交易日期 今天AAA"],"dateUnit":"日","source":"new_parser","type":"index","indexPropertiesMap":{"起始交易日期":"EEE","截止交易日期":"今天AAA"},"reportType":"TRADE_DAILY","dateType":"+区间","valueType":"_浮点型数值(股)","domain":"abs_股票领域","sonSize":0,"relatedSize":0,"tag":"[5日]区间日均成交量"},{"opName":"and","opProperty":"","sonSize":2,"relatedSize":0},{"indexName":"股票简称","indexProperties":["不包含st,退"],"source":"new_parser","type":"index","indexPropertiesMap":{"不包含":"st,退"},"reportType":"null","valueType":"_股票简称","domain":"abs_股票领域","uiText":"股票简称不包含st","sonSize":0,"queryText":"股票简称不包含st","relatedSize":0,"tag":"股票简称"},{"indexName":"股票简称","indexProperties":["不包含st,退"],"source":"new_parser","type":"index","indexPropertiesMap":{"不包含":"st,退"},"reportType":"null","valueType":"_股票简称","domain":"abs_股票领域","uiText":"股票简称不包含退","sonSize":0,"queryText":"股票简称不包含退","relatedSize":0,"tag":"股票简称"}]'''
             d1 = datetime.datetime.strptime(str(self.dates[-1]), "%Y-%m-%d").date()
@@ -47,22 +47,23 @@ class CFetchDaliangDataFromTHS2(object):
             newDate5 = d5.strftime("%Y%m%d")
             Condition = Condition.replace("EEE",newDate5)
 
-            print(query)
-            print(Condition)
+            logger.warning(query)
+            # print(Condition)
             ths = CFetchDataFromTHS2(query,Condition)
             ths.page = page
             ths.perPage = perPage
             ths.dateRange0 = newDate5
             ths.dateRange1 = newDate1
+            ths.iwc_token = "b1ceb3590f3c93f6d9983031907e7c1c"
 
             df = ths.RequstData(self.v)
-            print(df)
+            #print(df)
             map = self.keywordTranslator(df)
             self.dataFrame = pd.DataFrame()
             for key in map:
                 self.dataFrame[key] = df[map[key]]
 
-            folder = f'/Volumes/Data/复盘/股票1/{self.dates[-1]}/'
+            folder = f'/Volumes/Data/复盘/股票_New/{self.dates[-1]}/'
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 
@@ -110,6 +111,6 @@ class CFetchDaliangDataFromTHS2(object):
                 self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
         else:
             fullPath = f"{rootPath}{fileName}.jpg"
-            print(fullPath)
+            logger.error(fullPath)
             jpgDataFrame = pd.DataFrame(df,columns=columns)
             self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)

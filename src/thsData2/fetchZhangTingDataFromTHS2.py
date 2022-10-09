@@ -28,16 +28,16 @@ class CFetchZhangTingDataFromTHS2(object):
             d = datetime.datetime.strptime(str(self.date), "%Y-%m-%d").date()
             newDate = d.strftime("%Y%m%d")
 
-
             Condition = Condition.replace("20220909",newDate)
             ths = CFetchDataFromTHS2(query,Condition)
             ths.page = page
             ths.perPage = perPage
             ths.dateRange0 = newDate
             ths.dateRange1 = newDate
+            ths.iwc_token = "0ac952b216652356192695879"
 
-            print(query)
-            print(Condition)
+            logger.warning(query)
+            # print(Condition)
 
             df = ths.RequstData(self.v)
             map = self.keywordTranslator(df)

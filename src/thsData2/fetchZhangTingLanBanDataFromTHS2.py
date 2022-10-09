@@ -35,6 +35,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
             ths.perPage = perPage
             ths.dateRange0 = newDate
             ths.dateRange1 = newDate
+            ths.iwc_token = "0ac952b216652375866261184"
 
             df = ths.RequstData(self.v)
             #print(df)
@@ -43,25 +44,16 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
             for key in map:
                 tmpDataFrame[key] = df[map[key]]
 
-            #print(tmpDataFrame)
-            # 去掉一封就封死的票
-            yifengZhangTing = tmpDataFrame[((tmpDataFrame['涨停开板次数'] == 1) & (tmpDataFrame['涨停'] == "涨停")) ]
-            #print(yifengZhangTing)
-            self.dataFrame = tmpDataFrame[~((tmpDataFrame['涨停开板次数'] == 1) & (tmpDataFrame['涨停'] == "涨停")) ]
-            self.dataFrame.reset_index(drop = True,inplace = True)
-            #logger.info(str(self.dataFrame))
-            #logger.info(f'{self.dataFrame[:10]}\n{self.dataFrame[-10:]}')
-            # logger.info(self.date)
-            # logger.info(f'{self.dataFrame.columns}')
-            # logger.info(f'{self.dataFrame.shape}')
-            folder = f'/Volumes/Data/复盘/股票1/{self.date}/'
+
+            self.dataFrame = tmpDataFrame
+            logger.warning(query)
+
+            folder = f'/Volumes/Data/复盘/股票_New/{self.date}/'
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 
             fileName = f'''烂板_{self.date}'''
-            fileName1 = f'''一封涨停_{self.date}'''
             self.DataFrameToJPG(self.dataFrame,["股票代码","股票简称"],folder,fileName)
-            self.DataFrameToJPG(yifengZhangTing,["股票代码","股票简称"],folder,fileName1)
             return self.dataFrame
 
 
@@ -106,6 +98,6 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
             if df.empty == True:
                 return
             fullPath = f"{rootPath}{fileName}.jpg"
-            print(fullPath)
+            logger.error(fullPath)
             jpgDataFrame = pd.DataFrame(df,columns=columns)
             self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
