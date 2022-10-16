@@ -4,6 +4,8 @@ from fupan.yiziban import CYizhiban
 from fupan.tradingDate import GetTradingDateLastN
 from fupan.zhuanQianXiaoying import CZhuanQianXiaoXing
 import pandas as pd
+import logging
+logger = logging.getLogger()
 
 def formatSql_1(operator1, operator2, net,descption):
     # 两个营业部同时净买入卖出
@@ -59,7 +61,7 @@ def PrintSQLs(tradingDays):
     ]
 
     for sql in sqls:
-        print(sql)
+        logger.info(sql)
     
 
 def ConvertDataFrameToJPG(df,fullPath):
@@ -92,6 +94,7 @@ def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
     fullPath = f"{rootDir}周期高标_{today}.jpg"
     jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+    logger.info(fullPath)
 
 
 def GetFuPanList(dbConnection,tradingDay):
@@ -110,6 +113,7 @@ def GetFuPanList(dbConnection,tradingDay):
     fullPath = f"{rootDir}高标_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+    logger.info(fullPath)
     
 
 def FupanDaily():

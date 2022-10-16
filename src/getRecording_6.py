@@ -17,7 +17,7 @@ def GetRecording():
         'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
     }
     maxNone = 0
-    start =10112475
+    start =10112894
     #start = 10067539
     result = []
     res = {}
@@ -41,10 +41,9 @@ def GetRecording():
             result.append(data)
             if "盯盘抓板" in name or "复盘寻龙" in name or "大师直播课" in name:  
                 res[name] = index
+                print(f"{i:<4d} :   {name}  {api}")
                 print(url) 
                 #input()
-
-            print(f"{i:<4d} :   {name}  {api}")
         else:
             print(response.text)
             

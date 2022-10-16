@@ -11,8 +11,7 @@ from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
 from zhuanzai.jisilu import CJiSiLu
 from categrate import CATEGRAGTE_KE_ZHUAN_ZAI
 
-def GetFromJisiluAndWriteToDB():
-    logger = StartToInitLogger("集思录")
+def GetFromJisiluAndWriteToDB(logger):
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
     jisiLu = CJiSiLu(logger,dbConnection)
@@ -28,4 +27,5 @@ def AutoDownload():
 
 
 if __name__ == "__main__":
+    logger = StartToInitLogger("集思录")
     GetFromJisiluAndWriteToDB()

@@ -75,6 +75,6 @@ def DataFrameToJPG(df,columns,rootPath, fileName):
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,70)
-    GetDataByGaiNian(dbConnection,"医疗器械",tradingDays[-1])
+    GetDataByGaiNian(dbConnection,"信创",tradingDays[-1])
 
 

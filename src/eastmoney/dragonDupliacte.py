@@ -1,7 +1,4 @@
-from ast import operator
-from unicodedata import name
 import pandas as pd
-
 
 
 class CDragonDuplicate(object):
@@ -15,7 +12,6 @@ class CDragonDuplicate(object):
 
     def Analysis(self):
         pass
-
 
 
     def GetData(self):

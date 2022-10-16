@@ -258,8 +258,7 @@ class CFuPan(object):
             return "unKnown"
 
 
-def FuPanFun():
-    logger = StartToInitLogger("复盘")
+def FuPanFun(logger):
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
     FuPan = CFuPan(logger,dbConnection,-1)
@@ -314,4 +313,5 @@ def NewGaiNian(dbConnection=None):
     dbConnection.Execute(sql)
 
 if __name__ == "__main__":
-    FuPanFun()
+    logger = StartToInitLogger("复盘")
+    FuPanFun(logger)

@@ -18,16 +18,16 @@ class CFetchDataFromTHS2(object):
         self.condition = condition
         self.codelist = ""
         self.indexNameLimit = ""
-        self.logid = "354c9961a95566fb93612116b46b9f24"
+        self.logid = "03e523157156c3baa91747ab537bc298"
         self.ret = 'json_all'
-        self.sessignid = "354c9961a95566fb93612116b46b9f24"
+        self.sessignid = "03e523157156c3baa91747ab537bc298"
         self.dateRange0 = "20220902"
         self.dateRange1 = "20220902"
         self.iwc_token = "0ac9667e16630744404705242"
         self.user_id = "240679370"
         self.uuids = 24087
         self.query_type = 'stock'
-        self.comp_id = '6374433'
+        self.comp_id = '6439244'
         self.business_cat = 'soniu'
         self.uuid = 24087
         self.urp_use_sort =1
@@ -81,7 +81,7 @@ class CFetchDataFromTHS2(object):
         component = components[0]
         datas = component["data"]["datas"]
         df = pd.DataFrame(datas)
-        logger.error(f"共获取{df.shape[0]}条数据")
+        #logger.error(f"共获取{df.shape[0]}条数据")
         return df
 
 

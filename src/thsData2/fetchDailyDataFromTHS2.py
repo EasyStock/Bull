@@ -41,9 +41,9 @@ class CFetchDailyDataFromTHS2(object):
         ths.perPage = perPage
         ths.dateRange0 = newDate
         ths.dateRange1 = newDate
-        ths.iwc_token = "8c758ed93364dd880e39eec416b3fdf8"
+        ths.iwc_token = "0ac952af16654771178418035"
 
-        logger.error(query)
+        logger.warning(query)
         df = ths.RequstData(self.v)
         self.dataSize = df.shape[0]  #记录总共获取了多少条数据
         map = self.keywordTranslator(df)

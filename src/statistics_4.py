@@ -3,6 +3,9 @@ from DBOperating import GetTradingDateLastN,GetZhangTingDataBy,GetZhangTingData,
 from mysql.connect2DB import ConnectToDB
 from categrate import CATEGRAGTE
 
+import logging
+logger = logging.getLogger()
+
 class CZhangTing(object):
     def __init__(self):
         self.zhangTingDays = 0
@@ -121,6 +124,7 @@ def categrateZhangTing(dbConnection):
         if df.shape[0] >=5:
             fullPath = f"{rootFolder}{date}_{key}.jpg"
             jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
+            logger.info(fullPath)
             ConvertDataFrameToJPG(jpgDataFrame,fullPath)
         print(df)
         
