@@ -54,9 +54,6 @@ class CFetchDailyDataFromTHS2(object):
         self.dataFrame['成交量'] = self.dataFrame['成交量'].astype(float).astype(str)
         self.dataFrame['成交额'] = self.dataFrame['成交额'].astype(float).astype(str)
         self.dataFrame['涨跌幅'] = self.dataFrame['涨跌幅'].astype(float).apply(lambda x:'''%.3f'''%x)
-        # logger.info(str(self.dataFrame))
-        # logger.info(str(self.dataFrame.shape))
-
 
     # def RequestDailyData(self,page = 1,perPage = 100):
     #     query = '前复权开盘价，前复权收盘价，前复权最高价，前复权最低价，前复权涨跌幅, 成交量，成交额，上市天数,所属概念'

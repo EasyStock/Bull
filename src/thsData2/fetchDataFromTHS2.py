@@ -72,7 +72,7 @@ class CFetchDataFromTHS_MultiPageMgr(object):
 
             threshold = self.dataFrame.shape[0]
             currentCount = tmpData.shape[0]
-            logger.error(f"开始获取第 【{page:^5d}】页数据, 每页 【{perPage:^5d}】条, 本次总共获取了 【{currentCount:^5d}】 条数据, 总共获取了【{threshold:^5d}】 条数据")
+            logger.error(f"开始获取第 【{page:^5d}】页数据, 每页 【{perPage:^5d}】条, 本次总共获取了 【{currentCount:^5d}】 条数据, 总共获取了【{threshold:^8d}】 条数据")
             return tmpData
 
     def RequestMutiPageData(self,v,perPage = 100):
@@ -88,7 +88,7 @@ class CFetchDataFromTHS_MultiPageMgr(object):
             threshold = self.dataFrame.shape[0]
             if currentCount < perPage and threshold >= self.threshold:
                 break
-            time.sleep(2)
+            time.sleep(1)
         
         if self.dataFrame.empty:
             return

@@ -220,7 +220,7 @@ class CFetchNewHighDataFromTHS2(object):
                 s = s + "   ".join(subInfo) + "\n       "
 
             res = f'''{k[0]:15} {len(k[1]):5}
-====================================
+**************************************
        {s}'''
             if len((k[1])) >=2:
                 logging.error(res)

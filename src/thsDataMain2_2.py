@@ -22,7 +22,7 @@ def GetTHS_V():
 
 def GetDailyDataEx(dbConnection,date,logger):
     #Validated
-    logger.error("======开始获取每日复盘数据=====")
+    logger.error("\n\n======开始获取每日复盘数据=====")
     #v = "A71OYud1gplCtib1xbHCAVHnyhO2WvUS-4xVjH8B-hhBpdNMR6oBfIveZU0M"
     v = GetTHS_V()
     daily = CFetchDailyDataFromTHS2(date,v)
@@ -51,60 +51,22 @@ def GetDailyDataEx(dbConnection,date,logger):
 
         dbConnection.Execute(sql)
 
-# def GetDailyData(dbConnection,date,logger):
-#     #Validated
-#     logger.error("======开始获取每日复盘数据=====")
-#     #v = "A71OYud1gplCtib1xbHCAVHnyhO2WvUS-4xVjH8B-hhBpdNMR6oBfIveZU0M"
-#     v = GetTHS_V()
-#     stockBasicInfo_sqls, stockDailyInfo_sql= GetDailyDataMgr(date,v,'stockBasicInfo','stockDailyInfo')
-#     for index, sql in enumerate(stockBasicInfo_sqls):
-#         msg = f'''BasicInfo index: {index+1},{sql}''' 
-#         logger.info(msg)
-#         dbConnection.Execute(sql)
-
-#     for index, sql in enumerate(stockDailyInfo_sql): 
-#         msg = f'''DailyData index: {index+1},{sql}''' 
-#         logger.info(msg)
-#         dbConnection.Execute(sql)
-
-def GetNewHighDataEX(dbConnection,date,logger):
+def GetNewHighData(dbConnection,date,logger):
     #Validated
-    logger.error("======开始获取新高数据=====")
+    logger.error("\n\n======开始获取新高数据=====")
     v = "A1-cbY4HQBnleEQFv_Aujk746LjsxKa2zQa3CPGS-YtXsHGm-ZRDtt3oR-IC"
     v = GetTHS_V()
     newHigh = CFetchNewHighDataFromTHS2(date,v)
     newHigh.RequestNewHighDataEX()
 
-# def GetNewHighData(dbConnection,date,logger):
-#     #Validated
-#     logger.error("======开始获取新高数据=====")
-#     v = "A1-cbY4HQBnleEQFv_Aujk746LjsxKa2zQa3CPGS-YtXsHGm-ZRDtt3oR-IC"
-#     v = GetTHS_V()
-#     newHigh = CFetchNewHighDataFromTHS2(date,v)
-#     #newHigh.RequestDailyData()
-#     newHigh.RequestNewHighData()
-    
-# def GetZhangTingData(dbConnection,date,logger):
-#     #Validated
-#     logger.error("======开始获取涨停数据=====")
-#     v = "A1GippsR1lzvyzo121oWDUULZlfqv9w8b29rSDN6TWE1gH-Iew7VAP-CeIvA"
-#     zhagngTing = CFetchZhangTingDataFromTHS2(date,v)
-#     #zhagngTing.RequestDailyData()
-#     zhagngTing.RequestZhangTingData()
-#     zhangTingSql = zhagngTing.FormateZhangTingInfoToSQL('stockzhangting') 
-#     for index,sql in enumerate(zhangTingSql):
-#         logger.info(f'''index: [{index+1:^5d}], {sql}''')
-#         dbConnection.Execute(sql) 
 
-
-def GetZhangTingDataEX(dbConnection,date,logger):
+def GetZhangTingData(dbConnection,date,logger):
     #Validated
-    logger.error("======开始获取涨停数据=====")
+    logger.error("\n\n======开始获取涨停数据=====")
     v = "A1GippsR1lzvyzo121oWDUULZlfqv9w8b29rSDN6TWE1gH-Iew7VAP-CeIvA"
     zhagngTing = CFetchZhangTingDataFromTHS2(date,v)
-    #zhagngTing.RequestDailyData()
     zhagngTing.RequestZhangTingDataEX()
-    zhangTingSql = zhagngTing.FormateZhangTingInfoToSQL('stockzhangting_test')
+    zhangTingSql = zhagngTing.FormateZhangTingInfoToSQL('stockzhangting')
     printcount = 50 
     for index,sql in enumerate(zhangTingSql):
         msg = f'''index: [{index+1}], {sql}'''
@@ -116,104 +78,53 @@ def GetZhangTingDataEX(dbConnection,date,logger):
 
         dbConnection.Execute(sql) 
 
-
 def oneKeyDailyData(logger):
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,15)
-    #GetDailyData(dbConnection,tradingDays[-1],logger)
     GetDailyDataEx(dbConnection,tradingDays[-1],logger)
-    #GetNewHighData(dbConnection,tradingDays[-1],logger)
-    # GetZhangTingData(dbConnection,tradingDays[-1],logger)
-    #GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
-    # GetDaLiangData(dbConnection,tradingDays,logger)
-    #GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
+    GetNewHighData(dbConnection,tradingDays[-1],logger)
+
+    GetZhangTingData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
+    GetDaLiangData(dbConnection,tradingDays,logger)
+    GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
-
-def oneKeyDailyDataEX(logger):
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
-    dbConnection = ConnectToDB()
-    tradingDays = GetTradingDateLastN(dbConnection,15)
-    GetDailyDataEx(dbConnection,tradingDays[-1],logger)
-    GetNewHighDataEX(dbConnection,tradingDays[-1],logger)
-
-    GetZhangTingDataEX(dbConnection,tradingDays[-1],logger)
-    GetZhangTingLanBanDataEX(dbConnection,tradingDays[-1],logger)
-    GetDaLiangDataEX(dbConnection,tradingDays,logger)
-    GetDaLiangLanbBanDataEX(dbConnection,tradingDays,logger) 
-    logger.info(f'==============end:{datetime.datetime.now()}==============================')
-
-
-# def GetZhangTingLanBanData(dbConnection,date,logger):
-#     #Validated
-#     logger.error("======开始获取涨停烂板数据=====")
-#     v = GetTHS_V()
-#     zhangTingLanBan = CFetchZhangTingLanBanDataFromTHS2(date,v)
-#     #zhangTingLanBan.RequestDailyData()
-#     zhangTingLanBan.RequstZhangTingLanBanData()
-
-def GetZhangTingLanBanDataEX(dbConnection,date,logger):
+def GetZhangTingLanBanData(dbConnection,date,logger):
     #Validated
-    logger.error("======开始获取涨停烂板数据=====")
+    logger.error("\n\n======开始获取涨停烂板数据=====")
     v = GetTHS_V()
     zhangTingLanBan = CFetchZhangTingLanBanDataFromTHS2(date,v)
-    #zhangTingLanBan.RequestDailyData()
     zhangTingLanBan.RequstZhangTingLanBanDataEX()
 
-
-# def GetDaLiangData(dbConnection,dates,logger):
-#     #Validated
-#     logger.error("======开始获取大量数据=====")
-#     v = GetTHS_V()
-#     daliang = CFetchDaliangDataFromTHS2(dates,v)
-#     #daliang.RequestDailyData() 
-#     daliang.RequestDaliangData() 
     
-def GetDaLiangDataEX(dbConnection,dates,logger):
+def GetDaLiangData(dbConnection,dates,logger):
     #Validated
-    logger.error("======开始获取大量数据=====")
+    logger.error("\n\n======开始获取大量数据=====")
     v = GetTHS_V()
     daliang = CFetchDaliangDataFromTHS2(dates,v)
-    #daliang.RequestDailyData() 
     daliang.RequestDaliangDataEX() 
 
-
-# def GetDaLiangLanbBanData(dbConnection,dates,logger):
-#     #Validated
-#     logger.error("======开始获取大量 并且烂板数据=====")
-#     v = GetTHS_V()
-#     daliang = CFetchDaliangLanBanDataFromTHS2(dates,v)
-#     daliang.RequestDaliangLanBanData()
-#     #daliang.RequestDailyData() 
-
-def GetDaLiangLanbBanDataEX(dbConnection,dates,logger):
+def GetDaLiangLanbBanData(dbConnection,dates,logger):
     #Validated
-    logger.error("======开始获取大量 并且烂板数据=====")
+    logger.error("\n\n======开始获取大量 并且烂板数据=====")
     v = GetTHS_V()
     daliang = CFetchDaliangLanBanDataFromTHS2(dates,v)
     daliang.RequestDaliangLanBanDataEX()
-    #daliang.RequestDailyData() 
 
 
 def Test():
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,15)
-    # #GetDailyData(dbConnection,tradingDays[-1],logger)
-    # GetDailyDataEx(dbConnection,tradingDays[-1],logger)
 
-    # # GetNewHighData(dbConnection,tradingDays[-1],logger)
-    # GetNewHighDataEX(dbConnection,tradingDays[-1],logger)
-    # # GetZhangTingData(dbConnection,tradingDays[-1],logger)
-    # GetZhangTingDataEX(dbConnection,tradingDays[-1],logger)
-
-    # # GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
-    #GetZhangTingLanBanDataEX(dbConnection,tradingDays[-1],logger)
-    # # GetDaLiangData(dbConnection,tradingDays,logger)
-    #GetDaLiangDataEX(dbConnection,tradingDays,logger)
-    # # GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
-    GetDaLiangLanbBanDataEX(dbConnection,tradingDays,logger) 
+    GetDailyDataEx(dbConnection,tradingDays[-1],logger)
+    GetNewHighData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingData(dbConnection,tradingDays[-1],logger)
+    GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
+    GetDaLiangData(dbConnection,tradingDays,logger)
+    GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 if __name__ == '__main__':
