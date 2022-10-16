@@ -5,8 +5,97 @@ import requests
 import json
 import pandas as pd
 import logging
+import time
 
 logger = logging.getLogger()
+
+class CFetchDataFromTHS_MultiPageMgr(object):
+    def __init__(self,query,condition) -> None:
+        self.query = query
+        self.urp_sort_way = "asc"
+        self.urp_sort_index = '股票代码'
+        self.condition = condition
+        self.codelist = ""
+        self.indexNameLimit = ""
+        self.logid = "03e523157156c3baa91747ab537bc298"
+        self.ret = 'json_all'
+        self.sessignid = "03e523157156c3baa91747ab537bc298"
+        self.dateRange0 = "20220902"
+        self.dateRange1 = "20220902"
+        self.iwc_token = "0ac9667e16630744404705242"
+        self.user_id = "240679370"
+        self.uuids = 24087
+        self.query_type = 'stock'
+        self.comp_id = '6439244'
+        self.business_cat = 'soniu'
+        self.uuid = 24087
+        self.urp_use_sort =1
+
+        self.queryString = None
+        self.queryLength = 0
+        self.dataFrame = None
+        self.threshold = -1
+    
+    def RequestOnePage(self,v,page,perPage):
+        ths = CFetchDataFromTHS2(self.query,self.condition)
+        ths.page = page
+        ths.perPage = perPage
+
+        ths.query = self.query
+        ths.urp_sort_way = self.urp_sort_way
+        ths.urp_sort_index = self.urp_sort_index
+        ths.condition = self.condition
+        ths.codelist = self.codelist
+        ths.indexNameLimit = self.indexNameLimit
+        ths.logid = self.logid
+        ths.ret = self.ret
+        ths.sessignid = self.sessignid
+        ths.dateRange0 = self.dateRange0
+        ths.dateRange1 = self.dateRange1
+        ths.iwc_token = self.iwc_token
+        ths.user_id = self.user_id
+        ths.uuids = self.uuids
+        ths.query_type = self.query_type
+        ths.comp_id = self.comp_id
+        ths.business_cat = self.business_cat
+        ths.uuid = self.uuid
+        ths.urp_use_sort =self.urp_use_sort
+        df = ths.RequstData(v)
+        return df
+
+    def RequestOnePageAndAppendData(self,v,page,perPage):
+            tmpData = self.RequestOnePage(v,page,perPage)
+            if self.dataFrame is None:
+                self.dataFrame = tmpData
+            else:
+                self.dataFrame = pd.concat([self.dataFrame,tmpData],ignore_index=True)
+
+            threshold = self.dataFrame.shape[0]
+            currentCount = tmpData.shape[0]
+            logger.error(f"开始获取第 【{page:^5d}】页数据, 每页 【{perPage:^5d}】条, 本次总共获取了 【{currentCount:^5d}】 条数据, 总共获取了【{threshold:^5d}】 条数据")
+            return tmpData
+
+    def RequestMutiPageData(self,v,perPage = 100):
+        logger.warning(f'''查询数据条件: 【 {self.query} 】''')
+        for pageID in range(1,50000):
+            tmpData = self.RequestOnePageAndAppendData(v,pageID,perPage)
+            currentCount = tmpData.shape[0]
+            if currentCount == 0:
+                logger.warning(f'''重新获取 第【{pageID}】页数据 查询数据条件: 【 {self.query} 】''')
+                self.RequestOnePageAndAppendData(v,pageID,perPage)
+                continue
+
+            threshold = self.dataFrame.shape[0]
+            if currentCount < perPage and threshold >= self.threshold:
+                break
+            time.sleep(2)
+        
+        if self.dataFrame.empty:
+            return
+
+        logger.warning(f"总共获取了 [{pageID}] 页数据,总共 [{self.dataFrame.shape[0]}] 条")
+
+        return self.dataFrame
 
 class CFetchDataFromTHS2(object):
     def __init__(self,query,condition) -> None:
