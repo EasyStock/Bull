@@ -30,24 +30,30 @@ def RandomSubtraction(N,min1,max1):
 def format():
     result = []
     #plusCount = random.randint(0,129)
-    plusCount = int(129*0.6)
-    r1 = RandomPlus(plusCount,6,20,6,30)
-    r2 = RandomSubtraction(129-plusCount,6,30)
+    totalCount = 120
+    plusCount = int(totalCount*0.6)
+    r1 = RandomPlus(plusCount,6,50,6,50)
+    r2 = RandomSubtraction(totalCount-plusCount,6,50)
     result.extend(r1)
     result.extend(r2)
     random.shuffle(result)
     #print(result)
-    s = f'''{"":20}{"姓名:            时间:       "}\n'''
+    title = f'''{"":10}{"姓名:____________    日期:___________    做题时间:__________"}\n\n'''
+    resultStr = ""
     for index,r in enumerate(result):
         #print(index,r)
+        if (index) % 30 == 0  and index != 0:
+            resultStr = resultStr + title
+            
         msg = f'''{"":3}{r[0]:<5}{r[1]}{r[2]:>5} = {"":10}'''
-        s = s+ msg
+        resultStr = resultStr + msg
         if (index+1) % 3 == 0:
-            s = s + '\n\n'
-
-    print(s)
+            resultStr = resultStr + '\n\n'
+            
+    resultStr = resultStr + title
+    print(resultStr)
     with open("/tmp/aa.txt","w+") as f:
-        f.write(s)
+        f.write(resultStr)
 
 
 

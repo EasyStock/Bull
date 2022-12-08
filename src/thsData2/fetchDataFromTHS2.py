@@ -77,12 +77,17 @@ class CFetchDataFromTHS_MultiPageMgr(object):
 
     def RequestMutiPageData(self,v,perPage = 100):
         logger.warning(f'''查询数据条件: 【 {self.query} 】''')
+        zeroCount = 0
         for pageID in range(1,50000):
             tmpData = self.RequestOnePageAndAppendData(v,pageID,perPage)
             currentCount = tmpData.shape[0]
+            if zeroCount >=5:
+                break
+
             if currentCount == 0:
                 logger.warning(f'''重新获取 第【{pageID}】页数据 查询数据条件: 【 {self.query} 】''')
                 self.RequestOnePageAndAppendData(v,pageID,perPage)
+                zeroCount = zeroCount +1
                 continue
 
             threshold = self.dataFrame.shape[0]
@@ -91,7 +96,7 @@ class CFetchDataFromTHS_MultiPageMgr(object):
             time.sleep(1)
         
         if self.dataFrame.empty:
-            return
+            return None
 
         logger.warning(f"总共获取了 [{pageID}] 页数据,总共 [{self.dataFrame.shape[0]}] 条")
 

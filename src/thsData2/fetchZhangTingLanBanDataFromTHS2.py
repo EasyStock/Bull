@@ -40,7 +40,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
     #         return
 
     #     logger.warning(f"total fetch {pageID} page(s),totalSize = {self.dataFrame.shape[0]}")
-    #     folder = f'/Volumes/Data/复盘/股票_New/{self.date}/'
+    #     folder = f'/Volumes/Data/复盘/股票/{self.date}/'
     #     if os.path.exists(folder) == False:
     #         os.makedirs(folder)
 
@@ -95,7 +95,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
 
             self.dataFrame = tmpDataFrame
            
-            folder = f'/Volumes/Data/复盘/股票_New/{self.date}/'
+            folder = f'/Volumes/Data/复盘/股票/{self.date}/'
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 
@@ -129,7 +129,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
     #         self.dataFrame = tmpDataFrame
     #         logger.warning(query)
 
-    #         folder = f'/Volumes/Data/复盘/股票_New/{self.date}/'
+    #         folder = f'/Volumes/Data/复盘/股票/{self.date}/'
     #         if os.path.exists(folder) == False:
     #             os.makedirs(folder)
 

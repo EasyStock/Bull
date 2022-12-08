@@ -17,12 +17,11 @@ def GetRecording():
         'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
     }
     maxNone = 0
-    start =10112894
+    start =10115224
     #start = 10067539
     result = []
     res = {}
     for i in range(5000):
-        
         api = f'https://vod.jtzyuan.com/api/queryVideoById?id={start+i}'
         response = requests.get(api,headers = headers)
         if response.status_code == 200:
@@ -44,6 +43,7 @@ def GetRecording():
                 print(f"{i:<4d} :   {name}  {api}")
                 print(url) 
                 #input()
+            print(f"{i:<4d} :   {name}  {api}")
         else:
             print(response.text)
             

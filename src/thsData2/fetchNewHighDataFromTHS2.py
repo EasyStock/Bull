@@ -43,7 +43,7 @@ class CFetchNewHighDataFromTHS2(object):
 
     #     self.ParserGaiNian()
 
-    #     rootFolder = f"/Volumes/Data/复盘/股票_New/{self.date}/"
+    #     rootFolder = f"/Volumes/Data/复盘/股票/{self.date}/"
     #     if os.path.exists(rootFolder) == False:
     #         os.makedirs(rootFolder)
 
@@ -96,6 +96,8 @@ class CFetchNewHighDataFromTHS2(object):
             #print(Condition)
             df = ths.RequestMutiPageData(self.v,perPage)
             #print(df)
+            if df is None :
+                return
             map = self.keywordTranslator(df)
             self.dataFrame = pd.DataFrame()
             for key in map:
@@ -109,7 +111,7 @@ class CFetchNewHighDataFromTHS2(object):
 
             self.ParserGaiNian()
 
-            rootFolder = f"/Volumes/Data/复盘/股票_New/{self.date}/"
+            rootFolder = f"/Volumes/Data/复盘/股票/{self.date}/"
             if os.path.exists(rootFolder) == False:
                 os.makedirs(rootFolder)
 
@@ -148,7 +150,7 @@ class CFetchNewHighDataFromTHS2(object):
 
     #         self.ParserGaiNian()
 
-    #         rootFolder = f"/Volumes/Data/复盘/股票_New/{self.date}/"
+    #         rootFolder = f"/Volumes/Data/复盘/股票/{self.date}/"
     #         if os.path.exists(rootFolder) == False:
     #             os.makedirs(rootFolder)
 

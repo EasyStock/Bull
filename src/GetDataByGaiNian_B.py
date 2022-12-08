@@ -54,6 +54,9 @@ def GetDataByGaiNian(dbConnection,gainian,date):
 
 def DataFrameToJPG(df,columns,rootPath, fileName):
     size = df.shape[0]
+    if size == 0:
+        return
+
     step = 80
     if size > step:
         for index in range(0,size,step):
@@ -75,6 +78,6 @@ def DataFrameToJPG(df,columns,rootPath, fileName):
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,70)
-    GetDataByGaiNian(dbConnection,"信创",tradingDays[-1])
+    GetDataByGaiNian(dbConnection,"熊去氧胆酸",tradingDays[-1])
 
 
