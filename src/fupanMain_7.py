@@ -28,11 +28,12 @@ def PrintSQLs(tradingDays):
         f'''SELECT * FROM stock.yiziban where `日期` >= "{tradingDays[-3]}" order by `日期` ASC;''',
         
         "\n#以下是市场情绪",
-        f'''SELECT * FROM stock.fuPan where `日期` > "{tradingDays[-15]}" order by `日期`;''',
+        f'''SELECT * FROM stock.fuPan where `日期` > "{tradingDays[-35]}" order by `日期`;''',
         f'''SELECT * FROM stock.`市场总体情绪` where `日期` > "{tradingDays[-15]}" order by `日期`;''',
         f'''SELECT * FROM stock.`超短环境1`  where `日期` > "{tradingDays[-15]}" order by `日期`;''',
         f'''SELECT * FROM stock.`超短环境2`  where `日期` > "{tradingDays[-15]}" order by `日期`;''',
         f'''SELECT * FROM stock.`超短情绪指标`  where `日期` > "{tradingDays[-15]}" order by `日期`;''',
+        f'''SELECT * FROM stock.`超短情绪指标2`  where `日期` > "{tradingDays[-15]}" order by `日期`;''',
        
         "\n#以下是今日操作SQL",
         f'''SELECT * FROM stock.caozuo where `日期` >= "{tradingDays[-3]}";''',

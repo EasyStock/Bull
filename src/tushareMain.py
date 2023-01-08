@@ -36,7 +36,7 @@ def FetchAllInOne():
 def UpdateTradingDate():
     dbConnection = ConnectToDB()
     tushare = fethTushareDailyData()
-    df = tushare.FetchTreadingDate('20180101','20231231')
+    df = tushare.FetchTreadingDate('20220101','20251231')
     sqls = DataFrameToSqls_REPLACE(df,'treadingDay')
     for sql in sqls:
         dbConnection.Execute(sql)
