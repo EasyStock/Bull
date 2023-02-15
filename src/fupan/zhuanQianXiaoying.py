@@ -379,7 +379,7 @@ class CZhuanQianXiaoXing(object):
 
     
     def isGaoChao(self):
-        if self.shiNeng == 10 and self.dongNeng == 12 and self.dongNeng_shouBanHongPanRatio >0.75 and self.dongNeng_lianBanHongPanRatio >0.75:
+        if (self.shiNeng == 10 and self.dongNeng == 12) or (self.dongNeng_shouBanHongPanRatio >0.78 and self.dongNeng_lianBanHongPanRatio >0.78):
             self.dongNengStr.append("今日短线情绪《高潮》了！！！！")
             self.beizhu = "高潮"
         elif self.dongNeng_lianBanHongPanRatio >0.75:
