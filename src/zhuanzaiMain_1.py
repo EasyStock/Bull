@@ -28,4 +28,4 @@ def AutoDownload():
 
 if __name__ == "__main__":
     logger = StartToInitLogger("集思录")
-    GetFromJisiluAndWriteToDB()
+    GetFromJisiluAndWriteToDB(logger)

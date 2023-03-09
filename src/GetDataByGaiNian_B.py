@@ -78,6 +78,6 @@ def DataFrameToJPG(df,columns,rootPath, fileName):
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,70)
-    GetDataByGaiNian(dbConnection,"纸",tradingDays[-1])
+    GetDataByGaiNian(dbConnection,"国企改革",tradingDays[-1])
 
 

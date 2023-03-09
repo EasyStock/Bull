@@ -10,8 +10,10 @@ NAME_MAP = {
     "bond_nm":"转债名称",
     "bond_id":"转债代码",
     "price":"现价",
+    "volume":"成交额(万元)",
     "stock_id":"正股代码",
     "stock_nm":"正股名称",
+    "svolume":"正股成交额(万元)",
     "pb":"PB",
     "int_debt_rate":"有息负债率",
     "pledge_rt":"股票质押率",
@@ -39,7 +41,7 @@ class CJiSiLu(object):
         #self.cookie = "kbz_newcookie=1; kbzw__Session=egt3hsaj2rk5tgq71rbeb0sm15; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734,1653046909; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRqKWjppWplqWnq52Zv9jI19PgpqirmJ6Uqg..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1653046943"
         #self.cookie = "kbz_newcookie=1; kbzw__Session=egt3hsaj2rk5tgq71rbeb0sm15; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734,1653046909; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRqKWjppWplqWnq52Zv9jI19PgpqirmJ6Uqg..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1653391535"
         #self.cookie = "kbzw__Session=lthgok8o7k6b8tbvlbqpqugqe2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1670488713,1670582921,1670831871,1672049125; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRr6WjppGekZTM1s_a3uCRq5Supaau; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1672738799"
-        self.cookie = "kbzw__Session=i7gn48bfsfkvo8tumhk75qg8u3; Hm_lvt_164fe01b1433a19b507595a43bf58262=1675685898; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRsKWjppGekZTM1s_a3uCRq5Supaau; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1675685915"
+        self.cookie = "kbzw__Session=i7gn48bfsfkvo8tumhk75qg8u3; Hm_lvt_164fe01b1433a19b507595a43bf58262=1676705673; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeSp6WjppGekZTM1s_a3uCRq5Supaau; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1678362188"
     def request1_login(self):
         self.logger.info(f'==============begin:{datetime.datetime.now()}==============================')
         head = {
@@ -87,7 +89,7 @@ class CJiSiLu(object):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
         "Cookie":f"{self.cookie}",
         }
-        url='https://www.jisilu.cn/webapi/cb/list_new/'
+        url='https://www.jisilu.cn/webapi/cb/list/'
         response = requests.request("GET",url,headers=sse_head,verify = False)
         #print(response, response.text)
         if len(response.text)!=0:

@@ -1,0 +1,7 @@
+pandas
+requests
+pymysql
+schedule
+pyparsing
+openpyxl
+matplotlib
