@@ -9,6 +9,9 @@ from GetDuanBanData_B import GetDuanBanData
 from thsDataMain2_2 import oneKeyDailyData
 from ColoredLog import StartToInitLogger
 
+from GetJiTianJiBan_9 import WriteJiTianJiBan
+from FuPanSummary_10 import WriteSummary
+
 if __name__ == "__main__":
     logger = StartToInitLogger("AllInOne")
     GetFromJisiluAndWriteToDB(logger) #获取每日可转债数据
@@ -22,6 +25,8 @@ if __name__ == "__main__":
     #GetRecording()
     FupanDaily()
     DragonDaily()
+    WriteJiTianJiBan()
+    WriteSummary()
     
 
     
