@@ -4,9 +4,9 @@ import os
 
 
 def GetJiTianJiBan(dbConnection,stockID,tradingDays):
-    if len(tradingDays) < 20:
-        raise "所给的时间期限不足20天"
-    sqlDays = '''","'''.join(tradingDays[-15:])
+    if len(tradingDays) < 30:
+        raise "所给的时间期限不足30天"
+    sqlDays = '''","'''.join(tradingDays[-13:])
     #print(sqlDays)
     sql = f'''select `日期` from  stock.stockzhangting where `日期`  in ("{sqlDays}") and `股票代码` = "{stockID}"  order by `日期` DESC;'''
     #print(sql)
