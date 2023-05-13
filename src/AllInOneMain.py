@@ -11,13 +11,14 @@ from ColoredLog import StartToInitLogger
 
 from GetJiTianJiBan_9 import WriteJiTianJiBan
 from FuPanSummary_10 import WriteSummary
+from kaipanLaMain_11 import OneKeyKaiPanLa
 
 if __name__ == "__main__":
     logger = StartToInitLogger("AllInOne")
     GetFromJisiluAndWriteToDB(logger) #获取每日可转债数据
 
     oneKeyDailyData(logger)
-    #GetTHSData()          # 获取每日股票数据
+    #GetTHSData()          # 获取每日股票数据     
     FuPanFun(logger) 
     Statics()
     
@@ -26,6 +27,7 @@ if __name__ == "__main__":
     FupanDaily()
     DragonDaily()
     WriteJiTianJiBan()
+    OneKeyKaiPanLa()
     WriteSummary()
     
 
