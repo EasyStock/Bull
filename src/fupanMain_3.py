@@ -27,7 +27,7 @@ class CFuPan(object):
         self.today = self.tradingDays[lastN]
         self.yestoday = self.tradingDays[lastN-1]
         self.logger = logger
-        self.fuPanFullPath = f"/Volumes/Data/Downloads/网盘同步/BaiduNetdiskWorkspace/复盘记录/复盘记录表_{self.today}.xlsx"
+        self.fuPanFullPath = f'''/Volumes/Data/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'''
         self.excelWriter = pd.ExcelWriter(self.fuPanFullPath)
         self.shiNeng = 0
         self.dongNeng = 0
