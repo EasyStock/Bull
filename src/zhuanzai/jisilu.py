@@ -189,10 +189,9 @@ class CJiSiLu(object):
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
         name = f'{folderRoot}/{today}_变化量.xlsx'
-        excelWriter = pd.ExcelWriter(name)
-        newDf1.to_excel(excelWriter,"今日增加",index=False)
-        newDf2.to_excel(excelWriter,"今日减少",index=False)
-        excelWriter.save()
+        with pd.ExcelWriter(name,engine='openpyxl',mode='w+') as excelWriter:
+            newDf1.to_excel(excelWriter,"今日增加",index=False)
+            newDf2.to_excel(excelWriter,"今日减少",index=False)
 
     def Categrate(self,categrateMap):
         result = GetTradingDateLastN(self.dbConnection,15)

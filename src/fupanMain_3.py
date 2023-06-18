@@ -28,7 +28,6 @@ class CFuPan(object):
         self.yestoday = self.tradingDays[lastN-1]
         self.logger = logger
         self.fuPanFullPath = f'''/Volumes/Data/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'''
-        self.excelWriter = pd.ExcelWriter(self.fuPanFullPath)
         self.shiNeng = 0
         self.dongNeng = 0
         self.countOfZhangTing = 0
@@ -55,25 +54,21 @@ class CFuPan(object):
     def Calc10CMShouBan(self) -> float:
         result = Get10CMShouBanZhangTingData(self.dbConnection,self.yestoday,self.today)
         self.logger.info(result[1])
-        result[0].to_excel(self.excelWriter,"昨10CM首板",index=False)
         return self._ratio(result[0])
     
     def Calc20CMShouBan(self) -> float:
         result = Get20CMShouBanZhangTingData(self.dbConnection,self.yestoday,self.today)
         self.logger.info(result[1])
-        result[0].to_excel(self.excelWriter,"昨20CM首板",index=False)
         return self._ratio(result[0])
     
     def Calc10CMLianBan(self) -> float:
         result = Get10CMLianBanZhangTingData(self.dbConnection,self.yestoday,self.today)
         self.logger.info(result[1])
-        result[0].to_excel(self.excelWriter,"昨10CM连板",index=False)
         return self._ratio(result[0])
     
     def Calc20CMLianBan(self) -> float:
         result = Get20CMLianBanZhangTingData(self.dbConnection,self.yestoday,self.today)
         self.logger.info(result[1])
-        result[0].to_excel(self.excelWriter,"昨20CM连板",index=False)
         return self._ratio(result[0])
     
     def FuPan(self):
@@ -90,7 +85,6 @@ class CFuPan(object):
         res1 = Get1LianBan(self.dbConnection,self.today)
         self.logger.info(res1[1])
 
-        res1[0].to_excel(self.excelWriter,"今日首板",index=False)
         if res1[0].shape[0] >0:
             self.gaoDuBan = 1
             self.shiNeng = self.shiNeng + res1[0]["连续涨停天数"].sum()
@@ -99,7 +93,6 @@ class CFuPan(object):
         #今日2连板
         res2 = Get2LianBan(self.dbConnection,self.today)
         self.logger.info(res2[1])
-        res2[0].to_excel(self.excelWriter,"今日2连板",index=False)
         if res2[0].shape[0] >0:
             self.gaoDuBan =2
             self.shiNeng = self.shiNeng + res2[0]["连续涨停天数"].sum()
@@ -108,7 +101,6 @@ class CFuPan(object):
             
         #今日3连板
         res3 = Get3LianBan(self.dbConnection,self.today)
-        res3[0].to_excel(self.excelWriter,"今日3连板",index=False)
         self.logger.info(res3[1])
         if res3[0].shape[0] >0:
             self.gaoDuBan =3
@@ -118,7 +110,6 @@ class CFuPan(object):
              
         #今日4板及4板以上
         res4 = Get4AndMoreLianBan(self.dbConnection,self.today)
-        res4[0].to_excel(self.excelWriter,"今日4连板及以上",index=False)
         self.logger.info(res4[1])
         if res4[0].shape[0] >0:
             self.gaoDuBan = res4[0]["连续涨停天数"].max()
@@ -129,15 +120,32 @@ class CFuPan(object):
         
         #昨日3板及以上，今日断板
         res5 = GaoWeiFailed(self.dbConnection,self.yestoday,self.today)
-        res5[0].to_excel(self.excelWriter,"今日高位断板",index=False)
         self.logger.info(res5[1])
         
-        df = ZhangTingFengdan(self.dbConnection,self.today)
-        df["9:15封单"]=""
-        df["9:20封单"]=""
-        df["9:25封单"]=""
-        df.to_excel(self.excelWriter,"涨停封单",index=False)
-        self.excelWriter.save()
+        with pd.ExcelWriter(self.fuPanFullPath,engine='openpyxl',mode='w+') as excelWriter:
+            result = Get10CMShouBanZhangTingData(self.dbConnection,self.yestoday,self.today)
+            result[0].to_excel(excelWriter,"昨10CM首板",index=False)
+
+            result = Get10CMLianBanZhangTingData(self.dbConnection,self.yestoday,self.today)
+            result[0].to_excel(excelWriter,"昨10CM连板",index=False)
+
+            result = Get20CMShouBanZhangTingData(self.dbConnection,self.yestoday,self.today)
+            result[0].to_excel(excelWriter,"昨20CM首板",index=False)
+
+            result = Get20CMLianBanZhangTingData(self.dbConnection,self.yestoday,self.today)
+            result[0].to_excel(excelWriter,"昨20CM连板",index=False)
+
+            res1[0].to_excel(excelWriter,"今日首板",index=False)
+            res2[0].to_excel(excelWriter,"今日2连板",index=False)
+            res3[0].to_excel(excelWriter,"今日3连板",index=False)
+            res4[0].to_excel(excelWriter,"今日4连板及以上",index=False)
+            res5[0].to_excel(excelWriter,"今日高位断板",index=False)
+
+            df = ZhangTingFengdan(self.dbConnection,self.today)
+            df["9:15封单"]=""
+            df["9:20封单"]=""
+            df["9:25封单"]=""
+            df.to_excel(excelWriter,"涨停封单",index=False)
     
     def FormatFuPanSqlAndToDB(self):
         row = ("日期","红盘","绿盘","实际涨停","跌停","连板","10CM首板奖励率","20CM首板奖励率","10CM连板奖励率","20CM连板奖励率","首板个数","2连板个数","3连板个数","3连个股","4连板及以上个数","4连及以上个股","高度板","动能","势能")

@@ -134,10 +134,9 @@ def GetFromJisiluAndWriteToDB():
     result2,columns2 = dbConnection.Query(sql2)
     newDf2=pd.DataFrame(result2,columns=columns2)
     name = '/Volumes/Data/Downloads/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())
-    excelWriter = pd.ExcelWriter(name)
-    newDf1.to_excel(excelWriter,"今日增加",index=False)
-    newDf2.to_excel(excelWriter,"今日减少",index=False)
-    excelWriter.save()
+    with pd.ExcelWriter(name,engine='openpyxl',mode='w+') as excelWriter:
+        newDf1.to_excel(excelWriter,"今日增加",index=False)
+        newDf2.to_excel(excelWriter,"今日减少",index=False)
             
 def AutoDownload():
     schedule.every().day.at("18:00").do(GetFromJisiluAndWriteToDB)
