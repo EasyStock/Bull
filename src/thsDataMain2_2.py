@@ -1,4 +1,3 @@
-from logging import log
 from thsData2.fetchDailyDataFromTHS2 import CFetchDailyDataFromTHS2
 from thsData.constants_10jqka import eng_10jqka_CookieList
 import random
@@ -11,6 +10,8 @@ from thsData2.fetchZhangTingDataFromTHS2 import CFetchZhangTingDataFromTHS2
 from thsData2.fetchZhangTingLanBanDataFromTHS2 import CFetchZhangTingLanBanDataFromTHS2
 from thsData2.fetchDaliangDataFromTHS2 import CFetchDaliangDataFromTHS2
 from thsData2.fetchDaliangLanbanDataFromTHS2 import CFetchDaliangLanBanDataFromTHS2
+import sys
+
 import logging
 logger = logging.getLogger()
 
@@ -129,7 +130,10 @@ def Test():
 
 if __name__ == '__main__':
     logger = StartToInitLogger("同花顺日常数据_new")
-    #oneKeyDailyData(logger)
-    Test()
+    try:
+        oneKeyDailyData(logger)
+    except Exception as e:
+        print(e)
+        sys.exit(1)
 
 

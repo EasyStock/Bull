@@ -1,12 +1,9 @@
-from os import name
-import requests
-import pandas as pd
-import json
 import datetime
 import schedule
 import time
 from ColoredLog import StartToInitLogger
-from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
+from mysql.connect2DB import ConnectToDB
+import sys
 
 from zhuanzai.jisilu import CJiSiLu
 from categrate import CATEGRAGTE_KE_ZHUAN_ZAI
@@ -28,4 +25,8 @@ def AutoDownload():
 
 if __name__ == "__main__":
     logger = StartToInitLogger("集思录")
-    GetFromJisiluAndWriteToDB(logger)
+    try:
+        GetFromJisiluAndWriteToDB(logger)
+    except Exception as e:
+        print(e)
+        sys.exit(1)

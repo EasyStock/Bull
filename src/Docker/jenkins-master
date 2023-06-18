@@ -1,0 +1,7 @@
+docker network create my-net
+docker run -d --network my-net --privileged=true -v /Volumes/Data/Docker/jenkins-master:/var/jenkins_home -p 50000:50000 -p 8080:8080 --name jenkins-master jenkins/jenkins
+
+
+#agent 
+docker run -it --network my-net --privileged=true -v /Volumes/Data/复盘:/Volumes/Data/复盘 -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkins-agent1 jenkins_agent:1.0 /bin/bash
+

@@ -12,6 +12,7 @@ import datetime
 import re
 import requests
 import json
+import sys
 
 class CFuPan(object):
     def __init__(self,logger, dbConnection,lastN=-1) -> None:
@@ -314,4 +315,8 @@ def NewGaiNian(dbConnection=None):
 
 if __name__ == "__main__":
     logger = StartToInitLogger("复盘")
-    FuPanFun(logger)
+    try:
+        FuPanFun(logger)
+    except Exception as e:
+        print(e)
+        sys.exit(1)

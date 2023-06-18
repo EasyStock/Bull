@@ -93,7 +93,7 @@ class CFetchDataFromTHS_MultiPageMgr(object):
             threshold = self.dataFrame.shape[0]
             if currentCount < perPage and threshold >= self.threshold:
                 break
-            time.sleep(1)
+            time.sleep(3)
         
         if self.dataFrame.empty:
             return None
@@ -112,16 +112,16 @@ class CFetchDataFromTHS2(object):
         self.condition = condition
         self.codelist = ""
         self.indexNameLimit = ""
-        self.logid = "d50e0d11e427fb7bd153ed1eb592e005s"
+        self.logid = "e119ea5613381eeb6c7f0552b0099f60"
         self.ret = 'json_all'
-        self.sessignid = "d50e0d11e427fb7bd153ed1eb592e005"
+        self.sessignid = "e119ea5613381eeb6c7f0552b0099f60"
         self.dateRange0 = "20220902"
         self.dateRange1 = "20220902"
-        self.iwc_token = "0ac9667116764602828818658"
+        self.iwc_token = "0ac952b016813870480805755"
         self.user_id = "240679370"
         self.uuids = 24087
         self.query_type = 'stock'
-        self.comp_id = '6439244'
+        self.comp_id = '6734520'
         self.business_cat = 'soniu'
         self.uuid = 24087
         self.urp_use_sort =1
