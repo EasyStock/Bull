@@ -65,9 +65,10 @@ def PrintSQLs(tradingDays):
         f'''\n#=========================================以上是复盘SQL=======================================================\n\n\n\n''',
     ]
 
-    for sql in sqls:
-        print(sql)
-    
+    fullName = f'''/Volumes/Data/复盘/股票/{tradingDays[-1]}/复盘SQL_{tradingDays[-1]}.sql'''
+    with open(fullName,'w+') as f:
+        for sql in sqls:
+            f.write(sql+'\n')
 
 def ConvertDataFrameToJPG(df,fullPath):
     from pandas.plotting import table
