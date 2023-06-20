@@ -27,7 +27,7 @@ class CFuPan(object):
         self.today = self.tradingDays[lastN]
         self.yestoday = self.tradingDays[lastN-1]
         self.logger = logger
-        self.fuPanFullPath = f'''/Volumes/Data/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'''
+        self.fuPanFullPath = f'/home/jenkins/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'
         self.shiNeng = 0
         self.dongNeng = 0
         self.countOfZhangTing = 0
@@ -84,7 +84,7 @@ class CFuPan(object):
         #今日首板
         res1 = Get1LianBan(self.dbConnection,self.today)
         self.logger.info(res1[1])
-
+        
         if res1[0].shape[0] >0:
             self.gaoDuBan = 1
             self.shiNeng = self.shiNeng + res1[0]["连续涨停天数"].sum()
@@ -146,6 +146,7 @@ class CFuPan(object):
             df["9:20封单"]=""
             df["9:25封单"]=""
             df.to_excel(excelWriter,"涨停封单",index=False)
+
     
     def FormatFuPanSqlAndToDB(self):
         row = ("日期","红盘","绿盘","实际涨停","跌停","连板","10CM首板奖励率","20CM首板奖励率","10CM连板奖励率","20CM连板奖励率","首板个数","2连板个数","3连板个数","3连个股","4连板及以上个数","4连及以上个股","高度板","动能","势能")

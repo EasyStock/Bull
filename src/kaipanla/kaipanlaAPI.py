@@ -12,7 +12,7 @@ class CkaiPanLaApi(object):
         self.context_type = 'application/x-www-form-urlencoded; charset=utf-8'
         self.connection = 'close'
         self.accept = '*/*'
-        self.userAgent = 'lhb/5.7.15 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.7.15'
+        self.userAgent = 'lhb/5.9.3 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.9.3'
         self.acceptLanguage = 'zh-Hans-CN;q=1.0, en-CN;q=0.9'
         self.acceptEncoding = 'gzip;q=1.0, compress;q=0.5'
 
@@ -47,7 +47,7 @@ def RequstData():
     'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     'Connection': 'close',
     'Accept': '*/*',
-    'User-Agent': 'lhb/5.7.15 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.7.15',
+    'User-Agent': 'lhb/5.9.3 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.9.3',
     'Accept-Language': 'zh-Hans-CN;q=1.0, en-CN;q=0.9',
     'Content-Length': str(len(queryString)),
     'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5',
@@ -66,7 +66,7 @@ def RequstData11(): #炸板
     'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     'Connection': 'close',
     'Accept': '*/*',
-    'User-Agent': 'lhb/5.7.15 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.7.15',
+    'User-Agent': 'lhb/5.9.3 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.9.3',
     'Accept-Language': 'zh-Hans-CN;q=1.0',
     'Content-Length': str(len(queryString)),
     'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5',
@@ -87,7 +87,7 @@ def RequstData2222(): #市场量能
     'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     'Connection': 'close',
     'Accept': '*/*',
-    'User-Agent': 'lhb/5.7.15 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.7.15',
+    'User-Agent': 'lhb/5.9.3 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.9.3',
     'Accept-Language': 'zh-Hans-CN;q=1.0, en-CN;q=0.9',
     'Content-Length': str(len(queryString)),
     'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5',
@@ -106,7 +106,7 @@ def RequstData3333(): #市场量能历史
     'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     'Connection': 'close',
     'Accept': '*/*',
-    'User-Agent': 'lhb/5.7.15 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.7.15',
+    'User-Agent': 'lhb/5.9.3 (com.kaipanla.www; build:0; iOS 15.4.0) Alamofire/5.9.3',
     'Accept-Language': 'zh-Hans-CN;q=1.0, en-CN;q=0.9',
     'Content-Length': str(len(queryString)),
     'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5',

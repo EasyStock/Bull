@@ -40,7 +40,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
     #         return
 
     #     logger.warning(f"total fetch {pageID} page(s),totalSize = {self.dataFrame.shape[0]}")
-    #     folder = f'/Volumes/Data/复盘/股票/{self.date}/'
+    #     folder = f'/home/jenkins/复盘/股票/{self.date}/'
     #     if os.path.exists(folder) == False:
     #         os.makedirs(folder)
 
@@ -95,7 +95,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
 
             self.dataFrame = tmpDataFrame
            
-            folder = f'/Volumes/Data/复盘/股票/{self.date}/'
+            folder = f'/home/jenkins/复盘/股票/{self.date}/'
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 
@@ -129,7 +129,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
     #         self.dataFrame = tmpDataFrame
     #         logger.warning(query)
 
-    #         folder = f'/Volumes/Data/复盘/股票/{self.date}/'
+    #         folder = f'/home/jenkins/复盘/股票/{self.date}/'
     #         if os.path.exists(folder) == False:
     #             os.makedirs(folder)
 
@@ -154,7 +154,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
     def ConvertDataFrameToJPG(self,df,fullPath):
         from pandas.plotting import table
         import matplotlib.pyplot as plt
-        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+        plt.rcParams["font.sans-serif"] = ["SimHei"]#显示中文字体
         high = int(0.174 * df.shape[0]+0.5)+1
         fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
         ax = fig.add_subplot(111, frame_on=False) 

@@ -15,9 +15,9 @@ from kaipanLaMain_11 import OneKeyKaiPanLa
 
 if __name__ == "__main__":
     logger = StartToInitLogger("AllInOne")
-    GetFromJisiluAndWriteToDB(logger) #获取每日可转债数据
+    #GetFromJisiluAndWriteToDB(logger) #获取每日可转债数据
 
-    oneKeyDailyData(logger)
+    oneKeyDailyData(logger)  
     #GetTHSData()          # 获取每日股票数据     
     FuPanFun(logger) 
     Statics()

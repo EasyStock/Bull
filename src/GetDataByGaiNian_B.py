@@ -7,7 +7,7 @@ import os
 def ConvertDataFrameToJPG(df,fullPath):
     from pandas.plotting import table
     import matplotlib.pyplot as plt
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+    plt.rcParams["font.sans-serif"] = ["SimHei"]#显示中文字体
     high = int(0.174 * df.shape[0]+0.5)+1
     fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
     ax = fig.add_subplot(111, frame_on=False) 
@@ -28,7 +28,7 @@ def GetDataByGaiNian(dbConnection,gainian,date):
     sql2 = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{date}' and (B.`所属概念` like '%{gainian}%'  OR B.`所属概念` like '%{gainian}%' ) order by `PB` DESC;'''
     sql3 = f'''select * from stock.stockbasicinfo where `所属概念` like "%{gainian}%" ;'''
 
-    fodler = f'/Volumes/Data/复盘/股票/{date}/'
+    fodler = f'/home/jenkins/复盘/股票/{date}/'
     if os.path.exists(fodler) == False:
         os.makedirs(fodler)
     

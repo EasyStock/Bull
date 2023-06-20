@@ -305,50 +305,37 @@ def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
         else:
             print(f'''{date} data is None''')
 
+def RequestIndexData(dates,dbConnection): #大盘指数数据
+    IndexListParam = {
+        "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+        "queryStringOfToday":"DeviceID=72697ee95ed4399fac9914eba97c8ede3bfddb7c&PhoneOSNew=2&StockIDList=SH000001%2CSZ399001%2CSZ399006%2CSH000688&Token=919d7846d93da295c163371c85cfd81c&UserID=1585460&VerSion=5.9.0.3&a=RefreshStockList&apiv=w32&c=UserSelectStock",
+        "hostOfToday":"apphq.longhuvip.com",
+        #====================
+        "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+        "queryStringOfHistory" :"Day={0}&PhoneOSNew=2&VerSion=5.9.0.3&a=GetZsReal&apiv=w32&c=StockL2History",
+        "hostOfHistory":"apphis.longhuvip.com"
+        }
+    dataMgr = CKaiPanLaDataMgr()
+    all = []
+    for date in dates:
+        print(f"=======start to request 指数 data of: {date}=================")
+        result = dataMgr.RequestData(date,IndexListParam)
+        if result is not None:
+            js =json.loads(result)
+            StockLists = js["StockList"]
+            for item in StockLists:
+                item["date"] = date
+                all.append(item)
+        else:
+            print(f'''{date} data is None''')
+
+    column = ["date","StockID","prod_name","increase_amount","increase_rate","last_px","turnover"]
+    df = pd.DataFrame(all,columns= column)
+    print(df)
+    sqls = DataFrameToSqls_INSERT_OR_IGNORE(df,"`stock`.`kaipanla_index`")
+    for sql in sqls:
+        #print(sql)
+        dbConnection.Execute(sql)
 
 
 
-# class CKaiPanLaVolumnMgr(object):
-#     def __init__(self,dbConnection) -> None:
-#         self.dbConnection = dbConnection
-
-#     def RequestDataToday(self):
-#         url = "https://apphq.longhuvip.com/w1/api/index.php"
-#         queryString = "PhoneOSNew=2&Type=0&VerSion=5.7.0.15&a=MarketCapacity&apiv=w32&c=HomeDingPan"
-#         host  = 'apphq.longhuvip.com'
-#         api = CkaiPanLaApi(url,queryString,host)
-#         data = api.RequstData()
-#         return data
-
-
-#     def RequestHistoryData(self,date):
-#         url = "https://apphis.longhuvip.com/w1/api/index.php"
-#         queryString = f'''Date={date}&PhoneOSNew=2&Type=0&VerSion=5.9.0.3&a=MarketCapacity&apiv=w32&c=HisHomeDingPan'''
-#         host  = 'apphis.longhuvip.com'
-#         api = CkaiPanLaApi(url,queryString,host)
-#         data = api.RequstData()
-#         return data
-
-
-#     def RequestData(self,date):
-#         today = datetime.date.today()
-#         data = None
-#         if str(today) == str(date):
-#             data = self.RequestDataToday()
-#         else:
-#             data = self.RequestHistoryData(date)
-
-#         print(f"=======start to request {date}=================")
-#         js =json.loads(data)
-#         last = js['info']['last']
-#         s_zrcs = js['info']['s_zrcs']
-#         trends = str(js['info']['trends']).replace("'","\"")
-#         sql = f'''INSERT IGNORE INTO `stock`.`kaipanla_volumn` (`date`, `volumn`, `s_zrcs`, `trends`) VALUES ('{date}', '{last}', '{s_zrcs}', '{trends}');'''
-#         #print(sql)
-#         self.dbConnection.Execute(sql)
-
-#     def RequestDatabyDates(self,dates):
-#         for date in dates:
-#             self.RequestData(date)
-
-#=========================================================================================#

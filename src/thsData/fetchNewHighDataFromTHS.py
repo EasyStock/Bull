@@ -44,7 +44,7 @@ class CNewHighDataFromTHS(object):
         
         self.ParserGaiNian()
         logger.info(f'{self.dataFrame}')
-        rootFolder = f"/Volumes/Data/复盘/股票/{self.date}/"
+        rootFolder = f"/home/jenkins/复盘/股票/{self.date}/"
         if os.path.exists(rootFolder) == False:
             os.makedirs(rootFolder)
 
@@ -56,7 +56,7 @@ class CNewHighDataFromTHS(object):
     def ConvertDataFrameToJPG(self, df,fullPath):
         from pandas.plotting import table
         import matplotlib.pyplot as plt
-        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+        plt.rcParams["font.sans-serif"] = ["SimHei"]#显示中文字体
         high = int(0.174 * df.shape[0]+0.5)+1
         fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
         ax = fig.add_subplot(111, frame_on=False) 

@@ -1,4 +1,4 @@
-from kaipanla.kaipanlaDataMgr import RequestVolumnDataByDates,RequestZhangTingDataByDates,RequestZhaBanDataByDates,RequestDieTingDataByDates,RequestZhiRanZhangTingDataByDates
+from kaipanla.kaipanlaDataMgr import RequestVolumnDataByDates,RequestZhangTingDataByDates,RequestZhaBanDataByDates,RequestDieTingDataByDates,RequestZhiRanZhangTingDataByDates,RequestIndexData
 from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 import urllib3
@@ -21,6 +21,10 @@ def RequestKaiPanLaDieTingData(dbConnection,tradingDays,lastN = 3):
 
 def RequestKaiPanLaZhiRanZhangTingData(dbConnection,tradingDays,lastN = 3):
     RequestZhiRanZhangTingDataByDates(tradingDays,dbConnection)
+
+
+def RequestKaiPanLaIndexData(dbConnection,tradingDays,lastN = 3):
+    RequestIndexData(tradingDays,dbConnection)
 
 def MergeDataTo(dbConnection,tradingDays):
     lastDay = tradingDays[-1]
@@ -59,7 +63,15 @@ def OneKeyKaiPanLa():
     RequestKaiPanLaZhaBanData(dbConnection,tradingDays,lastN)
     RequestKaiPanLaDieTingData(dbConnection,tradingDays,lastN)
     RequestKaiPanLaZhiRanZhangTingData(dbConnection,tradingDays,lastN)
+    RequestKaiPanLaIndexData(dbConnection,tradingDays,lastN)
     MergeDataTo(dbConnection,tradingDays)
+
+
+def Test():
+    lastN = 1000
+    dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,lastN)
+    RequestIndexData(tradingDays,dbConnection)
 
 if __name__ == "__main__":
     OneKeyKaiPanLa()

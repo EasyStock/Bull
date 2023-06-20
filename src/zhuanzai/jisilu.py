@@ -65,8 +65,8 @@ class CJiSiLu(object):
         }
         url='https://www.jisilu.cn/account/login/'
         response = requests.request("GET",url,headers=head)
-        self.logger.info(response.status_code)
-        self.logger.info(response.text)
+        # self.logger.info(response.status_code)
+        # self.logger.info(response.text)
         self.logger.info(f'==============end:{datetime.datetime.now()}==============================')
         
     def jisilu(self):
@@ -113,7 +113,10 @@ class CJiSiLu(object):
             #newDf['流通市值小于50亿'] = (newDf['流通市值（亿元)']<=50)
             #newDf['剩余规模<=3'] = (newDf['剩余规模']<=3)
             today = datetime.date.today()
-            fName = f"/Volumes/Data/复盘/可转债/每日原始数据/{today}.xlsx"
+            folder = f"/home/jenkins/复盘/可转债/{today}/"
+            if os.path.exists(folder) == False:
+                os.makedirs(folder)
+            fName = f"/home/jenkins/复盘/可转债/{today}/每日原始数据_{today}.xlsx"
             newDf.to_excel(fName,index=False)
             newDf = newDf[newDf['现价']<=125]
             newDf = newDf[newDf['PB']>=1.2]
@@ -134,7 +137,7 @@ class CJiSiLu(object):
     def ConvertDataFrameToJPG(self,df,fullPath):
         from pandas.plotting import table
         import matplotlib.pyplot as plt
-        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']#显示中文字体
+        plt.rcParams["font.sans-serif"] = ["SimHei"]#显示中文字体
         high = int(0.174 * df.shape[0]+0.5) +1
         fig = plt.figure(figsize=(3, high), dpi=400)#dpi表示清晰度
         ax = fig.add_subplot(111, frame_on=False) 
@@ -155,7 +158,7 @@ class CJiSiLu(object):
         
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
 
-        folderRoot= f'''/Volumes/Data/复盘/可转债/{today}/'''
+        folderRoot= f'''/home/jenkins/复盘/可转债/{today}/'''
         if os.path.exists(folderRoot) == False:
             os.makedirs(folderRoot)
 
@@ -188,7 +191,7 @@ class CJiSiLu(object):
         sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{today}') order by `PB` DESC;"
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
-        name = f'{folderRoot}/{today}_变化量.xlsx'
+        name = f'{folderRoot}{today}_变化量.xlsx'
         with pd.ExcelWriter(name,engine='openpyxl',mode='w+') as excelWriter:
             newDf1.to_excel(excelWriter,"今日增加",index=False)
             newDf2.to_excel(excelWriter,"今日减少",index=False)
