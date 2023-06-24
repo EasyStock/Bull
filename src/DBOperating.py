@@ -8,17 +8,17 @@ def GetTradingDateLastN(dbConnection,N):
     today = datetime.date.today()
     end = today.strftime("%Y-%m-%d")
     sql = f"SELECT `日期` FROM stock.treadingDay where `开市` =1 and `交易所`='SSE' and `日期`<='{end}'"
-    print(sql)
+    #print(sql)
     res,_ = dbConnection.Query(sql)
     results = [r[0] for r in res]
     return results[-N:]
 
 def GetZhangTingData(dbConnection,date):
     sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
-    print(df)
+    #print(df)
     return df
 
 def GetZhangTingDataBy(dbConnection,date,reasons, gaiNians):
@@ -45,7 +45,7 @@ def GetZhangTingDataBy(dbConnection,date,reasons, gaiNians):
         elif gai != "":
             sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
             
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     return df
@@ -74,7 +74,7 @@ def GetRemainZhangTingDataBy(dbConnection,date,reasons, gaiNians):
         elif gai != "":
             sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
         
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     #print(df)
@@ -83,7 +83,7 @@ def GetRemainZhangTingDataBy(dbConnection,date,reasons, gaiNians):
 def Get10CMShouBanZhangTingData(dbConnection,yestoday,today):
     #获取10CM首板涨停
     sql = f"select A.*, B.`股票简称` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码` in (select `股票代码` from `stockZhangting` where `股票代码` REGEXP '^60|^00' and `日期` = '{yestoday}' and `连续涨停天数`=1) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================昨日({yestoday})  10CM首板涨停奖励率========================\n{str(df)}\n {df.shape}"
@@ -159,7 +159,7 @@ def DongNeng(dbConnection,yestoday,today):
     sqlT = f"select count(*) from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`>=2;"
     resultsY, _ = dbConnection.Query(sqlY)
     resultsT, _ = dbConnection.Query(sqlT)
-    print(resultsY,resultsT)
+    #print(resultsY,resultsT)
     if resultsY[0][0] ==0:
         return -1
     else:
@@ -178,7 +178,7 @@ def GetKeZhuanzai(dbConnection,today,gaiNians):
     if gai != "":
         sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and ({gai}) order by `PB` DESC;" 
     
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     return df
@@ -195,14 +195,14 @@ def GetKeZhuanzai_remain(dbConnection,today,gaiNians):
     if gai != "":
         sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and ({gai}) order by `PB` DESC;" 
     
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     return df
 
 def GetTodayMarketingData(dbConnection,today):
     sql = f"select A.*, B.`股票简称`,B.`上市天数` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码`=B.`股票代码` and `日期`= '{today}' and B.`上市天数`>1;"
-    print(sql)
+    #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     return df
@@ -212,7 +212,7 @@ def isTableExist(dbConnection,tableName):
     newName = tableName.replace("`",'')
     names = newName.split('.')
     sql = f''' select * from information_schema.TABLES where TABLE_NAME = "{names[1]}" and TABLE_SCHEMA = "{names[0]}";  '''
-    print(sql)
+    #print(sql)
     results, _ = dbConnection.Query(sql)
     return (len(results) > 0)
 
@@ -233,7 +233,7 @@ def migrateDataFrom(srcConnection,destConnection,tableName,drop = False):
     if isDestTableExist:
         if drop:
             truncateSql = f''' TRUNCATE {tableName}; '''
-            print(truncateSql)
+            #print(truncateSql)
             destConnection.Execute(truncateSql)
             
         querySql = f" select * from {tableName}; "
@@ -241,19 +241,19 @@ def migrateDataFrom(srcConnection,destConnection,tableName,drop = False):
         df = pd.DataFrame(results1,columns=columns1)
         sqls = DataFrameToSqls_INSERT_OR_IGNORE(df,tableName)
         for sql in sqls:
-            print(sql)
+            #print(sql)
             destConnection.Execute(sql)
     else:
         createSql = f'''show create table {tableName};'''
         querySql = f" select * from {tableName}; "
-        print(createSql)
+        #print(createSql)
         results,_ = srcConnection.Query(createSql)
         results1, columns1 = srcConnection.Query(querySql)
         df = pd.DataFrame(results1,columns=columns1)
         sqls = DataFrameToSqls_INSERT_OR_IGNORE(df,tableName)
         destConnection.Execute(results[0][1])
         for sql in sqls:
-            print(sql)
+            #print(sql)
             destConnection.Execute(sql)
         
 

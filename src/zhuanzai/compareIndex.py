@@ -18,7 +18,7 @@ class CCompareWithIndex(object):
         sql = f'''SELECT A.`日期`, A.`转债代码`,A.`转债名称`,A.`正股代码`, A.`正股名称`, A.`现价`,B.`现价` As '昨日价格' FROM stock.kezhuanzhai As A, (SELECT * FROM stock.kezhuanzhai where `日期`= "{yestoday}") AS B where A.`日期`= "{today}" and A.`转债代码` = B.`转债代码`;'''
         result1,columns1 = self.dbConnection.Query(sql)
         newDf1=pd.DataFrame(result1,columns=columns1)
-        print(newDf1)
+        #print(newDf1)
         return newDf1
 
     def GetIndexInfoBySotckID(self,IndexInfo,stockID):
