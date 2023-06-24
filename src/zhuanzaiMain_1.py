@@ -7,6 +7,8 @@ import sys
 
 from zhuanzai.jisilu import CJiSiLu
 from categrate import CATEGRAGTE_KE_ZHUAN_ZAI
+from zhuanzai.compareIndex import CCompareWithIndex,CZhuanzaiSelect
+from DBOperating import GetTradingDateLastN
 
 def GetFromJisiluAndWriteToDB(logger):
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
@@ -14,6 +16,10 @@ def GetFromJisiluAndWriteToDB(logger):
     jisiLu = CJiSiLu(logger,dbConnection)
     jisiLu.GetFromJisiluAndWriteToDB()
     jisiLu.Categrate(CATEGRAGTE_KE_ZHUAN_ZAI)
+
+    tradingDays = GetTradingDateLastN(dbConnection,3)
+    comparer = CCompareWithIndex(dbConnection,logger)
+    comparer.CompareWithIndex_ALL(tradingDays)
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 def AutoDownload():
@@ -22,6 +28,19 @@ def AutoDownload():
         schedule.run_pending()
         time.sleep(1)
 
+
+def compareWithIndexTest(logger):
+    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,1000)
+    # c = CCompareWithIndex(dbConnection,logger)
+    #c.CompareWithIndex("2023-06-21","2023-06-20")
+    #c.CompareWithIndex_ALL(tradingDays)
+
+    select = CZhuanzaiSelect(dbConnection,logger)
+    #select.SelectFrom("2023-06-08","2023-06-19")
+    select.Select("2023-06-08","2023-06-19",tradingDays)
+    logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 if __name__ == "__main__":
     logger = StartToInitLogger("集思录")

@@ -45,13 +45,15 @@ class CMySqlConnection(object):
     def Execute(self,sql_statement):
         if self.db is None:
             print('execule sql failed, db is None.') 
-            return
+            return False
         
         cursor = self.db.cursor()
         try:
             cursor.execute(sql_statement)
             self.db.commit()
+            return True
             #print('execule sql:[%s] successfully!'%(sql_statement))
         except:
             print('execule sql:[%s] failed!'%(sql_statement))
             self.db.rollback()
+            return False

@@ -5,6 +5,7 @@ import datetime
 from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
 from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
 import os
+import sys
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -110,14 +111,25 @@ class CJiSiLu(object):
             newDf.loc[newDf['流通市值（亿元)']<=50, '流通市值小于50亿'] = '小于50亿'
             newDf.loc[newDf['剩余规模']<=3, '剩余规模<=3'] = '剩余规模<=3'
             newDf['PB-溢价率'] = (newDf['PB'] - newDf['溢价率']/100.0)
+            newDf['回售触发价'] =  newDf['回售触发价'].round(2)
+            newDf['提示'] =  newDf['提示'].str.replace('\r\n',"")
             #newDf['流通市值小于50亿'] = (newDf['流通市值（亿元)']<=50)
             #newDf['剩余规模<=3'] = (newDf['剩余规模']<=3)
             today = datetime.date.today()
+
+            df_all = newDf.copy()
+            df_all['日期'] = today
             folder = f"/home/jenkins/复盘/可转债/{today}/"
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
             fName = f"/home/jenkins/复盘/可转债/{today}/每日原始数据_{today}.xlsx"
+            sqls = DataFrameToSqls_REPLACE(df_all,"kezhuanzhai_all")
+            for sql in sqls:
+                if self.dbConnection.Execute(sql) == False:
+                    sys.exit(1)
+
             newDf.to_excel(fName,index=False)
+
             newDf = newDf[newDf['现价']<=125]
             newDf = newDf[newDf['PB']>=1.2]
             newDf = newDf[newDf['有息负债率']>0]
@@ -180,8 +192,9 @@ class CJiSiLu(object):
             df['日期'] = today
             sqls = DataFrameToSqls_REPLACE(df,"kezhuanzhai")
             for sql in sqls:
-                self.logger.info(sql)
-                self.dbConnection.Execute(sql)
+                #self.logger.info(sql)
+                if self.dbConnection.Execute(sql) == False:
+                    sys.exit(1)
         
         lastDay = dates[-2]
         sql1 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{lastDay}') order by `PB` DESC;"
