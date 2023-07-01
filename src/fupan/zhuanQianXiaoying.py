@@ -293,7 +293,9 @@ class CZhuanQianXiaoXing(object):
         zhangTing_yestoday_shouban = self.zhangTing_yestoday[self.zhangTing_yestoday["昨日连续涨停天数"] == 1]
         total_shouban = zhangTing_yestoday_shouban.shape[0]
         hongpan_shouban = zhangTing_yestoday_shouban[zhangTing_yestoday_shouban["涨跌幅"] >0].shape[0]
-        self.dongNeng_shouBanHongPanRatio = 1.0*hongpan_shouban/total_shouban
+        self.dongNeng_shouBanHongPanRatio = 0
+        if total_shouban != 0:
+            self.dongNeng_shouBanHongPanRatio = 1.0*hongpan_shouban/total_shouban
         s1 = f'''昨日{self.yestoday}首板涨停, 今日首板红盘比(>0.6): {hongpan_shouban}/{total_shouban} = {self.dongNeng_shouBanHongPanRatio:.2f}'''
         self.dongNengStr.append(s1)
         if self.dongNeng_shouBanHongPanRatio > 0.6:

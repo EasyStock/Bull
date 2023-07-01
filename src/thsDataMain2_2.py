@@ -13,6 +13,7 @@ from thsData2.fetchDaliangLanbanDataFromTHS2 import CFetchDaliangLanBanDataFromT
 import sys
 
 import logging
+import traceback
 logger = logging.getLogger()
 
 def GetTHS_V():

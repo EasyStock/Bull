@@ -13,7 +13,8 @@ from GetJiTianJiBan_9 import WriteJiTianJiBan
 from FuPanSummary_10 import WriteSummary
 from kaipanLaMain_11 import OneKeyKaiPanLa
 
-if __name__ == "__main__":
+
+def AllInOne():
     logger = StartToInitLogger("AllInOne")
     #GetFromJisiluAndWriteToDB(logger) #获取每日可转债数据
 
@@ -29,8 +30,51 @@ if __name__ == "__main__":
     WriteJiTianJiBan()
     OneKeyKaiPanLa()
     WriteSummary()
-    
 
-    
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    helpStr = f'''
+    0 : AllInOne
+    1 : 可转债
+    2 : 同花顺每日数据
+    3 : 每日复盘1
+    4 : 统计
+    5 : 断板数据
+    6 : 每日复盘2
+    7 : 每日龙虎榜
+    8 : 计算几天几板
+    9 : 开盘啦数据
+    10 : 写复盘总结
+    '''
+    logger = StartToInitLogger("AllInOne")
+    parser.add_argument('-i','--index',default=0,choices=[0,1,2,3,4,5,6,7,8,9,10],type=int, help=helpStr)
+    args = parser.parse_args()
+
+    if args.index == 0:
+        AllInOne()
+    elif args.index == 1:
+        GetFromJisiluAndWriteToDB(logger)
+    elif args.index == 2:
+        oneKeyDailyData(logger)
+    elif args.index == 3:
+        FuPanFun(logger)
+    elif args.index == 4:
+        Statics()
+    elif args.index == 5:
+        GetDuanBanData()
+    elif args.index == 6:
+        FupanDaily()
+    elif args.index == 7:
+        DragonDaily()
+    elif args.index == 8:
+        WriteJiTianJiBan()
+    elif args.index == 9:
+        OneKeyKaiPanLa()
+    elif args.index == 10:
+        WriteSummary()
+    else:
+        pass
     
     
