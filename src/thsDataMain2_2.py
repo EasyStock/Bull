@@ -133,7 +133,7 @@ if __name__ == '__main__':
     try:
         oneKeyDailyData(logger)
     except Exception as e:
-        print(e)
+        traceback.print_stack()
         sys.exit(1)
 
 

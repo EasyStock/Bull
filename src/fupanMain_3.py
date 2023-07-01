@@ -10,6 +10,7 @@ import datetime
 import re
 import sys
 from workspace import workSpaceRoot
+import traceback
 
 class CFuPan(object):
     def __init__(self,logger, dbConnection,lastN=-1) -> None:
@@ -170,7 +171,7 @@ class CFuPan(object):
         index_str = '''`,`'''.join(row)
         value_str = '''","'''.join(str(x) for x in values)
         sql = '''REPLACE INTO `{0}` (`{1}`) VALUES ("{2}");'''.format("fuPan",index_str,value_str)
-        print(sql)
+        self.logger.info(sql)
         self.dbConnection.Execute(sql)
         
     def __str__(self) -> str:
@@ -203,10 +204,6 @@ class CFuPan(object):
         self.countOfDieTing = df[df['是否跌停'] == True].shape[0]
         self.hongPan = df[df["涨跌幅"]>0].shape[0]
         self.lvPan = df[df["涨跌幅"]<0].shape[0]
-        print(df)
-        print(list(df[df['是否ST'] == True]['股票简称']))
-        print(list(df[df['是否涨停'] == True]['股票简称']))
-        print(list(df[df['是否跌停'] == True]['股票简称']))
     
     def _isST(self,name):
         if name.find("ST")!=-1 or  name.find("st")!=-1:
@@ -289,14 +286,12 @@ def Test():
     FuPan.MarketingData()
     FuPan.FuPan()
     FuPan.FormatFuPanSqlAndToDB()
-    print(FuPan)
     NewGaiNian(dbConnection)
 
 
 def NewGaiNian(dbConnection=None):
     sql = "SELECT `所属概念`,`更新日期` FROM stock.stockbasicinfo;"
     datas,columns = dbConnection.Query(sql)
-    #print(datas,columns)
     allGaiNian = []
     date = ""
     for data in datas:
@@ -316,7 +311,6 @@ def NewGaiNian(dbConnection=None):
 
     value_str = ''','''.join(tmp)
     sql = f'''INSERT IGNORE INTO `stock`.`gainian` (`概念名称`,`更新日期`) VALUES {value_str};'''
-    #print(sql)
     dbConnection.Execute(sql)
 
 if __name__ == "__main__":
@@ -324,5 +318,5 @@ if __name__ == "__main__":
     try:
         FuPanFun(logger)
     except Exception as e:
-        print(e)
+        traceback.print_stack()
         sys.exit(1)

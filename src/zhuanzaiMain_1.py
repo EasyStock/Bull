@@ -9,6 +9,7 @@ from zhuanzai.jisilu import CJiSiLu
 from categrate import CATEGRAGTE_KE_ZHUAN_ZAI
 from zhuanzai.compareIndex import CCompareWithIndex,CZhuanzaiSelect
 from DBOperating import GetTradingDateLastN
+import traceback
 
 def GetFromJisiluAndWriteToDB(logger):
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
@@ -47,5 +48,5 @@ if __name__ == "__main__":
     try:
         GetFromJisiluAndWriteToDB(logger)
     except Exception as e:
-        print(e)
+        traceback.print_stack()
         sys.exit(1)
