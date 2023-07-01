@@ -116,7 +116,7 @@ class CJiSiLu(object):
             folder = f"{workSpaceRoot}/复盘/可转债/{self.today}/"
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
-            fName = f"{self.workSpaceRoot}/复盘/可转债/{self.today}/每日原始数据_{self.today}.xlsx"
+            fName = f"{workSpaceRoot}/复盘/可转债/{self.today}/每日原始数据_{self.today}.xlsx"
             sqls = DataFrameToSqls_REPLACE(df_all,"kezhuanzhai_all")
             for sql in sqls:
                 if self.dbConnection.Execute(sql) == False:
