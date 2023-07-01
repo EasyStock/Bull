@@ -2,8 +2,8 @@ import os
 from DBOperating import GetTradingDateLastN,GetZhangTingDataBy,GetZhangTingData,GetRemainZhangTingDataBy
 from mysql.connect2DB import ConnectToDB
 from categrate import CATEGRAGTE
-
 import logging
+from workspace import workSpaceRoot
 logger = logging.getLogger()
 
 class CZhangTing(object):
@@ -112,7 +112,7 @@ def categrateZhangTing(dbConnection):
         
     remain = []
     remain1 = []
-    rootFolder = f'''/home/jenkins/复盘/股票/{date}/'''
+    rootFolder = f'''{workSpaceRoot}复盘/股票/{date}/'''
     if os.path.exists(rootFolder) == False:
         os.makedirs(rootFolder)
 

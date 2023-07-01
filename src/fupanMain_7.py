@@ -5,6 +5,7 @@ from fupan.tradingDate import GetTradingDateLastN
 from fupan.zhuanQianXiaoying import CZhuanQianXiaoXing
 import pandas as pd
 import logging
+from workspace import workSpaceRoot
 logger = logging.getLogger()
 
 def formatSql_1(operator1, operator2, net,descption):
@@ -64,8 +65,7 @@ def PrintSQLs(tradingDays):
 
         f'''\n#=========================================以上是复盘SQL=======================================================\n\n\n\n''',
     ]
-
-    fullName = f'''/home/jenkins/复盘/股票/{tradingDays[-1]}/复盘SQL_{tradingDays[-1]}.sql'''
+    fullName = f'''{workSpaceRoot}/复盘/股票/{tradingDays[-1]}/复盘SQL_{tradingDays[-1]}.sql'''
     with open(fullName,'w+') as f:
         for sql in sqls:
             f.write(sql+'\n')
@@ -87,13 +87,13 @@ def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
     sql = f'''select A.`股票代码`,B.`股票简称`,A.`最大连板天数` from (SELECT `股票代码`,max(`连续涨停天数`) As `最大连板天数` FROM stock.stockzhangting where `日期`> "{tradingDay}" and `连续涨停天数`>=4 group by `股票代码` order by `最大连板天数` DESC) As A, `stockBasicInfo` as B where A.`股票代码`=B.`股票代码`'''
     data, columns = dbConnection.Query(sql)
     df = pd.DataFrame(data,columns=columns)
-    fodler = f'/home/jenkins/复盘/股票/{today}/'
+    fodler = f'{workSpaceRoot}/复盘/股票/{today}/'
     if os.path.exists(fodler) == False:
         os.makedirs(fodler)
     fullPath = f'''{fodler}周期高标_{today}.xlsx'''
     df.to_excel(fullPath,index=False)
 
-    rootDir = f"/home/jenkins/复盘/股票/{today}/"
+    rootDir = f"{workSpaceRoot}复盘/股票/{today}/"
     if os.path.exists(rootDir) == False:
         os.makedirs(rootDir)
 
@@ -109,7 +109,7 @@ def GetFuPanList(dbConnection,tradingDay):
     df = pd.DataFrame(data,columns=columns)
     df["明日预期"] = ""
 
-    rootDir = f"/home/jenkins/复盘/股票/{tradingDay}/"
+    rootDir = f"{workSpaceRoot}复盘/股票/{tradingDay}/"
     if os.path.exists(rootDir) == False:
         os.makedirs(rootDir)
 

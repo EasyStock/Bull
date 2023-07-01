@@ -11,7 +11,7 @@ import logging
 import datetime
 import json
 import os
-
+from workspace import workSpaceRoot
 logger = logging.getLogger()
 
 NEWHIGH_COLUMNS_MAP= {
@@ -44,7 +44,7 @@ class CNewHighDataFromTHS(object):
         
         self.ParserGaiNian()
         logger.info(f'{self.dataFrame}')
-        rootFolder = f"/home/jenkins/复盘/股票/{self.date}/"
+        rootFolder = f"{workSpaceRoot}复盘/股票/{self.date}/"
         if os.path.exists(rootFolder) == False:
             os.makedirs(rootFolder)
 

@@ -4,7 +4,7 @@ from thsData2.fetchDataFromTHS2 import CFetchDataFromTHS_MultiPageMgr,CFetchData
 import datetime
 import logging
 import os
-
+from workspace import workSpaceRoot
 
 NEWHIGH_COLUMNS_MAP= {
     '股票代码' : '^股票代码',
@@ -20,65 +20,6 @@ class CFetchNewHighDataFromTHS2(object):
         self.dataFrame = None
         self.date = date
         self.v = v
-
-    # def RequestNewHighData(self):
-    #     step = 10
-    #     for pageID in range(1,500):
-    #         tmpData = self._RequestNewHighData(pageID,step)
-    #         if self.dataFrame is None:
-    #             self.dataFrame = tmpData
-    #         else:
-    #             self.dataFrame = pd.concat([self.dataFrame,tmpData],ignore_index=True)
-            
-    #         size = tmpData.shape[0]
-    #         if size < step:
-    #             break
-        
-    #     if self.dataFrame.empty:
-    #         return
-
-    #     logger.warning(f"total fetch {pageID} page(s),totalSize = {self.dataFrame.shape[0]}")
-    #     self.dataFrame = self.dataFrame[self.dataFrame['上市天数'].isna().values != True] #删除未上市的
-    #     self.dataFrame['上市天数'] = self.dataFrame['上市天数'].apply(lambda x:int(x)).astype(int)
-
-    #     self.ParserGaiNian()
-
-    #     rootFolder = f"/home/jenkins/复盘/股票/{self.date}/"
-    #     if os.path.exists(rootFolder) == False:
-    #         os.makedirs(rootFolder)
-
-    #     fullPath = f"{rootFolder}新高_{self.date}.jpg"
-    #     jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
-    #     self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    #     logger.info(fullPath)
-
-
-
-    # def _RequestNewHighData(self,page = 1,perPage = 100):
-    #     query = '创历史新高 上市天数大于200 非st 非退市,所属概念'
-    #     Condition = '''[{"chunkedResult":"创历史新高 _&_上市天数大于200 _&_非st _&_非退市,_&_所属概念","opName":"and","opProperty":"","sonSize":8,"relatedSize":0},{"indexName":"股价创历史新高","indexProperties":["nodate 1","交易日期 20220909"],"source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"20220909","nodate":"1"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_是否","domain":"abs_股票领域","uiText":"股价创历史新高","sonSize":0,"queryText":"股价创历史新高","relatedSize":0,"tag":"股价创历史新高"},{"opName":"and","opProperty":"","sonSize":6,"relatedSize":0},{"indexName":"上市天数","indexProperties":["nodate 1","交易日期 20220909","(200"],"source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"20220909","(":"200","nodate":"1"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_整型数值(天)","domain":"abs_股票领域","uiText":"上市天数>200天","sonSize":0,"queryText":"上市天数>200天","relatedSize":0,"tag":"上市天数"},{"opName":"and","opProperty":"","sonSize":4,"relatedSize":0},{"indexName":"股票简称","indexProperties":["不包含st,退"],"source":"new_parser","type":"index","indexPropertiesMap":{"不包含":"st,退"},"reportType":"null","valueType":"_股票简称","domain":"abs_股票领域","uiText":"股票简称不包含st","sonSize":0,"queryText":"股票简称不包含st","relatedSize":0,"tag":"股票简称"},{"opName":"and","opProperty":"","sonSize":2,"relatedSize":0},{"indexName":"股票简称","indexProperties":["不包含st,退"],"source":"new_parser","type":"index","indexPropertiesMap":{"不包含":"st,退"},"reportType":"null","valueType":"_股票简称","domain":"abs_股票领域","uiText":"股票简称不包含退","sonSize":0,"queryText":"股票简称不包含退","relatedSize":0,"tag":"股票简称"},{"indexName":"所属概念","indexProperties":[],"source":"new_parser","type":"index","indexPropertiesMap":{},"reportType":"null","valueType":"_所属概念","domain":"abs_股票领域","uiText":"所属概念","sonSize":0,"queryText":"所属概念","relatedSize":0,"tag":"所属概念"}]'''
-    #     d = datetime.datetime.strptime(str(self.date), "%Y-%m-%d").date()
-    #     newDate = d.strftime("%Y%m%d")
-
-    #     Condition = Condition.replace("20220909",newDate)
-    #     ths = CFetchDataFromTHS2(query,Condition)
-    #     ths.page = page
-    #     ths.perPage = perPage
-    #     ths.dateRange0 = newDate
-    #     ths.dateRange1 = newDate
-    #     ths.iwc_token = "0ac9666116652356504797468"
-    #     logger.warning(query)
-    #     #print(Condition)
-    #     df = ths.RequstData(self.v)
-    #     #print(df)
-    #     map = self.keywordTranslator(df)
-    #     tmpDataFrame = pd.DataFrame()
-    #     for key in map:
-    #         tmpDataFrame[key] = df[map[key]]
-
-    #     logger.error(f"fetch page = {page}, perPage = {perPage}, total = {tmpDataFrame.shape[0]}")
-    #     return tmpDataFrame
-
 
     def RequestNewHighDataEX(self):
             query = '创历史新高 上市天数大于200 非st 非退市,所属概念'
@@ -111,7 +52,7 @@ class CFetchNewHighDataFromTHS2(object):
 
             self.ParserGaiNian()
 
-            rootFolder = f"/home/jenkins/复盘/股票/{self.date}/"
+            rootFolder = f"{workSpaceRoot}复盘/股票/{self.date}/"
             if os.path.exists(rootFolder) == False:
                 os.makedirs(rootFolder)
 
@@ -119,46 +60,6 @@ class CFetchNewHighDataFromTHS2(object):
             jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
             self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
             logger.info(fullPath)
-
-    # def RequestDailyData(self,page = 1,perPage = 100):
-    #         query = '创历史新高 上市天数大于200 非st 非退市,所属概念'
-    #         Condition = '''[{"chunkedResult":"创历史新高 _&_上市天数大于200 _&_非st _&_非退市,_&_所属概念","opName":"and","opProperty":"","sonSize":8,"relatedSize":0},{"indexName":"股价创历史新高","indexProperties":["nodate 1","交易日期 20220909"],"source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"20220909","nodate":"1"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_是否","domain":"abs_股票领域","uiText":"股价创历史新高","sonSize":0,"queryText":"股价创历史新高","relatedSize":0,"tag":"股价创历史新高"},{"opName":"and","opProperty":"","sonSize":6,"relatedSize":0},{"indexName":"上市天数","indexProperties":["nodate 1","交易日期 20220909","(200"],"source":"new_parser","type":"index","indexPropertiesMap":{"交易日期":"20220909","(":"200","nodate":"1"},"reportType":"TRADE_DAILY","dateType":"交易日期","valueType":"_整型数值(天)","domain":"abs_股票领域","uiText":"上市天数>200天","sonSize":0,"queryText":"上市天数>200天","relatedSize":0,"tag":"上市天数"},{"opName":"and","opProperty":"","sonSize":4,"relatedSize":0},{"indexName":"股票简称","indexProperties":["不包含st,退"],"source":"new_parser","type":"index","indexPropertiesMap":{"不包含":"st,退"},"reportType":"null","valueType":"_股票简称","domain":"abs_股票领域","uiText":"股票简称不包含st","sonSize":0,"queryText":"股票简称不包含st","relatedSize":0,"tag":"股票简称"},{"opName":"and","opProperty":"","sonSize":2,"relatedSize":0},{"indexName":"股票简称","indexProperties":["不包含st,退"],"source":"new_parser","type":"index","indexPropertiesMap":{"不包含":"st,退"},"reportType":"null","valueType":"_股票简称","domain":"abs_股票领域","uiText":"股票简称不包含退","sonSize":0,"queryText":"股票简称不包含退","relatedSize":0,"tag":"股票简称"},{"indexName":"所属概念","indexProperties":[],"source":"new_parser","type":"index","indexPropertiesMap":{},"reportType":"null","valueType":"_所属概念","domain":"abs_股票领域","uiText":"所属概念","sonSize":0,"queryText":"所属概念","relatedSize":0,"tag":"所属概念"}]'''
-    #         d = datetime.datetime.strptime(str(self.date), "%Y-%m-%d").date()
-    #         newDate = d.strftime("%Y%m%d")
-
-    #         Condition = Condition.replace("20220909",newDate)
-    #         ths = CFetchDataFromTHS2(query,Condition)
-    #         ths.page = page
-    #         ths.perPage = perPage
-    #         ths.dateRange0 = newDate
-    #         ths.dateRange1 = newDate
-    #         ths.iwc_token = "0ac9666116652356504797468"
-    #         logger.warning(query)
-    #         #print(Condition)
-    #         df = ths.RequstData(self.v)
-    #         #print(df)
-    #         map = self.keywordTranslator(df)
-    #         self.dataFrame = pd.DataFrame()
-    #         for key in map:
-    #             self.dataFrame[key] = df[map[key]]
-    #         if self.dataFrame.empty:
-    #             return
-
-    #         self.dataFrame = self.dataFrame[self.dataFrame['上市天数'].isna().values != True] #删除未上市的
-    #         self.dataFrame['上市天数'] = self.dataFrame['上市天数'].apply(lambda x:int(x)).astype(int)
-
-
-    #         self.ParserGaiNian()
-
-    #         rootFolder = f"/home/jenkins/复盘/股票/{self.date}/"
-    #         if os.path.exists(rootFolder) == False:
-    #             os.makedirs(rootFolder)
-
-    #         fullPath = f"{rootFolder}新高_{self.date}.jpg"
-    #         jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
-    #         self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    #         logger.info(fullPath)
-
 
     def ConvertDataFrameToJPG(self, df,fullPath):
         from pandas.plotting import table

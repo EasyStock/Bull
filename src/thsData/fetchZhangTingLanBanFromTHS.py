@@ -6,7 +6,7 @@ import time
 import datetime
 import logging
 import os
-
+from workspace import workSpaceRoot
 logger = logging.getLogger()
 
 ZHANGTING_COLUMNS_MAP= {
@@ -52,7 +52,7 @@ class CFetchZhangTingLanBanFromTHS(object):
         logger.info(self.date)
         logger.info(f'{self.dataFrame.columns}')
         logger.info(f'{self.dataFrame.shape}')
-        folder = f'/home/jenkins/复盘/股票/{self.date}/'
+        folder = f'{workSpaceRoot}复盘/股票/{self.date}/'
         if os.path.exists(folder) == False:
             os.makedirs(folder)
 

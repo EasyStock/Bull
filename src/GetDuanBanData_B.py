@@ -2,9 +2,12 @@ from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 import pandas as pd
 import os
-
+from workspace import workSpaceRoot
 
 def ConvertDataFrameToJPG(df,fullPath):
+    if df.empty:
+        print(fullPath, "ConvertDataFrameToJPG, DataFrame is empty")
+        return
     from pandas.plotting import table
     import matplotlib.pyplot as plt
     plt.rcParams["font.sans-serif"] = ["SimHei"]#显示中文字体
@@ -26,7 +29,7 @@ def _getDataBySql(dbConnection,sql):
 def GetData_duanban(dbConnection,yesteday,today):
     sql = f'''select * from stock.stockzhangting where `日期` = "{yesteday}"  and `股票代码` not in (SELECT `股票代码` FROM stock.stockzhangting where `日期` = "{today}") order by `连续涨停天数` DESC, `首次涨停时间` ASC,`最终涨停时间` ASC;'''
 
-    fodler = f'/home/jenkins/复盘/股票/{today}/'
+    fodler = f'{workSpaceRoot}复盘/股票/{today}/'
     if os.path.exists(fodler) == False:
         os.makedirs(fodler)
     

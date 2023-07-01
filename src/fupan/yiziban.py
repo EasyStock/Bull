@@ -1,7 +1,7 @@
 
 import pandas as pd
 import os
-
+from workspace import workSpaceRoot
 def DataFrameToSqls_INSERT_OR_IGNORE(datas,tableName):
     sqls = []
     for _, row in datas.iterrows():
@@ -44,7 +44,7 @@ class CYizhiban(object):
             self.dbConnection.Execute(sql)
             #print(sql)
 
-    def WriteToLocalFile(self,path = "/home/jenkins/复盘/股票/"):
+    def WriteToLocalFile(self,path = "{workSpaceRoot}复盘/股票/"):
         if self.yiziban is None:
             return
 

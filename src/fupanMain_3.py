@@ -1,5 +1,3 @@
-
-import string
 from mysql.connect2DB import ConnectToDB
 from DBOperating import GetTradingDateLastN,Get1LianBan,Get2LianBan,Get3LianBan,Get4AndMoreLianBan,GaoWeiFailed,\
                         Get10CMShouBanZhangTingData,Get20CMShouBanZhangTingData,Get10CMLianBanZhangTingData,\
@@ -10,9 +8,8 @@ import schedule
 import time
 import datetime
 import re
-import requests
-import json
 import sys
+from workspace import workSpaceRoot
 
 class CFuPan(object):
     def __init__(self,logger, dbConnection,lastN=-1) -> None:
@@ -27,7 +24,7 @@ class CFuPan(object):
         self.today = self.tradingDays[lastN]
         self.yestoday = self.tradingDays[lastN-1]
         self.logger = logger
-        self.fuPanFullPath = f'/home/jenkins/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'
+        self.fuPanFullPath = f'{workSpaceRoot}/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'
         self.shiNeng = 0
         self.dongNeng = 0
         self.countOfZhangTing = 0

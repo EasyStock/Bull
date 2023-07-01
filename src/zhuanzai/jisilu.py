@@ -6,6 +6,7 @@ from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
 from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
 import os
 import sys
+from workspace import workSpaceRoot
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -36,15 +37,8 @@ class CJiSiLu(object):
         self.logger = logger
         self.dbConnection = dbConnection
         self.today = None
-        #self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; kbzw_r_uname=%E6%9E%97%E6%9E%97%E5%AD%90; Hm_lvt_164fe01b1433a19b507595a43bf58262=1641813690; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KKor5Ogk9irp5qp0Nmaq8WuqaTbmqiW2rCmnLCdrZSomJiyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6Nncka-YpaehrJepk6KwponMzd3D6MqmrKavj6OX; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1644239925"
-        #self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652352736; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68"
-        #self.cookie = "kbzw__Session=1ciut82djp86l5lcr8asthpgl2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68.; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652426600"
-        #self.cookie = "kbzw__Session=bao8cb79jtucr7dg42iu1h6h14; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRp6WjppWomqqnppuwjMrD3MLp4KKtlKePp68; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1652352736"
-        #self.cookie = "kbz_newcookie=1; kbzw__Session=egt3hsaj2rk5tgq71rbeb0sm15; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734,1653046909; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRqKWjppWplqWnq52Zv9jI19PgpqirmJ6Uqg..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1653046943"
-        #self.cookie = "kbz_newcookie=1; kbzw__Session=egt3hsaj2rk5tgq71rbeb0sm15; Hm_lvt_164fe01b1433a19b507595a43bf58262=1652352734,1653046909; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRqKWjppWplqWnq52Zv9jI19PgpqirmJ6Uqg..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1653391535"
-        #self.cookie = "kbzw__Session=lthgok8o7k6b8tbvlbqpqugqe2; Hm_lvt_164fe01b1433a19b507595a43bf58262=1670488713,1670582921,1670831871,1672049125; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeRr6WjppGekZTM1s_a3uCRq5Supaau; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1672738799"
-        #self.cookie = "kbzw__Session=i7gn48bfsfkvo8tumhk75qg8u3; Hm_lvt_164fe01b1433a19b507595a43bf58262=1676705673; kbz_newcookie=1; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpMy01r6bruPz3tXlzaaXpJGXn8DZxNnP6Ojo0bSMwNDqxuOXwNnEkLDHmc2JqpzWk6vArqCTudHgzdnQ2svE1euRq5SupaaugZisvM3CtaWM48vhxpe-2NvM34qUvN3b6NnckaeSp6WjppGekZTM1s_a3uCRq5Supaau; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1678362188"
         self.cookie = "kbz_newcookie=1; kbzw__Session=9aqo0c4fm6dh30cv9lgck4n1l1; Hm_lvt_164fe01b1433a19b507595a43bf58262=1683199215,1685616733; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpLjH1r6bkqqxqp-qoq-TrYKypMi5v82Mwejv0uXY2JGrj6eXm8XC08ri7eTc4aeXq-TV3OOTxcLTgcPMlcGZnafBp5bWrpyYouDR4N7Mztu34NallqquoauXkIm_wcm2xZiXzt_M3Je63cTb0J2ZuNHr2-THpZKoqqGoj6CPpJnIyt_N6cullqquoauX; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1685616870"
+    
     def request1_login(self):
         self.logger.info(f'==============begin:{datetime.datetime.now()}==============================')
         head = {
@@ -119,10 +113,10 @@ class CJiSiLu(object):
 
             df_all = newDf.copy()
             df_all['日期'] = self.today
-            folder = f"/home/jenkins/复盘/可转债/{self.today}/"
+            folder = f"{workSpaceRoot}/复盘/可转债/{self.today}/"
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
-            fName = f"/home/jenkins/复盘/可转债/{self.today}/每日原始数据_{self.today}.xlsx"
+            fName = f"{self.workSpaceRoot}/复盘/可转债/{self.today}/每日原始数据_{self.today}.xlsx"
             sqls = DataFrameToSqls_REPLACE(df_all,"kezhuanzhai_all")
             for sql in sqls:
                 if self.dbConnection.Execute(sql) == False:
@@ -171,7 +165,7 @@ class CJiSiLu(object):
         
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
 
-        folderRoot= f'''/home/jenkins/复盘/可转债/{self.today}/'''
+        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{self.today}/'''
         if os.path.exists(folderRoot) == False:
             os.makedirs(folderRoot)
 
