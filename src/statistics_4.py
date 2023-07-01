@@ -112,7 +112,7 @@ def categrateZhangTing(dbConnection):
         
     remain = []
     remain1 = []
-    rootFolder = f'''{workSpaceRoot}复盘/股票/{date}/'''
+    rootFolder = f'''{workSpaceRoot}/复盘/股票/{date}/'''
     if os.path.exists(rootFolder) == False:
         os.makedirs(rootFolder)
 

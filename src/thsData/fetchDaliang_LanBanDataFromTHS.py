@@ -48,7 +48,7 @@ class CFetchDaLiangAndLanBanFromTHS(object):
         # logger.info(self.date)
         # logger.info(f'{self.dataFrame.columns}')
         # logger.info(f'{self.dataFrame.shape}')
-        folder = f'{workSpaceRoot}复盘/股票/{self.date}/'
+        folder = f'{workSpaceRoot}/复盘/股票/{self.date}/'
         if os.path.exists(folder) == False:
             os.makedirs(folder)
 

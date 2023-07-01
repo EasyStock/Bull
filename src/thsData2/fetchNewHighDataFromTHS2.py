@@ -52,7 +52,7 @@ class CFetchNewHighDataFromTHS2(object):
 
             self.ParserGaiNian()
 
-            rootFolder = f"{workSpaceRoot}复盘/股票/{self.date}/"
+            rootFolder = f"{workSpaceRoot}/复盘/股票/{self.date}/"
             if os.path.exists(rootFolder) == False:
                 os.makedirs(rootFolder)
 

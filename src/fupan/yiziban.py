@@ -44,7 +44,7 @@ class CYizhiban(object):
             self.dbConnection.Execute(sql)
             #print(sql)
 
-    def WriteToLocalFile(self,path = "{workSpaceRoot}复盘/股票/"):
+    def WriteToLocalFile(self,path = "{workSpaceRoot}/复盘/股票/"):
         if self.yiziban is None:
             return
 

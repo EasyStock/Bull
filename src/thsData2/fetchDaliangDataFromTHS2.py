@@ -61,7 +61,7 @@ class CFetchDaliangDataFromTHS2(object):
             for key in map:
                 self.dataFrame[key] = df[map[key]]
 
-            folder = f'{workSpaceRoot}复盘/股票/{self.dates[-1]}/'
+            folder = f'{workSpaceRoot}/复盘/股票/{self.dates[-1]}/'
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 

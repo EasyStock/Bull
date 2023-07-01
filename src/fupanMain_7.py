@@ -93,7 +93,7 @@ def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
     fullPath = f'''{fodler}周期高标_{today}.xlsx'''
     df.to_excel(fullPath,index=False)
 
-    rootDir = f"{workSpaceRoot}复盘/股票/{today}/"
+    rootDir = f"{workSpaceRoot}/复盘/股票/{today}/"
     if os.path.exists(rootDir) == False:
         os.makedirs(rootDir)
 
@@ -109,7 +109,7 @@ def GetFuPanList(dbConnection,tradingDay):
     df = pd.DataFrame(data,columns=columns)
     df["明日预期"] = ""
 
-    rootDir = f"{workSpaceRoot}复盘/股票/{tradingDay}/"
+    rootDir = f"{workSpaceRoot}/复盘/股票/{tradingDay}/"
     if os.path.exists(rootDir) == False:
         os.makedirs(rootDir)
 

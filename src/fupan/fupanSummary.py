@@ -1155,7 +1155,7 @@ def Summary(dbConnection,tradingDays):
     #print(newDf)
     newDf.to_csv("/tmp/AAA.CSV",index=False)
     htmlStr = FormatToHTML(newDf,tradingDays)
-    fileName = f'''{workSpaceRoot}复盘/每日复盘笔记/复盘摘要_{lastDay}.htm'''
+    fileName = f'''{workSpaceRoot}/复盘/每日复盘笔记/复盘摘要_{lastDay}.htm'''
     with open(fileName,"w+") as f:
         f.write(htmlStr)
         print("写入摘要:" + fileName + "  成功！！")

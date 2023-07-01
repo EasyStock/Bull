@@ -29,7 +29,7 @@ def _getDataBySql(dbConnection,sql):
 def GetData_duanban(dbConnection,yesteday,today):
     sql = f'''select * from stock.stockzhangting where `日期` = "{yesteday}"  and `股票代码` not in (SELECT `股票代码` FROM stock.stockzhangting where `日期` = "{today}") order by `连续涨停天数` DESC, `首次涨停时间` ASC,`最终涨停时间` ASC;'''
 
-    fodler = f'{workSpaceRoot}复盘/股票/{today}/'
+    fodler = f'{workSpaceRoot}/复盘/股票/{today}/'
     if os.path.exists(fodler) == False:
         os.makedirs(fodler)
     

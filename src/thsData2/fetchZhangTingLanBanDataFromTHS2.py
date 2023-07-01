@@ -46,7 +46,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
 
             self.dataFrame = tmpDataFrame
            
-            folder = f'{workSpaceRoot}复盘/股票/{self.date}/'
+            folder = f'{workSpaceRoot}/复盘/股票/{self.date}/'
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 
