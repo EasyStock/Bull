@@ -36,7 +36,7 @@ def GetData_duanban(dbConnection,yesteday,today):
     fileName1 = f'''断板_{today}'''
 
     df = _getDataBySql(dbConnection,sql)
-    print(df)
+    #print(df)
     DataFrameToJPG(df,["股票代码","股票简称"],fodler,fileName1)
 
 

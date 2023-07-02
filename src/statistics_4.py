@@ -72,7 +72,7 @@ def AnalysisZhangTingReason(dbConnection):
     result = GetTradingDateLastN(dbConnection,15)
     date = result[-1]
     df = GetZhangTingData(dbConnection,date)
-    print(df)
+    #print(df)
     reasons = []
     for index, row in df.iterrows():
         reason = row["涨停原因类别"]
@@ -88,7 +88,8 @@ def AnalysisZhangTingReason(dbConnection):
     
     ret = sorted(reasonResults.items(), key=lambda d: d[1],reverse=True)
     for r in ret:
-        print(r)
+        if r[1] >=2:
+            print(r)
 
 
 

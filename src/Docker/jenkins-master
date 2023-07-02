@@ -1,7 +1,16 @@
 docker network create my-net
 docker run -d --network my-net --privileged=true -v /Volumes/Data/Docker/jenkins-master:/var/jenkins_home -p 50000:50000 -p 8080:8080 --name jenkins-master jenkins/jenkins
 
+docker run -d --network my-net --privileged=true -v /Volumes/Data/Docker/jenkins-master:/var/jenkins_home -p 50000:50000 -p 8080:8080 --name jenkins-master1 registry.cn-hangzhou.aliyuncs.com/jianpinh/jenkins-master
+
 
 #agent 
 docker run -it --network my-net --privileged=true -v /Volumes/Data/复盘:/Volumes/Data/复盘 -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkins-agent1 jenkins_agent:1.0 /bin/bash
 
+docker run -d  --network my-net --privileged=true -v /Volumes/Data/复盘:/Volumes/Data/复盘 -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name agent1_jenkins jenkins_agent:2.0 /bin/bash -c "wget http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/agent1/jenkins-agent.jnlp -secret 7fbf92a0aa25dff9ef15b4ac384e5dc075ab98e0a1cbafd19645cc651061118f -workDir /home/jenkins/WorkSpace/"
+
+
+docker run -d  --network my-net --privileged=true -v /Volumes/Data/复盘:/Volumes/Data/复盘 -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name agent2_jenkins jenkins_agent:2.0 /bin/bash -c "wget http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/agent2/jenkins-agent.jnlp -secret bba0e45855bb94d1d0645f93af80d89985444dbfc55523f4ed4ad0bc4474b192 -workDir /home/jenkins/WorkSpace/"
+
+
+docker run -d  --network my-net --privileged=true -v /Volumes/Data/复盘:/Volumes/Data/复盘 -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name agent3_jenkins jenkins_agent:2.0 /bin/bash -c "wget http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/agent3/jenkins-agent.jnlp -secret 5e79bba59b43c5ac4423f99b38dd02e689703de859d8012d1394ccf17c3c7890 -workDir /home/jenkins/WorkSpace/"
