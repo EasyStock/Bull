@@ -312,7 +312,9 @@ class CZhuanQianXiaoXing(object):
         shouban_count2 = self.gaoKaiDiZou[self.gaoKaiDiZou["昨日连续涨停天数"] == 1 ].shape[0]
         #print(self.gaoKaiDiZou[self.gaoKaiDiZou["昨日连续涨停天数"] == 1 ])
 
-        self.dongNeng_shouBanDaMianRatio = 1.0* (shouban_count1+shouban_count2) / total_shouban 
+        self.dongNeng_shouBanDaMianRatio  = 0
+        if total_shouban !=0:
+            self.dongNeng_shouBanDaMianRatio = 1.0* (shouban_count1+shouban_count2) / total_shouban 
         s2 = f"昨日{self.yestoday}首板涨停, 今日跌幅大于5%共:{shouban_count1}只, 高开低走的共:{shouban_count2}, 今日首板大面比(<0.3): {shouban_count1+shouban_count2}/{total_shouban} = {self.dongNeng_shouBanDaMianRatio:.2f}"
         self.dongNengStr.append(s2)
         if self.dongNeng_shouBanDaMianRatio < 0.3:
@@ -325,7 +327,9 @@ class CZhuanQianXiaoXing(object):
         dianban = self.zhangTing_yestoday[self.zhangTing_yestoday["昨日连续涨停天数"] >= 2]
         lianban_hongpan = dianban[dianban['涨跌幅'] > 0].shape[0]
         lianban_total = dianban.shape[0]
-        self.dongNeng_lianBanHongPanRatio = 1.0*lianban_hongpan/lianban_total
+        self.dongNeng_lianBanHongPanRatio = 0
+        if lianban_total != 0:
+            self.dongNeng_lianBanHongPanRatio = 1.0*lianban_hongpan/lianban_total
         s3 = f'''昨日{self.yestoday}连板涨停, 今日连板红盘比(>0.6): {lianban_hongpan}/{lianban_total} = {self.dongNeng_lianBanHongPanRatio:.2f}'''
         self.dongNengStr.append(s3)
 
@@ -338,7 +342,9 @@ class CZhuanQianXiaoXing(object):
         #4. 连板比例: 今日连板总数/昨日连板总数
         zhangTing_Today_lianban = self.zhangTing_today[self.zhangTing_today["连续涨停天数"] >= 2]
         count_lianban_today = zhangTing_Today_lianban.shape[0]
-        self.dongNeng_lianBanRatio = count_lianban_today/lianban_total
+        self.dongNeng_lianBanRatio = 0
+        if lianban_total !=0:
+            self.dongNeng_lianBanRatio = count_lianban_today/lianban_total
         s4 = f'''连板比例(>0.6):{count_lianban_today}/{lianban_total} = {self.dongNeng_lianBanRatio:.2f}'''
         self.dongNengStr.append(s4)
         if self.dongNeng_lianBanRatio >0.6:
@@ -349,7 +355,9 @@ class CZhuanQianXiaoXing(object):
         #5. 计算昨日连板大面比
         lianban_count1 = dianban[dianban["涨跌幅"] < -5].shape[0]
         lianban_count2 = self.gaoKaiDiZou[self.gaoKaiDiZou["昨日连续涨停天数"] >= 2].shape[0]
-        self.dongNeng_lianBanDaMianRatio = 1.0* (lianban_count1+lianban_count2) / lianban_total 
+        self.dongNeng_lianBanDaMianRatio = 0
+        if lianban_total !=0:
+            self.dongNeng_lianBanDaMianRatio = 1.0* (lianban_count1+lianban_count2) / lianban_total 
         s5 = f"昨日{self.yestoday}连板涨停, 今日跌幅大于5%共:{lianban_count1}只, 高开低走的共:{lianban_count2}, 今日连板大面比(<0.3): {lianban_count1+lianban_count2}/{lianban_total} = {self.dongNeng_lianBanDaMianRatio:.2f}"
         self.dongNengStr.append(s5)
         if self.dongNeng_lianBanDaMianRatio < 0.3:
