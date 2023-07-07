@@ -71,15 +71,6 @@ class CFupanSummary(object):
             font-family:"宋体";
             mso-generic-font-family:auto;
             mso-font-charset:134;}
-        .font5
-            {color:#000000;
-            font-size:14.0pt;
-            font-weight:400;
-            font-style:normal;
-            text-decoration:none;
-            font-family:"宋体";
-            mso-generic-font-family:auto;
-            mso-font-charset:134;}
         .font29
             {color:#FF0000;
             font-size:14.0pt;
@@ -106,26 +97,6 @@ class CFupanSummary(object):
             mso-protection:locked visible;
             mso-style-name:"常规";
             mso-style-id:0;}
-        td
-            {mso-style-parent:style0;
-            padding-top:1px;
-            padding-right:1px;
-            padding-left:1px;
-            mso-ignore:padding;
-            mso-number-format:"General";
-            text-align:general;
-            vertical-align:middle;
-            white-space:nowrap;
-            mso-rotate:0;
-            color:#000000;
-            font-size:11.0pt;
-            font-weight:400;
-            font-style:normal;
-            text-decoration:none;
-            font-family:宋体;
-            mso-font-charset:134;
-            border:none;
-            mso-protection:locked visible;}
         .xl65
             {mso-style-parent:style0;
             text-align:center;
@@ -173,26 +144,10 @@ class CFupanSummary(object):
             font-size:14.0pt;
             mso-font-charset:134;
             border:.5pt solid windowtext;}
-        .xl73
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:18.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
         .xl74
             {mso-style-parent:style0;
             text-align:left;
             font-size:18.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl75
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
             mso-font-charset:134;
             border-left:.5pt solid windowtext;
             border-right:.5pt solid windowtext;
@@ -217,32 +172,6 @@ class CFupanSummary(object):
             background:#FFC000;
             mso-font-charset:134;
             border:.5pt solid windowtext;}
-        .xl79
-            {mso-style-parent:style0;
-            mso-number-format:"yyyy/m/d";
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl80
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl81
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;}
         .xl82
             {mso-style-parent:style0;
             text-align:left;
@@ -252,122 +181,7 @@ class CFupanSummary(object):
             border-left:.5pt solid windowtext;
             border-top:.5pt solid windowtext;
             border-right:.5pt solid windowtext;}
-        .xl83
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:18.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl84
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:18.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl85
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl86
-            {mso-style-parent:style0;
-            mso-number-format:"yyyy/m/d";
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl87
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            color:windowtext;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl88
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
         .xl89
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl90
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:18.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl91
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:18.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl92
-            {mso-style-parent:style0;
-            mso-number-format:"yyyy/m/d";
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl93
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl94
-            {mso-style-parent:style0;
-            mso-number-format:"yyyy/m/d";
-            text-align:left;
-            font-size:16.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl95
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:16.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl96
-            {mso-style-parent:style0;
-            mso-number-format:"yyyy/m/d";
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:16.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl97
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:16.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl98
             {mso-style-parent:style0;
             text-align:left;
             mso-pattern:auto none;
@@ -379,15 +193,6 @@ class CFupanSummary(object):
             text-align:left;
             mso-pattern:auto none;
             background:#808080;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl100
-            {mso-style-parent:style0;
-            mso-number-format:"yyyy/m/d";
-            text-align:left;
-            mso-pattern:auto none;
-            background:#BDD7EE;
-            font-size:14.0pt;
             mso-font-charset:134;
             border:.5pt solid windowtext;}
         .xl101
@@ -407,19 +212,19 @@ class CFupanSummary(object):
             border:.5pt solid windowtext;}
         .xl103
             {mso-style-parent:style0;
-            mso-number-format:"0\.00%";
             text-align:left;
             mso-pattern:auto none;
-            background:#FFC000;
-            color:windowtext;
+            background:#BDD7EE;
             font-size:14.0pt;
             mso-font-charset:134;
+            color:#FF0000;
             border:.5pt solid windowtext;}
         .xl104
             {mso-style-parent:style0;
-            mso-number-format:"h:mm:ss";
+            mso-number-format:"0\.00%";
             text-align:left;
             font-size:14.0pt;
+            color:#FF0000;
             mso-font-charset:134;
             border:.5pt solid windowtext;}
         .xl105
@@ -440,233 +245,23 @@ class CFupanSummary(object):
             border:.5pt solid windowtext;}
         .xl107
             {mso-style-parent:style0;
-            mso-number-format:"0\.00%";
+            mso-number-format:"h:mm:ss";
             text-align:left;
             mso-pattern:auto none;
-            background:#FFC000;
-            font-size:16.0pt;
+            background:#BDD7EE;
+            font-size:14.0pt;
+            color:#FF0000;
             mso-font-charset:134;
             border:.5pt solid windowtext;}
         .xl108
             {mso-style-parent:style0;
+            mso-number-format:"0\.00%";
             text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl109
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-top:.5pt solid windowtext;}
-        .xl110
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-font-charset:134;}
-        .xl111
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            color:windowtext;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl112
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl113
-            {mso-style-parent:style0;
-            mso-font-charset:134;
-            border-bottom:.5pt solid windowtext;}
-        .xl114
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
+            font-size:16.0pt;
             color:#FF0000;
-            font-size:16.0pt;
             mso-font-charset:134;
             border:.5pt solid windowtext;}
-        .xl115
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;}
-        .xl116
-            {mso-style-parent:style0;
-            text-align:center;
-            mso-pattern:auto none;
-            background:#FFFF00;
-            font-size:36.0pt;
-            font-weight:700;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl117
-            {mso-style-parent:style0;
-            text-align:left;
-            white-space:normal;
-            color:#00B050;
-            font-size:14.0pt;
-            font-weight:700;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl118
-            {mso-style-parent:style0;
-            text-align:center;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl119
-            {mso-style-parent:style0;
-            text-align:left;
-            vertical-align:top;
-            white-space:normal;
-            color:windowtext;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl120
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl121
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl122
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl123
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl124
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;}
-        .xl125
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-top:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;}
-        .xl126
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-font-charset:134;
-            border-right:.5pt solid windowtext;}
-        .xl127
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-right:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl128
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl129
-            {mso-style-parent:style0;
-            mso-font-charset:134;
-            border-right:.5pt solid windowtext;}
-        .xl130
-            {mso-style-parent:style0;
-            mso-font-charset:134;
-            border-right:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl131
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:16.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl132
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#FFC000;
-            font-size:16.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl133
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl134
-            {mso-style-parent:style0;
-            text-align:center;
-            mso-font-charset:134;}
-        .xl135
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-pattern:auto none;
-            background:#808080;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;}
-        .xl136
-            {mso-style-parent:style0;
-            text-align:left;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
-        .xl137
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl138
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border-left:.5pt solid windowtext;
-            border-top:.5pt solid windowtext;
-            border-bottom:.5pt solid windowtext;}
-        .xl139
-            {mso-style-parent:style0;
-            text-align:left;
-            font-size:14.0pt;
-            mso-font-charset:134;
-            border:.5pt solid windowtext;}
+
         -->  </style>
         <!--[if gte mso 9]>
         <xml>
@@ -1374,40 +969,50 @@ class CFupanSummary(object):
             v = row["流通市值"]
             reason = row["涨停原因类别"]
             if index % 2 == 0:
+                style1 = "xl102"
+                style2 = "xl106"
+                if re.match('^30.*',stockID) is not None:
+                    style1 = "xl104"
+                    style2 = "xl108"
                 stringOfRow = f'''
                     <tr height="20.40" style='height:20.40pt;'>
-                        <td class="xl102" x:num="45084">{date}</td>
-                        <td class="xl102" x:str>{stockID}</td>
-                        <td class="xl102" x:str>{stcokName}</td>
-                        <td class="xl102" x:num>{days}</td>
-                        <td class="xl106" x:num="0.39618055555555554">{time1}</td>
-                        <td class="xl106" x:num="0.39618055555555554">{time2}</td>
-                        <td class="xl102" x:str>{banshu}</td>
-                        <td class="xl102" x:str>{e}</td>
-                        <td class="xl102" x:str>{e4}</td>
-                        <td class="xl102" x:str>{e8}</td>
-                        <td class="xl102" x:str>{e10}</td>
-                        <td class="xl102" x:str>{v}</td>
-                        <td class="xl102" colspan="6" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str>{reason}</td>
+                        <td class="{style1}" x:num="45084">{date}</td>
+                        <td class="{style1}" x:str>{stockID}</td>
+                        <td class="{style1}" x:str>{stcokName}</td>
+                        <td class="{style1}" x:num>{days}</td>
+                        <td class="{style2}" x:num="0.39618055555555554">{time1}</td>
+                        <td class="{style2}" x:num="0.39618055555555554">{time2}</td>
+                        <td class="{style1}" x:str>{banshu}</td>
+                        <td class="{style1}" x:str>{e}</td>
+                        <td class="{style1}" x:str>{e4}</td>
+                        <td class="{style1}" x:str>{e8}</td>
+                        <td class="{style1}" x:str>{e10}</td>
+                        <td class="{style1}" x:str>{v}</td>
+                        <td class="{style1}" colspan="6" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str>{reason}</td>
                         <td colspan="233" style='mso-ignore:colspan;'></td>
                     </tr>
                 '''
             else:
+                style1 = "xl101"
+                style2 = "xl105"
+                if re.match('^30.*',stockID) is not None:
+                    style1 = "xl103"
+                    style2 = "xl107"
                 stringOfRow = f'''
                     <tr height="20.40" style='height:20.40pt;'>
-                        <td class="xl101" x:num="45084">{date}</td>
-                        <td class="xl101" x:str>{stockID}</td>
-                        <td class="xl101" x:str>{stcokName}</td>
-                        <td class="xl101" x:num>{days}</td>
-                        <td class="xl105" x:num="0.39618055555555554">{time1}</td>
-                        <td class="xl105" x:num="0.39618055555555554">{time2}</td>
-                        <td class="xl101" x:str>{banshu}</td>
-                        <td class="xl101" x:str>{e}</td>
-                        <td class="xl101" x:str>{e4}</td>
-                        <td class="xl101" x:str>{e8}</td>
-                        <td class="xl101" x:str>{e10}</td>
-                        <td class="xl101" x:str>{v}</td>
-                        <td class="xl101" colspan="6" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str>{reason}</td>
+                        <td class="{style1}" x:num="45084">{date}</td>
+                        <td class="{style1}" x:str>{stockID}</td>
+                        <td class="{style1}" x:str>{stcokName}</td>
+                        <td class="{style1}" x:num>{days}</td>
+                        <td class="{style2}" x:num="0.39618055555555554">{time1}</td>
+                        <td class="{style2}" x:num="0.39618055555555554">{time2}</td>
+                        <td class="{style1}" x:str>{banshu}</td>
+                        <td class="{style1}" x:str>{e}</td>
+                        <td class="{style1}" x:str>{e4}</td>
+                        <td class="{style1}" x:str>{e8}</td>
+                        <td class="{style1}" x:str>{e10}</td>
+                        <td class="{style1}" x:str>{v}</td>
+                        <td class="{style1}" colspan="6" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str>{reason}</td>
                         <td colspan="233" style='mso-ignore:colspan;'></td>
                     </tr>
                 '''
