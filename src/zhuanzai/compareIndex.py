@@ -123,7 +123,16 @@ class CZhuanzaiSelect(object):
         self.zhuanZaiInfo=pd.DataFrame(result1,columns=columns1)
     
 
-    def _formatInfo(self,stockID,flagSum,group):
+    def _formatInfo1(self,stockID,flagSum,group):
+        indexID = list(group["indexID"])[0]
+        info = self.zhuanZaiInfo[self.zhuanZaiInfo['转债代码'] == stockID]
+        stockName = info.iloc[-1]["转债名称"]
+        message =  f'''\n===================[{stockName}({stockID})]=========================
+统计和:                     {flagSum}
+'''
+        return message
+
+    def _formatInfo2(self,stockID,flagSum,group):
         indexID = list(group["indexID"])[0]
         info = self.zhuanZaiInfo[self.zhuanZaiInfo['转债代码'] == stockID]
         indexInfo = self.indexInfo.loc[indexID]
@@ -162,9 +171,14 @@ class CZhuanzaiSelect(object):
         results = self.SelectFrom(start,end)
         for result in results:
             (stockID,flagSum,group) = result
-            message = self._formatInfo(stockID,flagSum,group)
-            self.logger.info(message)
-            input()
-
+            if flagSum > 0:
+                message = self._formatInfo1(stockID,flagSum,group)
+                self.logger.info(message)
+        for result in results:
+            (stockID,flagSum,group) = result
+            if flagSum > 0:
+                message = self._formatInfo2(stockID,flagSum,group)
+                self.logger.info(message)
+                input()
         
 
