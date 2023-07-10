@@ -56,6 +56,23 @@ class CYizhiban(object):
         full = os.path.join(subPath,fileName)
         self.yiziban.to_excel(full)
 
+        JPGfileName = f'''一字板_{self.date}.jpg'''
+        JPGfull = os.path.join(subPath,JPGfileName)
+        df = pd.DataFrame(self.yiziban,columns=("股票代码","股票简称"))
+        self.ConvertDataFrameToJPG(df,JPGfull)
+
+
+    def ConvertDataFrameToJPG(self,df,fullPath):
+        from pandas.plotting import table
+        import matplotlib.pyplot as plt
+        plt.rcParams["font.sans-serif"] = ["SimHei"]#显示中文字体
+        high = int(0.174 * df.shape[0]+0.5) +1
+        fig = plt.figure(figsize=(3, high), dpi=400)#dpi表示清晰度
+        ax = fig.add_subplot(111, frame_on=False) 
+        ax.xaxis.set_visible(False)  # hide the x axis
+        ax.yaxis.set_visible(False)  # hide the y axis
+        table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
+        plt.savefig(fullPath)
 
     def YiZhiBan(self):
         print("CYizhiban.YiZhiBan begin.")

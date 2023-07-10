@@ -644,7 +644,7 @@ class CFupanSummary(object):
 
 
     def ForamtChaoDuan1(self):
-        df = self.markingDatas.tail(5)
+        df = self.markingDatas.tail(10)
         df.reset_index(inplace=True)
         size = df.shape[0] +1
         high = size*20.40
@@ -666,7 +666,7 @@ class CFupanSummary(object):
         </tr>'''
         for index,row in df.iterrows():
             style = 'xl77'
-            if index == 4:
+            if index == size-2:
                 style = 'xl78'
             date = row["日期"]
             ratio10 = row["10CM首板奖励率"]
