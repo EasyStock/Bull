@@ -653,10 +653,10 @@ class CFupanSummary(object):
             <td class="xl67" height="{high}" colspan="2" rowspan="{size}" style='height:{high}.00pt;border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;' x:str>四.超短环境1</td>
             <td class="xl76" x:str>日期</td>
             <td class="xl76" x:str>高度板</td>
-            <td class="xl76" x:str>10CM首板奖励率</td>
-            <td class="xl76" x:str>20CM首板奖励率</td>
-            <td class="xl76" x:str>10CM连板奖励率</td>
-            <td class="xl76" x:str>20CM连板奖励率</td>
+            <td class="xl76" x:str>10CM首板奖励率%</td>
+            <td class="xl76" x:str>20CM首板奖励率%</td>
+            <td class="xl76" x:str>10CM连板奖励率%</td>
+            <td class="xl76" x:str>20CM连板奖励率%</td>
             <td class="xl76" x:str>首板个数</td>
             <td class="xl76" x:str>2连板个数</td>
             <td class="xl76" x:str>3连板个数</td>

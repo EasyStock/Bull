@@ -40,13 +40,15 @@ def compareWithIndexTest(logger):
 
     select = CZhuanzaiSelect(dbConnection,logger)
     #select.SelectFrom("2023-06-08","2023-06-19")
-    select.Select("2023-06-08","2023-06-19",tradingDays)
+    select.Select("2023-07-04","2023-07-06",tradingDays)
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 if __name__ == "__main__":
     logger = StartToInitLogger("集思录")
+    
+    #compareWithIndexTest(logger)
     try:
         GetFromJisiluAndWriteToDB(logger)
     except Exception as e:
-        traceback.print_stack()
+        print(e)
         sys.exit(1)

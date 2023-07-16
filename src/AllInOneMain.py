@@ -12,6 +12,7 @@ from ColoredLog import StartToInitLogger
 from GetJiTianJiBan_9 import WriteJiTianJiBan
 from FuPanSummary_10 import WriteSummary
 from kaipanLaMain_11 import OneKeyKaiPanLa
+from ifindMain import refreshAccessToken,FengDan
 
 
 def AllInOne():
@@ -29,6 +30,8 @@ def AllInOne():
     DragonDaily()
     WriteJiTianJiBan()
     OneKeyKaiPanLa()
+    refreshAccessToken()
+    FengDan()
     WriteSummary()
 
 
@@ -47,6 +50,8 @@ if __name__ == "__main__":
     8 : 计算几天几板
     9 : 开盘啦数据
     10 : 写复盘总结
+    11 : 刷新Token
+    12 : 写一字板封单量
     '''
     logger = StartToInitLogger("AllInOne")
     parser.add_argument('-i','--index',default=0,choices=[0,1,2,3,4,5,6,7,8,9,10],type=int, help=helpStr)
@@ -74,6 +79,10 @@ if __name__ == "__main__":
         OneKeyKaiPanLa()
     elif args.index == 10:
         WriteSummary()
+    elif args.index == 11:
+        refreshAccessToken()
+    elif args.index == 12:
+        FengDan()
     else:
         pass
     
