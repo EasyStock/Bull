@@ -54,7 +54,7 @@ if __name__ == "__main__":
     12 : 写一字板封单量
     '''
     logger = StartToInitLogger("AllInOne")
-    parser.add_argument('-i','--index',default=0,choices=[0,1,2,3,4,5,6,7,8,9,10],type=int, help=helpStr)
+    parser.add_argument('-i','--index',default=0,choices=[0,1,2,3,4,5,6,7,8,9,10,11,12],type=int, help=helpStr)
     args = parser.parse_args()
 
     if args.index == 0:
