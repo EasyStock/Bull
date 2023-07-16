@@ -20,5 +20,16 @@ def FengDan():
     fengdan.ProcessFengDanLastN(tradingDays)
 
 if __name__ == "__main__":
-    #refreshAccessToken()
-    FengDan()
+    import argparse
+    parser = argparse.ArgumentParser()
+    helpStr = f'''
+    0 : 刷新token 
+    1 : 写入封单数据
+    '''
+    parser.add_argument('-i','--index',default=0,choices=[0,1],type=int, help=helpStr)
+    args = parser.parse_args()
+
+    if args.index == 0:
+        refreshAccessToken()
+    elif args.index == 1:
+        FengDan()
