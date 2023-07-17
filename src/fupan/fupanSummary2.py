@@ -1106,14 +1106,15 @@ class CFupanSummary(object):
         shouban = self.FormatShouBanGu()
         tail = self.ForamtTail()
 
-        Summary = f'''{head}{title}{warning}{summaryOfToday}{yizi}{marking}{chaoduan1}{chaoduan2}{qingxu1}{qingxu2}{redian1}{redian2}{lianban}{shouban}{tail}'''
-        with open(f'''/tmp/{self.today}.htm''',"w+") as f:
+        Summary = f'''{head}{title}{warning}{summaryOfToday}{yizi}{marking}{chaoduan1}{chaoduan2}{qingxu1}{qingxu2}{redian1}{redian2}{lianban}{shouban}{tail}'''    
+        fileName = f'''{workSpaceRoot}/复盘/股票/{self.today}/复盘摘要_{self.today}.htm'''
+        with open(fileName,"w+") as f:
             f.write(Summary)
-        
+            print("写入摘要:" + fileName + "  成功！！")
+
         sqlSummary = Summary.replace('  ',' ').replace('\n','').replace("'","\\'").replace('"','\"')
         sql = f'''REPLACE INTO `stock`.`fupansummary` (`date`, `summary`) VALUES ('{self.today}', '{sqlSummary}');'''
-        # with open(f'''/tmp/{self.today}.sql''',"w+") as f:
-        #     f.write(sql)
+
         self.dbConnection.Execute(sql)
 
         

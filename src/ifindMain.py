@@ -16,7 +16,7 @@ def FengDan():
 
     fengdan = CFengdan(dbConnection,token)
     #fengdan.Query(["000151.SZ"],"2023-06-16")
-    tradingDays = GetTradingDateLastN(dbConnection,30)
+    tradingDays = GetTradingDateLastN(dbConnection,3)
     fengdan.ProcessFengDanLastN(tradingDays)
 
 if __name__ == "__main__":
