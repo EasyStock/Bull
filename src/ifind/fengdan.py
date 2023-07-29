@@ -99,4 +99,4 @@ class CFengdan(object):
             if len(stockIDs) == 0:
                 continue
             self.Query(stockIDs,day)
-            input()
+            #input()

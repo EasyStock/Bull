@@ -20,6 +20,7 @@ def FengDan():
     fengdan.ProcessFengDanLastN(tradingDays)
 
 if __name__ == "__main__":
+    refreshAccessToken()
     import argparse
     parser = argparse.ArgumentParser()
     helpStr = f'''
