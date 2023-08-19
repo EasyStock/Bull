@@ -1118,3 +1118,14 @@ class CFupanSummary(object):
         self.dbConnection.Execute(sql)
 
         
+
+    def GetFuPanLastSummary(self):
+        sql = f'''SELECT summary FROM stock.fupansummary order by date DESC limit 1;'''
+        results, _ = self.dbConnection.Query(sql)
+        summary = results[0][0]
+        path = "/home/jenkins/Summary/"
+        import os
+        if os.path.exists(path) == False:
+            os.makedirs(path)
+        with open(f"{path}summary.html",'w+') as f:
+            f.write(summary)

@@ -318,5 +318,5 @@ if __name__ == "__main__":
     try:
         FuPanFun(logger)
     except Exception as e:
-        traceback.print_stack()
+        
         sys.exit(1)
