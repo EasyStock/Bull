@@ -98,6 +98,8 @@ class CFetchNewHighDataFromTHS2(object):
             stockName = row["股票简称"]
             stockID = row["股票代码"]
             fName = f"{stockID}_{stockName}"
+            if row["所属概念数量"] == 0:
+                continue
             gaiNians = row["所属概念"].split(";")
             for g in gaiNians:
                 if g in exceptions:

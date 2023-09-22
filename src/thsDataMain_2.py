@@ -15,15 +15,12 @@ from urllib.parse import quote
 from thsData.fetchZhangTingLanBanFromTHS import CFetchZhangTingLanBanFromTHS
 from thsData.fetchDaliangDataFromTHS import CFetchDaLiangFromTHS
 from thsData.fetchDaliang_LanBanDataFromTHS import CFetchDaLiangAndLanBanFromTHS
-
+from thsData.fetchNoZhangTingLanBanData import CFetchNoZhangTingData
+from fupan.tradingDate import GetTradingDateLastN
 
 
 ZHANGTING_TABLE_NAME = 'zhangting'
 ZHANGTING_REASON_TABLE_NAME = 'zhangtingreason'
-# cookie ="cid=b699fcc5acb1074f7f421e52773a94171609932410; ComputerID=b699fcc5acb1074f7f421e52773a94171609932410; other_uid=Ths_iwencai_Xuangu_e98244ff8bb1daadaa5ffbd956a40024; WafStatus=0; PHPSESSID=4ac00185ac3cad0742526448795429f4; ta_random_userid=30xnca4on3; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjQxNDYwNTA0Ojo6MTQzMDEzNjkwMDo0MDIyOTY6MDoxY2E5ODM3OGZmMTgzOTE3NDljYTdkNDIzNWEzNzcyZjQ6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=76ee766f86732421e91b32de69f6c352; user_status=0; utk=d7b2d63fb9ab284163fb4f014f6587c1;"
-# cookie ="cid=b699fcc5acb1074f7f421e52773a94171609932410; ComputerID=b699fcc5acb1074f7f421e52773a94171609932410; other_uid=Ths_iwencai_Xuangu_e98244ff8bb1daadaa5ffbd956a40024; WafStatus=0; PHPSESSID=4ac00185ac3cad0742526448795429f4; ta_random_userid=30xnca4on3; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjQxODk5NjkyOjo6MTQzMDEzNjkwMDoyMjk1MDg6MDoxOTJjMTcyNDFmNTU0YjdlM2M3NThkOGRmMzFmZmIwNmI6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=864169332df85a86b062f9d76a0a37c4; user_status=0; utk=76d227129f3aa4f2c538ada4f8ebb741;"
-
-
 
 cookie = "ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjU4MzY0MzgzOjo6MTQzMDEzNjkwMDo0MDA0MTc6MDoxMjRiZmQ1ZTc5ODBkNTU4MGIxN2JlNmYwMjlhMmQ1MjE6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=320dd44c4bb53749369a65274368f53a; user_status=0; utk=eeb0549bcf3de92c942f9b1183adb72b;"
 cookie ="ta_random_userid=5yqsx6jxak; WafStatus=0; cid=6d07b3804ba608a64d44b53b9531a7a91650871235; ComputerID=6d07b3804ba608a64d44b53b9531a7a91650871235; PHPSESSID=0a1c33ad4bdcb6901ca58a383612f311; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNjU5NTI0ODU3Ojo6MTQzMDEzNjkwMDo0MDI3NDM6MDoxZGRlNmYwNmY1M2FiZDlkMzI5NzM4ZjdiODYzNTJjNjY6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=240b5cb9cd8fc15fcf52bd3137d16c64; user_status=0; utk=0f3ed8c1f3707af24e84e247d5c81d41;"
@@ -80,6 +77,16 @@ def GetZhangTingLanBanData(dbConnection,logger):
     dailyFetcher = CFetchZhangTingLanBanFromTHS(cookie,v)
     dailyFetcher.GetZhangTingLanBanData()
 
+
+def GetNoZhangTingLanBanData(dbConnection,logger):
+    logger.error("开始获取烂长上影线数据")
+    #上影线数据
+    tradingDays = GetTradingDateLastN(dbConnection,15)
+    dailyFetcher = CFetchNoZhangTingData(dbConnection,tradingDays[-1])
+    dailyFetcher.FetchNoZhangTingData()
+    
+
+
 def GetLiangDaData(dbConnection,logger):
     logger.error("开始获取每日放大量数据")
     #成家量急剧放大
@@ -122,6 +129,7 @@ def GetTHSData():
     GetLiangDaData(dbConnection,logger)
     GetLiangDaLanBanDaData(dbConnection,logger)
     GetZhangTingLanBanData(dbConnection,logger)
+    GetNoZhangTingLanBanData(dbConnection,logger)
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
     
 def AutoDownload():

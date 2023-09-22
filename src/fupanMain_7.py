@@ -124,12 +124,14 @@ def GetFuPanList(dbConnection,tradingDay):
     lianbanDf = df[df["连续涨停天数"]>=2]
     fullPath = f"{rootDir}连板_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(lianbanDf,columns=["股票代码","股票简称"])
+    jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     logger.info(fullPath)
 
     shoubanDF =  df[df["连续涨停天数"]==1]
     fullPath = f"{rootDir}首板_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(shoubanDF,columns=["股票代码","股票简称"])
+    jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     logger.info(fullPath)
     

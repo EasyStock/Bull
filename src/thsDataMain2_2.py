@@ -13,6 +13,8 @@ from thsData2.fetchDaliangLanbanDataFromTHS2 import CFetchDaliangLanBanDataFromT
 import sys
 
 import logging
+from thsData.fetchNoZhangTingLanBanData import CFetchNoZhangTingData
+
 import traceback
 logger = logging.getLogger()
 
@@ -80,6 +82,12 @@ def GetZhangTingData(dbConnection,date,logger):
 
         dbConnection.Execute(sql) 
 
+def GetNoZhangTingLanBanData(dbConnection,date,logger):
+    logger.error("开始获取烂长上影线数据")
+    #上影线数据
+    dailyFetcher = CFetchNoZhangTingData(dbConnection,date)
+    dailyFetcher.FetchNoZhangTingData()
+
 def oneKeyDailyData(logger):
     logger.info(f'==============begin:{datetime.datetime.now()}==============================')
     dbConnection = ConnectToDB()
@@ -91,6 +99,7 @@ def oneKeyDailyData(logger):
     GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
     GetDaLiangData(dbConnection,tradingDays,logger)
     GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
+    GetNoZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
     logger.info(f'==============end:{datetime.datetime.now()}==============================')
 
 def GetZhangTingLanBanData(dbConnection,date,logger):
