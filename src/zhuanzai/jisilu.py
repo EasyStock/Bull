@@ -30,6 +30,9 @@ NAME_MAP = {
     "bond_nm_tip":"提示",
 }
 
+pd.set_option('display.unicode.ambiguous_as_wide',True)
+pd.set_option('display.unicode.east_asian_width',True)
+pd.set_option('display.width',360)
 
 class CJiSiLu(object):
     def __init__(self,logger,dbConnection) -> None:
@@ -143,6 +146,8 @@ class CJiSiLu(object):
     def ConvertDataFrameToJPG(self,df,fullPath):
         from pandas.plotting import table
         import matplotlib.pyplot as plt
+        if df.empty == True:
+            return
         plt.rcParams["font.sans-serif"] = [WorkSpaceFont]#显示中文字体
         high = int(0.174 * df.shape[0]+0.5) +1
         fig = plt.figure(figsize=(3, high), dpi=400)#dpi表示清晰度
@@ -159,7 +164,7 @@ class CJiSiLu(object):
             self.today = dates[-1]
 
         self.logger.info(self.today)
-        self.request1_login()
+        #self.request1_login()
         df = self.jisilu()
         df.reset_index(drop=True,inplace=True)
         
@@ -209,12 +214,22 @@ class CJiSiLu(object):
         date = result[-1]
         
         remain = []
+
+        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{self.today}/'''
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
+
+        
         for key in categrateMap:
             self.logger.info(f"\n=========={key}=============")
             df = GetKeZhuanzai(self.dbConnection,date,categrateMap[key])
             remain.extend(categrateMap[key])
-            self.logger.info(str(df))
+            jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
+            self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_{key}.jpg")
+            #self.logger.info(str(df))
         
         self.logger.info(f"\n==========剩余=============")
         df = GetKeZhuanzai_remain(self.dbConnection,date,remain)
-        self.logger.info(str(df))
+        jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
+        self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_剩余.jpg")
+        #self.logger.info(str(df))
