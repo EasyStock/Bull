@@ -513,7 +513,7 @@ class CFupanSummary(object):
         dongNeng = lastRow["动能EX"]
         shiNeng = lastRow["势能EX"]
         beizhu = lastRow["备注"]
-        if len(beizhu) == 0:
+        if beizhu is None or len(beizhu) == 0:
             beizhu = "无"
         line3 = f'''
         3. 今日势能:</font><font class="font29">{shiNeng}</font><font class="font4">, 动能:</font><font class="font29">{dongNeng}</font><font class="font4">, 备注:</font><font class="font29">{beizhu}</font><font class="font4">
