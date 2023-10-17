@@ -1,6 +1,9 @@
 import pandas as pd
 import re
-
+from Utility.convertDataFrameToJPG import DataFrameToJPG
+from workspace import workSpaceRoot
+import os
+import datetime
 
 class CCompareWithIndex(object):
     def __init__(self,dbConnection,logger) -> None:
@@ -126,11 +129,13 @@ class CZhuanzaiSelect(object):
     def _formatInfo1(self,stockID,flagSum,group):
         indexID = list(group["indexID"])[0]
         info = self.zhuanZaiInfo[self.zhuanZaiInfo['转债代码'] == stockID]
+        if info.empty:
+            return ("",(stockID,"未知"))
         stockName = info.iloc[-1]["转债名称"]
         message =  f'''\n===================[{stockName}({stockID})]=========================
 统计和:                     {flagSum}
 '''
-        return message
+        return (message,(stockID,stockName))
 
     def _formatInfo2(self,stockID,flagSum,group):
         indexID = list(group["indexID"])[0]
@@ -169,11 +174,20 @@ class CZhuanzaiSelect(object):
         self.GetIndexInfo(start,end)
         self.GetZhuanZhuaiInfo(start)
         results = self.SelectFrom(start,end)
+        outPut = []
         for result in results:
             (stockID,flagSum,group) = result
             if flagSum > 0:
                 message = self._formatInfo1(stockID,flagSum,group)
-                self.logger.info(message)
+                self.logger.info(message[0])
+                outPut.append(message[1])
+        jpgDataFrame = pd.DataFrame(outPut,columns=["转债代码","转债名称"])
+        today = str(datetime.date.today())
+        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{today}/'''
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
+       
+        DataFrameToJPG(jpgDataFrame,["转债代码","转债名称"],folderRoot,f"{today}_比大盘")
         for result in results:
             (stockID,flagSum,group) = result
             if flagSum > 0:
