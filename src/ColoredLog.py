@@ -76,7 +76,7 @@ def InitLogger(fileName):
 
 def StartToInitLogger(title=None):
     folder = '/tmp/'
-    now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    now = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
     fullPath = os.path.join(folder,f'{now}_{title}.txt')
     logger = InitLogger(fullPath)
     return logger

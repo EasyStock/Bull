@@ -121,7 +121,7 @@ def Test(dbConnection):
 
 def GetTHSData():
     logger = StartToInitLogger("同花顺日常数据")
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     dbConnection = ConnectToDB()
     #GetDailyData(dbConnection,logger)
     #GetZhangTingData(dbConnection,logger)
@@ -130,7 +130,7 @@ def GetTHSData():
     GetLiangDaLanBanDaData(dbConnection,logger)
     GetZhangTingLanBanData(dbConnection,logger)
     GetNoZhangTingLanBanData(dbConnection,logger)
-    logger.info(f'==============end:{datetime.datetime.now()}==============================')
+    logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
     
 def AutoDownload():
     schedule.every().day.at("17:35").do(GetTHSData)

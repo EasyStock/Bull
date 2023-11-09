@@ -263,7 +263,7 @@ class CFuPan(object):
 
 
 def FuPanFun(logger):
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     dbConnection = ConnectToDB()
     FuPan = CFuPan(logger,dbConnection,-1)
     FuPan.MarketingData()
@@ -271,7 +271,7 @@ def FuPanFun(logger):
     FuPan.FormatFuPanSqlAndToDB()
     logger.info(str(FuPan))
     NewGaiNian(dbConnection)
-    logger.info(f'==============end:{datetime.datetime.now()}==============================')
+    logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
 
 def AutoDownload():
     schedule.every().day.at("17:35").do(FuPanFun)

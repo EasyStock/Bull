@@ -31,7 +31,7 @@ NAME_MAP = {
     "bond_nm_tip":"提示",
 }
 def jisilu(logger):
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     sse_head = {
     'Accept': 'application/json, text/plain, */*',
     'Accept-Encoding': 'gzip, deflate, br',
@@ -87,7 +87,7 @@ def jisilu(logger):
         newDf.sort_values('PB',axis=0,ascending=False,inplace=True)
         logger.info(f'{newDf}')
         logger.info(f'{newDf.shape}')
-        logger.info(f'==============end:{datetime.datetime.now()}==============================')
+        logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
         return newDf
         
 def ReadFileToDB():

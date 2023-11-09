@@ -12,7 +12,7 @@ RUN pip3 install openpyxl
 RUN pip3 install requests
 RUN pip3 install sqlparse
 RUN pip3 install schedule
-
+RUN pip3 install selenium
 
 RUN mkdir -p /home/jenkins
 WORKDIR /home/jenkins

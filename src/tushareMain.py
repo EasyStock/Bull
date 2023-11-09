@@ -48,11 +48,11 @@ def Test():
     logger.info(str(df))
     
 def tushareFun():
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     StartToInitLogger("TuShare日常数据")
     UpdateTradingDate()
     FetchAllInOne()
-    logger.info(f'==============end:{datetime.datetime.now()}==============================')
+    logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
 
 def AutoDownload():
     schedule.every().day.at("18:07").do(tushareFun)

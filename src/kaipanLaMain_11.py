@@ -2,6 +2,8 @@ from kaipanla.kaipanlaDataMgr import RequestVolumnDataByDates,RequestZhangTingDa
 from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 import urllib3
+import datetime
+
 urllib3.disable_warnings()
 
 def RequestKaiPanLaVolumnData(dbConnection,tradingDays,lastN = 3):
@@ -54,9 +56,13 @@ def MergeDataTo(dbConnection,tradingDays):
 
 
 def OneKeyKaiPanLa():
-    lastN = 3
+    lastN = 5
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,lastN)
+    today = datetime.date.today()
+    print("现在UTC时间是:",datetime.datetime.utcnow())
+    if tradingDays[-1] == str(today) and datetime.datetime.utcnow().time() < datetime.time(8, 30):
+        tradingDays = tradingDays[:-1]
 
     RequestKaiPanLaVolumnData(dbConnection,tradingDays,lastN)
     RequestKaiPanLaZhangTingData(dbConnection,tradingDays,lastN)

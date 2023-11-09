@@ -60,11 +60,11 @@ def _formatVolumn(volumn,delta = 1.0):
 def RequestVolumnDataByDates(dates,dbConnection):  #大盘成交量
     KaiPanLaVolumnParam = {
     "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-    "queryStringOfToday":"PhoneOSNew=2&Type=0&VerSion=5.7.0.15&a=MarketCapacity&apiv=w32&c=HomeDingPan",
+    "queryStringOfToday":"PhoneOSNew=2&Type=0&VerSion=5.12.0.1&a=MarketCapacity&apiv=w34&c=HomeDingPan",
     "hostOfToday":"apphq.longhuvip.com",
     #====================
     "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-    "queryStringOfHistory" :"Date={0}&PhoneOSNew=2&Type=0&VerSion=5.9.0.3&a=MarketCapacity&apiv=w32&c=HisHomeDingPan",
+    "queryStringOfHistory" :"Date={0}&PhoneOSNew=2&Type=0&VerSion=5.12.0.1&a=MarketCapacity&apiv=w34&c=HisHomeDingPan",
     "hostOfHistory":"apphis.longhuvip.com"
     }
 
@@ -88,11 +88,11 @@ def RequestVolumnDataByDates(dates,dbConnection):  #大盘成交量
 def RequestZhangTingDataByDates(dates,dbConnection): # 涨停数据
     KaiPanLaZhangTingListParam = {
         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=9&VerSion=5.7.0.15&a=DaBanList&apiv=w32&c=HomeDingPan&st=1000",
+        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=9&VerSion=5.12.0.1&a=DaBanList&apiv=w34&c=HomeDingPan&st=1000",
         "hostOfToday":"apphq.longhuvip.com",
         #====================
         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=6&VerSion=5.7.0.15&a=HisDaBanList&apiv=w32&c=HisHomeDingPan&st=1000",
+        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=6&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
     # pd.set_option('display.unicode.ambiguous_as_wide',True)
@@ -142,11 +142,11 @@ def RequestZhangTingDataByDates(dates,dbConnection): # 涨停数据
 def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
     KaiPanLaZhaBanListParam = {
         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.7.0.15&a=DaBanList&apiv=w32&c=HomeDingPan&st=1000",
+        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.12.0.1&a=DaBanList&apiv=w34&c=HomeDingPan&st=1000",
         "hostOfToday":"apphq.longhuvip.com",
         #====================
         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.7.0.15&a=HisDaBanList&apiv=w32&c=HisHomeDingPan&st=1000",
+        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
     # pd.set_option('display.unicode.ambiguous_as_wide',True)
@@ -197,11 +197,11 @@ def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
 def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
     KaiPanLaDieTingListParam = {
         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.7.0.15&a=DaBanList&apiv=w32&c=HomeDingPan&st=1000",
+        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.12.0.1&a=DaBanList&apiv=w34&c=HomeDingPan&st=1000",
         "hostOfToday":"apphq.longhuvip.com",
         #====================
         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.7.0.15&a=HisDaBanList&apiv=w32&c=HisHomeDingPan&st=1000",
+        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
     # pd.set_option('display.unicode.ambiguous_as_wide',True)
@@ -254,11 +254,11 @@ def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
 def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
     KaiPanLaZhiranZhangTingListParam = {
         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.7.0.15&a=DaBanList&apiv=w32&c=HomeDingPan&st=1000",
+        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.12.0.1&a=DaBanList&apiv=w34&c=HomeDingPan&st=1000",
         "hostOfToday":"apphq.longhuvip.com",
         #====================
         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.7.0.15&a=HisDaBanList&apiv=w32&c=HisHomeDingPan&st=1000",
+        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
     # pd.set_option('display.unicode.ambiguous_as_wide',True)
@@ -308,11 +308,11 @@ def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
 def RequestIndexData(dates,dbConnection): #大盘指数数据
     IndexListParam = {
         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"DeviceID=72697ee95ed4399fac9914eba97c8ede3bfddb7c&PhoneOSNew=2&StockIDList=SH000001%2CSZ399001%2CSZ399006%2CSH000688&Token=919d7846d93da295c163371c85cfd81c&UserID=1585460&VerSion=5.9.0.3&a=RefreshStockList&apiv=w32&c=UserSelectStock",
+        "queryStringOfToday":"DeviceID=72697ee95ed4399fac9914eba97c8ede3bfddb7c&PhoneOSNew=2&StockIDList=SH000001%2CSZ399001%2CSZ399006%2CSH000688&Token=919d7846d93da295c163371c85cfd81c&UserID=1585460&VerSion=5.12.0.1&a=RefreshStockList&apiv=w34&c=UserSelectStock",
         "hostOfToday":"apphq.longhuvip.com",
         #====================
         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&PhoneOSNew=2&VerSion=5.9.0.3&a=GetZsReal&apiv=w32&c=StockL2History",
+        "queryStringOfHistory" :"Day={0}&PhoneOSNew=2&VerSion=5.12.0.1&a=GetZsReal&apiv=w34&c=StockL2History",
         "hostOfHistory":"apphis.longhuvip.com"
         }
     dataMgr = CKaiPanLaDataMgr()

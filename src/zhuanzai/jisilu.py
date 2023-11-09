@@ -40,36 +40,50 @@ class CJiSiLu(object):
         self.logger = logger
         self.dbConnection = dbConnection
         self.today = None
-        self.cookie = "kbz_newcookie=1; kbzw__Session=9aqo0c4fm6dh30cv9lgck4n1l1; Hm_lvt_164fe01b1433a19b507595a43bf58262=1683199215,1685616733; kbzw__user_login=7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpLjH1r6bkqqxqp-qoq-TrYKypMi5v82Mwejv0uXY2JGrj6eXm8XC08ri7eTc4aeXq-TV3OOTxcLTgcPMlcGZnafBp5bWrpyYouDR4N7Mztu34NallqquoauXkIm_wcm2xZiXzt_M3Je63cTb0J2ZuNHr2-THpZKoqqGoj6CPpJnIyt_N6cullqquoauX; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1685616870"
+        self.kbzw_user_login = "7Obd08_P1ebax9aXXQANRxUOWCXxkZyh6dbc7OPm1Nq_1KLZ25GhkafdrZvfz6uZ3JWsrNTcx6WWqq6lm92lrJrYw5iyoO3K1L_RpKuZqZ2umZecpLjH1r6bkqqyrZ2ppLCarIKypMi5v82Mwejv0uXY2JGrj6eXm8XC08ri7eTc4aeXq-TV3OOTxcLTgcPMlcGZnafBp5bWrpyYouDR4N7Mztu34NallqquoauXkIm_wcm2xZiXzt_M3Je63cTb0J2ZuNHr2-THpZKor6Goj6CPpJnIyt_N6cullqquoauX"
+        self.cookie = f"kbz_newcookie=1; kbzw__Session=9aqo0c4fm6dh30cv9lgck4n1l1; Hm_lvt_164fe01b1433a19b507595a43bf58262=1698406312; kbzw__user_login={self.kbzw_user_login}; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1698412256"
     
-    def request1_login(self):
-        self.logger.info(f'==============begin:{datetime.datetime.now()}==============================')
-        head = {
-        "Connection": "keep-alive",
-        "Cache-Control": "max-age=0",
+
+    def getCookies(self):
+        sql = f'''SELECT cookie FROM cookies where name = "jisilu";'''
+        results, _ = self.dbConnection.Query(sql)
+        self.cookie = results[0][0]
+
+    def _formatResult(self,row):
+        result = ""
+        if row['现价'] > 125:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('价    格:',row['现价'],"[<=125];",chr(12288),end = '')
+
+        if row['PB'] < 1.2:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('平均市净率:',row['PB'],"[>=1.2];",chr(12288),end = '')
+
+        if row['有息负债率'] > 70 or row['有息负债率']<0:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('有息负债率:',row['有息负债率'],"[0<x<70];",chr(12288),end = '')
+
+        if row['股票质押率'] < 0:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('股票质押率:',row['股票质押率'],"[>=0];",chr(12288),end = '')
         
-        "sec-ch-ua": "Not A;Brand;v=99, Chromium;v=101, Google Chrome;v=101",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "macOS",
-        "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-User": "?1",
-        "Sec-Fetch-Dest": "document",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Cookie":f"{self.cookie}",
-        }
-        url='https://www.jisilu.cn/account/login/'
-        response = requests.request("GET",url,headers=head)
-        # self.logger.info(response.status_code)
-        # self.logger.info(response.text)
-        self.logger.info(f'==============end:{datetime.datetime.now()}==============================')
+        if row['流通市值（亿元)'] > 250:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('流通市值:',row['流通市值（亿元)'],"[<=250];",chr(12288),end = '')
+
+        if row['PB-溢价率'] < 1:
+            result = result + '{0:{3}<10}\t{1:.2f}\t{2:<15}\n'.format('市净-溢价:',float(row['PB-溢价率']),"[>=1.0];",chr(12288),end = '')
+
+        if row['评级'] not in ["AAA","AA+","AA","AA-","A+"]:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('评   级:',row['评级'],"[AAA,AA+,AA,AA-,A+];",chr(12288),end = '')
         
+        if row['回售触发价'] <= 0:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('回售触发价:',row['回售触发价'],"[>0];",chr(12288),end = '')
+
+        if row['剩余年限'] <= 1:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('剩余年限:',row['剩余年限'],"[>1];",chr(12288),end = '')
+
+        #print(result)
+        return result
+
+
     def jisilu(self):
-        self.logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+        self.logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
         sse_head = {
         'Accept': 'application/json, text/plain, */*',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -79,7 +93,7 @@ class CJiSiLu(object):
         "Host": "www.jisilu.cn",
         "Init": "1",
         'Referer': 'https://www.jisilu.cn/web/data/cb/list',
-        "sec-ch-ua": "Not A;Brand;v=99, Chromium;v=101, Google Chrome;v=101",
+        "sec-ch-ua": "\"Chromium\";v=\"118\", \"Google Chrome\";v=\"118\", \"Not=A?Brand\";v=\"99\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "macOS",
         "Sec-Fetch-Dest": "empty",
@@ -88,6 +102,7 @@ class CJiSiLu(object):
         # "If-Modified-Since": "Sun, 16 Jan 2022 01:10:13 GMT",
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
         "Cookie":f"{self.cookie}",
+        "if-modified-since":"Fri, 27 Oct 2023 12:57:15 GMT",
         }
         url='https://www.jisilu.cn/webapi/cb/list/'
         response = requests.request("GET",url,headers=sse_head,verify = False)
@@ -95,6 +110,7 @@ class CJiSiLu(object):
         if len(response.text)!=0:
             j = response.json()
             print(j['code'])
+            print(j['prompt'])
             data = j['data']
             df = pd.DataFrame(data)
             df = df[df['price_tips']!="待上市"]
@@ -115,6 +131,9 @@ class CJiSiLu(object):
             #newDf['剩余规模<=3'] = (newDf['剩余规模']<=3)
 
             df_all = newDf.copy()
+            #     df['新成交额'] = df.apply(lambda row: formatVolumn(row['成交额'],1.0), axis=1)
+            df_all["筛选结果"] = df_all.apply(lambda row: self._formatResult(row), axis=1)
+
             df_all['日期'] = self.today
             folder = f"{workSpaceRoot}/复盘/可转债/{self.today}/"
             if os.path.exists(folder) == False:
@@ -140,7 +159,7 @@ class CJiSiLu(object):
             newDf.sort_values('PB',axis=0,ascending=False,inplace=True)
             self.logger.info(f'{newDf}')
             self.logger.info(f'{newDf.shape}')
-            self.logger.info(f'==============end:{datetime.datetime.now()}==============================')
+            self.logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
             return newDf
 
     def ConvertDataFrameToJPG(self,df,fullPath):
@@ -164,7 +183,9 @@ class CJiSiLu(object):
             self.today = dates[-1]
 
         self.logger.info(self.today)
+        self.getCookies()
         #self.request1_login()
+        #self.request2_login()
         df = self.jisilu()
         df.reset_index(drop=True,inplace=True)
         

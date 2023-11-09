@@ -2,13 +2,18 @@ from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 from fupan.fupanSummary import Summary
 from fupan.fupanSummary2 import CFupanSummary
-
+import datetime
 
 
 def WriteSummary():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,70)
-    fupanSummary = CFupanSummary(dbConnection,tradingDays[-1])
+    today = datetime.date.today()
+    d = tradingDays[-1]
+    print("现在UTC时间是:",datetime.datetime.utcnow())
+    if tradingDays[-1] == str(today) and datetime.datetime.utcnow().time() < datetime.time(8, 30):
+        d = tradingDays[-2]
+    fupanSummary = CFupanSummary(dbConnection,d)
     fupanSummary.WirteFupanSummary()
 
 

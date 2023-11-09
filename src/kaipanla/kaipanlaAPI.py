@@ -39,7 +39,7 @@ class CkaiPanLaApi(object):
 
 def RequstData():
     url = "https://apphis.longhuvip.com/w1/api/index.php"
-    queryString = "Day=2023-04-21&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.7.0.15&a=HisDaBanList&apiv=w31&c=HisHomeDingPan&st=20"
+    queryString = "Day=2023-04-21&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.12.0.1&a=HisDaBanList&apiv=w31&c=HisHomeDingPan&st=20"
                   
     #queryString =  "Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.6.0.1&a=DaBanList&apiv=w30&c=HomeDingPan&st=20"
     headers = {
@@ -79,7 +79,7 @@ def RequstData11(): #炸板
 
 def RequstData2222(): #市场量能
     url = "https://apphq.longhuvip.com/w1/api/index.php"
-    queryString = "PhoneOSNew=2&Type=0&VerSion=5.7.0.15&a=MarketCapacity&apiv=w31&c=HomeDingPan"
+    queryString = "PhoneOSNew=2&Type=0&VerSion=5.12.0.1&a=MarketCapacity&apiv=w31&c=HomeDingPan"
                   
     #queryString =  "Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.6.0.1&a=DaBanList&apiv=w30&c=HomeDingPan&st=20"
     headers = {
@@ -99,7 +99,7 @@ def RequstData2222(): #市场量能
 
 def RequstData3333(): #市场量能历史
     url = "https://apphis.longhuvip.com/w1/api/index.php"
-    queryString = "Date=2023-04-27&PhoneOSNew=2&Type=0&VerSion=5.9.0.3&a=MarketCapacity&apiv=w32&c=HisHomeDingPan"
+    queryString = "Date=2023-04-27&PhoneOSNew=2&Type=0&VerSion=5.12.0.1&a=MarketCapacity&apiv=w34&c=HisHomeDingPan"
                   
     headers = {
     'Host': 'apphis.longhuvip.com', 

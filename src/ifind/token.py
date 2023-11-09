@@ -46,7 +46,7 @@ class CIFindToken(object):
             self.dbConnection.Execute(sql)
         else:
             d1 = datetime.datetime.strptime(str(self.expired_time), "%Y-%m-%d %H:%M:%S")
-            now = datetime.datetime.now()
+            now = datetime.datetime.utcnow()
             oneday=datetime.timedelta(days=3) 
             refreshTime=now+oneday
             if refreshTime > d1:

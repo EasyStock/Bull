@@ -89,7 +89,7 @@ def GetNoZhangTingLanBanData(dbConnection,date,logger):
     dailyFetcher.FetchNoZhangTingData()
 
 def oneKeyDailyData(logger):
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,15)
     GetDailyDataEx(dbConnection,tradingDays[-1],logger)
@@ -100,7 +100,7 @@ def oneKeyDailyData(logger):
     GetDaLiangData(dbConnection,tradingDays,logger)
     GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     GetNoZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
-    logger.info(f'==============end:{datetime.datetime.now()}==============================')
+    logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
 
 def GetZhangTingLanBanData(dbConnection,date,logger):
     #Validated
@@ -126,7 +126,7 @@ def GetDaLiangLanbBanData(dbConnection,dates,logger):
 
 
 def Test():
-    logger.info(f'==============begin:{datetime.datetime.now()}==============================')
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,15)
 
@@ -136,7 +136,7 @@ def Test():
     GetZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
     GetDaLiangData(dbConnection,tradingDays,logger)
     GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
-    logger.info(f'==============end:{datetime.datetime.now()}==============================')
+    logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
 
 if __name__ == '__main__':
     logger = StartToInitLogger("同花顺日常数据_new")
