@@ -80,6 +80,15 @@ class CFupanSummary(object):
             font-family:"宋体";
             mso-generic-font-family:auto;
             mso-font-charset:134;}
+        .font30
+            {color:#0000FF;
+            font-size:14.0pt;
+            font-weight:400;
+            font-style:normal;
+            text-decoration:none;
+            font-family:"宋体";
+            mso-generic-font-family:auto;
+            mso-font-charset:134;}
         .style0
             {mso-number-format:"General";
             text-align:general;
@@ -512,17 +521,31 @@ class CFupanSummary(object):
     def _formatLine3(self,lastRow):
         dongNeng = lastRow["动能EX"]
         shiNeng = lastRow["势能EX"]
+        lianban = lastRow["连板股的红盘比"]
+        souban = lastRow["首板红盘比"]
         beizhu = lastRow["备注"]
         if beizhu is None or len(beizhu) == 0:
             beizhu = "无"
         line3 = f'''
-        3. 今日势能:</font><font class="font29">{shiNeng}</font><font class="font4">, 动能:</font><font class="font29">{dongNeng}</font><font class="font4">, 备注:</font><font class="font29">{beizhu}</font><font class="font4">
+        3. 今日势能:</font><font class="font29">{shiNeng}</font><font class="font4">, 动能:</font><font class="font29">{dongNeng}</font><font class="font4">, 连板股的红盘比:</font><font class="font29">{lianban}</font><font class="font4">, 首板红盘比:</font><font class="font29">{souban}</font><font class="font4">, 备注:</font><font class="font29">{beizhu}</font><font class="font4">
         '''
         return line3
 
+    def _formatRedFont(self,message):
+        ret = f'''</font><font class="font29">{message}</font><font class="font4">'''
+        return ret
+    
+    def _formatBlueFont(self,message):
+        ret = f'''</font><font class="font30">{message}</font><font class="font4">'''
+        return ret
+    
     def _formatLine4(self,lastRow):
         line4 = f'''
-        4. 今日热点板块有: </font><font class="font29">{self.reDianBankuai1} 和 {self.reDianBankuai2}</font>
+        高潮: {self._formatBlueFont("动能综合值=12 且 势能综合值=10")}{self._formatRedFont("  或者 ")}{self._formatBlueFont("连板股的红盘比 >=0.78 首板股的红盘比 >=0.78")}<br/>
+        半高潮: {self._formatRedFont("只有")} {self._formatBlueFont("连板股的红盘比 >=0.78")}<br/>
+        冰点期判断 - 强势行情: {self._formatBlueFont("如果动能综合值 =-12 且 势能综合值 <=-2")}{self._formatRedFont("  或者 ")}{self._formatBlueFont("(动能综合值<=-8  且 势能综合值<=-2) 出现两次")}<br/>
+        冰点期判断 - 弱势行情: {self._formatBlueFont("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4")}{self._formatRedFont("  或者 ")}{self._formatBlueFont("连续两天动能综合值和势能综合值都<=-6 ")}<br/>
+        4. 今日热点板块有: </font><font class="font29">{self.reDianBankuai1} 和 {self.reDianBankuai2}</font><br/>
         '''
         return line4
 
