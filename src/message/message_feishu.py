@@ -44,7 +44,6 @@ def sendMessage(tenant_access_token,receive_id_type, receive_id, msg_type, conte
     resp = requests.post(url=url, headers=headers, json=req_body)
     if resp.status_code != 200:
         print(resp.text)
-    
 
 def formatCardOfFeishu(date,df):
     if df.empty:
@@ -56,7 +55,7 @@ def formatCardOfFeishu(date,df):
         stockID = row["转债代码"]
         stockName = row["转债名称"]
         reason = f'''**<font color=red>{reason}</font>**'''
-        s = f"**转债名称** : {stockName}\n**转债代码** : {stockID}\n**原        因** : {reason}\n"
+        s = f"**转债名称** : {stockName}\n**转债代码** : {stockID}\n**原        因** : {reason}"
         content = {"content":s,"tag":"markdown"}
         contents.append(content)
         contents.append(tag)

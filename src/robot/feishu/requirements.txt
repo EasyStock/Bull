@@ -1,0 +1,5 @@
+Flask==2.0.2
+python-dotenv
+requests
+pycryptodome
+Werkzeug<3
