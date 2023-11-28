@@ -69,19 +69,19 @@ def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
     tag = {"tag":"hr"}
     avgLianBanCount = f'''{df["平均连板数量"][0]:.1f}'''
 
-    line1 = f'''{_markdownFontHighlight("1. 市场总体情况:")}\n**a.** 今成交量:{_markdownFontColor(df["两市量"][0])},增量:{_markdownFontColor(df["增量"][0])}\n**b.** 红盘:{_markdownFontColor(df["红盘"][0])}, 绿盘: {_markdownFontColor(df["绿盘"][0],"green")}\n**c.** 涨停: {_markdownFontColor(df["实际涨停"][0])}, 跌停: {_markdownFontColor(df["跌停"][0])}\n**d.** 炸板: {_markdownFontColor(df["炸板"][0])}，炸板率: {_markdownFontColor(df["炸板率"][0])}\n**e.** 连板个数: {_markdownFontColor(df["连板数量"][0])},近30个交易日最多连板个数: {_markdownFontColor(df["最高连板数量"][0])},最少连板个数: {_markdownFontColor(df["最低连板数量"][0])},平均连板个数: {_markdownFontColor(avgLianBanCount)}'''
+    line1 = f'''{_markdownFontHighlight("一. 市场总体情况:")}\n**1.** 今成交量:{_markdownFontColor(df["两市量"][0])},增量:{_markdownFontColor(df["增量"][0])}\n**2.** 红盘:{_markdownFontColor(df["红盘"][0])}, 绿盘: {_markdownFontColor(df["绿盘"][0],"green")}\n**3.** 涨停: {_markdownFontColor(df["实际涨停"][0])}, 跌停: {_markdownFontColor(df["跌停"][0])}\n**4.** 炸板: {_markdownFontColor(df["炸板"][0])}，炸板率: {_markdownFontColor(df["炸板率"][0])}\n**5.** 连板个数: {_markdownFontColor(df["连板数量"][0])},近30个交易日最多连板个数: {_markdownFontColor(df["最高连板数量"][0])},最少连板个数: {_markdownFontColor(df["最低连板数量"][0])},平均连板个数: {_markdownFontColor(avgLianBanCount)}'''
     elements.append(_markdown(line1))
     elements.append(tag)
 
-    line2 = f'''{_markdownFontHighlight("2. 市场情绪:")}\n今日势能:{_markdownFontColor(df["势能EX"][0])}, 动能:{_markdownFontColor(df["动能EX"][0])}, 连板股的红盘比:{_markdownFontColor(df["连板股的红盘比"][0])}, 首板红盘比:{_markdownFontColor(df["首板红盘比"][0])}, 备注:{_markdownFontColor(df["备注"][0])}\n\n**情绪判断标准**\n**a. 高潮:** {_markdownFontColor("动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78","green")}\n**b. 半高潮:** {_markdownFontColor("只有 连板股的红盘比 >=0.78","green")}\n**c. 冰点期判断 - 强势行情:** {_markdownFontColor("如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次","green")}\n**d. 冰点期判断 - 弱势行情:** {_markdownFontColor("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6","green")}'''
+    line2 = f'''{_markdownFontHighlight("二. 市场情绪:")}\n今日势能:{_markdownFontColor(df["势能EX"][0])}, 动能:{_markdownFontColor(df["动能EX"][0])}, 连板股的红盘比:{_markdownFontColor(df["连板股的红盘比"][0])}, 首板红盘比:{_markdownFontColor(df["首板红盘比"][0])}, 备注:{_markdownFontColor(df["备注"][0])}\n\n**情绪判断标准**\n**1. 高潮:** {_markdownFontColor("动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78","green")}\n**2. 半高潮:** {_markdownFontColor("只有 连板股的红盘比 >=0.78","green")}\n**3. 冰点期判断 - 强势行情:** {_markdownFontColor("如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次","green")}\n**4. 冰点期判断 - 弱势行情:** {_markdownFontColor("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6","green")}'''
     elements.append(_markdown(line2))
     elements.append(tag)
 
-    line3 = f'''{_markdownFontHighlight("3. 超短情况:")}\n**a.**10CM首板奖励率:{_markdownFontColor(df["10CM首板奖励率"][0])}%,10CM连板奖励率:{_markdownFontColor(df["10CM连板奖励率"][0])}%\n**b.**20CM首板奖励率:{_markdownFontColor(df["20CM首板奖励率"][0])}%,20CM连板奖励率:{_markdownFontColor(df["20CM连板奖励率"][0])}%\n**c.**2连板个股:{_markdownFontColor(df["2连板个数"][0])}个,近30日最大2连板个股:{_markdownFontColor(df["最大2连板个数"][0])}个\n**d.**3连板个股:{_markdownFontColor(df["3连板个数"][0])}个: {_markdownFontColor(df["3连个股"][0])}\n**e.**4连及以上个股: {_markdownFontColor(df["4连板及以上个数"][0])}个,{_markdownFontColor(df["4连及以上个股"][0])}\n**f.**近30个交易日高度板: {_markdownFontColor(df["最大高度板"][0])} 板'''
+    line3 = f'''{_markdownFontHighlight("三. 超短情况:")}\n**1.**10CM首板奖励率:{_markdownFontColor(df["10CM首板奖励率"][0])}%,10CM连板奖励率:{_markdownFontColor(df["10CM连板奖励率"][0])}%\n**2.**20CM首板奖励率:{_markdownFontColor(df["20CM首板奖励率"][0])}%,20CM连板奖励率:{_markdownFontColor(df["20CM连板奖励率"][0])}%\n**3.**2连板个股:{_markdownFontColor(df["2连板个数"][0])}个,近30日最大2连板个股:{_markdownFontColor(df["最大2连板个数"][0])}个\n**4.**3连板个股:{_markdownFontColor(df["3连板个数"][0])}个: {_markdownFontColor(df["3连个股"][0])}\n**5.**4连及以上个股: {_markdownFontColor(df["4连板及以上个数"][0])}个,{_markdownFontColor(df["4连及以上个股"][0])}\n**6.**近30个交易日高度板: {_markdownFontColor(df["最大高度板"][0])} 板'''
     elements.append(_markdown(line3))
     elements.append(tag)
 
-    line4 = f"**4. 今日热点板块:** {_markdownFontColor(redian)}"
+    line4 = f"**四. 今日热点板块:** {_markdownFontColor(redian)}"
     elements.append(_markdown(line4))
     elements.append(tag)
 

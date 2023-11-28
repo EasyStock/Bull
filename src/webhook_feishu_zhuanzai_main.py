@@ -15,6 +15,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,5)
+    # args.webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a"
+    # args.secret = "brYyzPbSks4OKnMgdwKvIh"
     if args.webhook and args.secret:
         SendKeZhuanZaiYuJing(dbConnection,tradingDays,args.webhook,args.secret)
         sleep(3)

@@ -87,16 +87,25 @@ def SendKeZhuanZaiYuJing(dbConnection,tradingDays,receive_id=debug_receive_id):
     sendMessage(_tenant_access_token,receive_id_type,receive_id,msg_type,content)
 
 
-def NewGaiNian_zhuanzai(dbConnection,tradingDays,receive_id=debug_receive_id):
+def GetNewGaiNians(dbConnection,tradingDays):
     sql = f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-2]}") and `更新日期`="{tradingDays[-1]}";'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     if df.empty:
-        return
-
+        return []
+    
+    ret = []
     for result in results:
         gainian = result[0]
-
+        ret.append(gainian)
+        sql1 = f'''INSERT IGNORE INTO `stock`.`stockgainiannew` (`日期`, `新概念`) VALUES ('{tradingDays[-1]}', '{gainian}');'''
+        dbConnection.Execute(sql1)
+    return ret
+       
+def NewGaiNian_zhuanzai(dbConnection,tradingDays,receive_id=debug_receive_id):
+    results = GetNewGaiNians(dbConnection,tradingDays)
+    for result in results:
+        gainian = result
         sql2 = f'''SELECT A.`转债代码`,A.`转债名称` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and B.`所属概念` like '%{gainian}%' order by `PB` DESC;'''
         results2, _ = dbConnection.Query(sql2)
 
@@ -104,16 +113,14 @@ def NewGaiNian_zhuanzai(dbConnection,tradingDays,receive_id=debug_receive_id):
         content = json.dumps(msg,ensure_ascii=False)
         msg_type = "interactive"
         sendMessage(_tenant_access_token,receive_id_type,receive_id,msg_type,content)
+        s = ";".join([f'''{t[0]} {t[1]}''' for t in results2])
+        sql = f''''REPLACE INTO `stock`.`stockgainiannew` (`日期`, `新概念`, `可转债`) VALUES ('{tradingDays[-1]}', '{gainian}', '{s}');'''
+        dbConnection.Execute(sql)
 
 def NewGaiNian_Stock(dbConnection,tradingDays,receive_id=debug_receive_id):
-    sql = f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-2]}") and `更新日期`="{tradingDays[-1]}";'''
-    results, columns = dbConnection.Query(sql)
-    df = pd.DataFrame(results,columns=columns)
-    if df.empty:
-        return
-
+    results = GetNewGaiNians(dbConnection,tradingDays)
     for result in results:
-        gainian = result[0]
+        gainian = result
         sql1 = f'''SELECT `股票代码`, `股票简称` FROM stock.stockbasicinfo where `所属概念` like "%{gainian}%";'''
         results1, _ = dbConnection.Query(sql1)
 
@@ -122,6 +129,9 @@ def NewGaiNian_Stock(dbConnection,tradingDays,receive_id=debug_receive_id):
         content = json.dumps(msg,ensure_ascii=False)
         msg_type = "interactive"
         sendMessage(_tenant_access_token,receive_id_type,receive_id,msg_type,content)
+        s = ";".join([f'''{t[0]} {t[1]}''' for t in results1])
+        sql = f'''REPLACE INTO `stock`.`stockgainiannew` (`日期`, `新概念`, `股票`) VALUES ('{tradingDays[-1]}', '{gainian}', '{s}');'''
+        dbConnection.Execute(sql)
 
 
 def MeiRiFuPan_Stock(dbConnection,tradingDays,receive_id=debug_receive_id):

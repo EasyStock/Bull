@@ -63,14 +63,20 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
 
     for result in results:
         gainian = result[0]
-        sql1 = f'''SELECT `股票代码`, `股票简称` FROM stock.stockbasicinfo where `所属概念` like "%{gainian}%";'''
-        results1, _ = dbConnection.Query(sql1)
+        sql1 = f'''INSERT IGNORE INTO `stock`.`stockgainiannew` (`日期`, `新概念`) VALUES ('{tradingDays[-1]}', '{gainian}');'''
+        dbConnection.Execute(sql1)
 
+        sql2 = f'''SELECT `股票代码`, `股票简称` FROM stock.stockbasicinfo where `所属概念` like "%{gainian}%";'''
+        results1, _ = dbConnection.Query(sql2)
 
         msg = FormatCardOfNewGaiNian(tradingDays[-1],gainian,results1,["**股票代码**","**股票简称**"])
         content = json.dumps(msg,ensure_ascii=False)
         msg_type = "interactive"
         sendMessageByWebhook(webhook,secret,msg_type,content)
+        
+        s = ";".join([f'''{t[0]} {t[1]}''' for t in results1])
+        sql3 = f'''UPDATE `stock`.`stockgainiannew` SET `股票` = '{s}' WHERE (`日期` = '{tradingDays[-1]}') and (`新概念` = '{gainian}');'''
+        dbConnection.Execute(sql3)
 
 
 def SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret):

@@ -25,9 +25,16 @@ def SendKeZhuanZaiNewGaiNian(dbConnection,tradingDays,webhook,secret):
 
     for result in results:
         gainian = result[0]
+        sql1 = f'''INSERT IGNORE INTO `stock`.`stockgainiannew` (`日期`, `新概念`) VALUES ('{tradingDays[-1]}', '{gainian}');'''
+        dbConnection.Execute(sql1)
+
         sql2 = f'''SELECT A.`转债代码`,A.`转债名称` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and B.`所属概念` like '%{gainian}%' order by `PB` DESC;'''
         results2, _ = dbConnection.Query(sql2)
         msg = FormatCardOfNewGaiNian(tradingDays[-1],gainian,results2,["**转债代码**","**转债名称**"])
         content = json.dumps(msg,ensure_ascii=False)
         msg_type = "interactive"
         sendMessageByWebhook(webhook,secret,msg_type,content)
+        
+        s = ";".join([f'''{t[0]} {t[1]}''' for t in results2])
+        sql3 = f'''UPDATE `stock`.`stockgainiannew` SET `可转债` = '{s}' WHERE (`日期` = '{tradingDays[-1]}') and (`新概念` = '{gainian}');'''
+        dbConnection.Execute(sql3)

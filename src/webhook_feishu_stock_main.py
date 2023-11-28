@@ -2,6 +2,7 @@ from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_St
 from mysql.connect2DB import ConnectToDB
 from DBOperating import GetTradingDateLastN
 from time import sleep
+import datetime
 
 if __name__ == "__main__":
     import argparse
@@ -17,6 +18,12 @@ if __name__ == "__main__":
     tradingDays = GetTradingDateLastN(dbConnection,5)
     # args.webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a"
     # args.secret = "brYyzPbSks4OKnMgdwKvIh"
+
+    today = datetime.date.today()
+    print("现在UTC时间是:",datetime.datetime.utcnow())
+    if tradingDays[-1] == str(today) and datetime.datetime.utcnow().time() < datetime.time(9, 0):
+        tradingDays = tradingDays[:-1]
+
     if args.webhook and args.secret:
         SendNewGaiNianOfStock(dbConnection,tradingDays,args.webhook,args.secret)
         sleep(3)
