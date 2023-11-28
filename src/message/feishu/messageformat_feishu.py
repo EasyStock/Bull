@@ -52,6 +52,35 @@ def FormatCardOfNewGaiNian(date,gainian, stocks,titles):
     title = f"{date} 新增概念:{gainian}"
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"turquoise","title":{"content":title,"tag":"plain_text"}}}
 
+def FormatCardOfNewGaiNian5Days(data,title):
+    tag = {"tag":"hr"}
+    elements = []
+    for index,d in enumerate(data):
+        date = d[0]
+        gaiNian = d[1]
+        stocks = d[2]
+        if len(stocks) == 0:
+            s = f'''**{index+1}. {date} - 新增概念:**{_markdownFontColor(gaiNian)},**但无此概念相关的可转债**'''
+            line1 = {"content":s,"tag":"markdown"}
+            elements.append(tag)
+            elements.append(line1)
+        else:
+            stockID = stocks[0]
+            stockName = stocks[1]
+            stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债代码","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债名称","text_align":"center"}]}]}
+            s = f'''**{index+1}. {date} - 新增概念:**{_markdownFontColor(gaiNian)},**此概念相关的可转债如下:**'''
+            line1 = {"content":s,"tag":"markdown"}
+            line2 = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]}],"horizontal_spacing":"small"}
+            elements.append(tag)
+            elements.append(line1)
+            elements.append(stockHead)
+            elements.append(line2)
+
+    elements.append(tag)
+    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"orange","title":{"content":title,"tag":"plain_text"}}}
+
 def _markdownFontColor(data,color = "red"):
     return f'''**<font color='{color}'>{data}</font>**'''
 

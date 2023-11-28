@@ -73,7 +73,7 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
         content = json.dumps(msg,ensure_ascii=False)
         msg_type = "interactive"
         sendMessageByWebhook(webhook,secret,msg_type,content)
-        
+
         s = ";".join([f'''{t[0]} {t[1]}''' for t in results1])
         sql3 = f'''UPDATE `stock`.`stockgainiannew` SET `股票` = '{s}' WHERE (`日期` = '{tradingDays[-1]}') and (`新概念` = '{gainian}');'''
         dbConnection.Execute(sql3)
@@ -101,3 +101,4 @@ def SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret):
     content = json.dumps(msg,ensure_ascii=False)
     msg_type = "interactive"
     sendMessageByWebhook(webhook,secret,msg_type,content)
+
