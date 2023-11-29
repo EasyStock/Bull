@@ -2,6 +2,9 @@ import pandas as pd
 import json
 from message.feishu.messageformat_feishu import FormatCardOfNewGaiNian,FormatCardOfMeiRiFuPan
 from message.feishu.webhook_api import sendMessageByWebhook
+from Utility.convertDataFrameToJPG import DataFrameToJPG
+import os
+from workspace import workSpaceRoot
 
 class CReDian(object):
     def __init__(self,dbConnection,today):
@@ -67,7 +70,15 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
         dbConnection.Execute(sql1)
 
         sql2 = f'''SELECT `股票代码`, `股票简称` FROM stock.stockbasicinfo where `所属概念` like "%{gainian}%";'''
-        results1, _ = dbConnection.Query(sql2)
+        results1, columns = dbConnection.Query(sql2)
+
+        jpgDataFrame = pd.DataFrame(results1,columns=columns)
+        if not jpgDataFrame.empty:
+            folderRoot= f'''{workSpaceRoot}/复盘/股票/{tradingDays[-1]}/'''
+            if os.path.exists(folderRoot) == False:
+                os.makedirs(folderRoot)
+            fileName = f'''新增概念_{gainian}'''
+            DataFrameToJPG(jpgDataFrame,columns,folderRoot,fileName)
 
         msg = FormatCardOfNewGaiNian(tradingDays[-1],gainian,results1,["**股票代码**","**股票简称**"])
         content = json.dumps(msg,ensure_ascii=False)
