@@ -1,4 +1,6 @@
 
+import re
+
 def __formatReason(reason):
     reasons = reason.split(('['))
     return "  [".join(reasons)
@@ -17,11 +19,15 @@ def FormatCardOfZhuanZaiYuJing(date,df):
         return None
     contents = []
     tag = {"tag":"hr"}
+    #alarmPattern = "[\s\S]* 平均市净率:[\s\S]*|[\s\S]*有息负债率:[\s\S]*|[\s\S]*流通市值:[\s\S]*|[\s\S]*评   级:[\s\S]*|[\s\S]*剩余年限:[\s\S]*"
+    alarmPattern = "[\s\S]*(平均市净率:|有息负债率:|流通市值:|评   级:|剩余年限:)+?[\s\S]*"
     for _, row in df.iterrows():
         reasons = _fornatZhuanZaiReason(row["原因"])
         stockID = row["转债代码"]
         stockName = row["转债名称"]
         reason = f'''**<font color=red>{reasons}</font>**'''
+        if re.match(alarmPattern,reasons) == None:
+            continue
         s = f"**转债名称** : {stockName}\n**转债代码** : {stockID}\n**原        因** : {reason}"
         content = {"content":s,"tag":"markdown"}
         contents.append(content)

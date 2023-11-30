@@ -27,13 +27,13 @@ class CKaiPanLaDataMgr(object):
 
 
     def RequestData(self,date,params:dict):
-        today = datetime.date.today()
-        data = None
-        if str(today) == str(date):
-            data = self.RequestDataToday(params)
-        else:
-            data = self.RequestHistoryData(date,params)
-
+        # today = datetime.date.today()
+        # data = None
+        # if str(today) == str(date):
+        #     data = self.RequestDataToday(params)
+        # else:
+        #     data = self.RequestHistoryData(date,params)
+        data = self.RequestHistoryData(date,params)
         return data
 
 #=========================================================================================
