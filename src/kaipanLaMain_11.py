@@ -32,6 +32,8 @@ def MergeDataTo(dbConnection,tradingDays):
     lastDay = tradingDays[-1]
     sql1  = f'''select volumn,delta,ratio from stock.kaipanla_volumn where date = "{lastDay}";'''
     result1,_ = dbConnection.Query(sql1)
+    if len(result1) == 0:
+        return
 
     sql2 = f'''SELECT count(*) FROM stock.kaipanla_zhangting where date = '{lastDay}';'''
     result2,_ = dbConnection.Query(sql2)

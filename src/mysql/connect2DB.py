@@ -43,6 +43,6 @@ def DataFrameToSqls_UPDATE(datas,tableName,index_str):
         for rowIndex, value in row.items():
             sql = sql + '''`%s` = '%s',''' %(rowIndex,value)
         sql = sql[:-1]
-        sql = sql + '''WHERE `%s` = '%s' '''%(index_str,index)
+        sql = sql + ''' WHERE `%s` = '%s'; '''%(index_str,index)
         sqls.append(sql)
     return sqls
