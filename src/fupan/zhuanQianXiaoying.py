@@ -430,6 +430,169 @@ class CZhuanQianXiaoXing(object):
         print(self.zhangTing_yestoday[self.zhangTing_yestoday["涨跌幅"]<-5])
 
 
+################################################################
+    def _format2To3(self,row):
+        ban3 = row['3连板个数']
+        zuoRi2Ban = row['昨日2板数']
+        ratio = 0.0
+        if zuoRi2Ban == 0:
+            ratio = 0.0
+        else:
+            ratio = float(f'''{ban3/zuoRi2Ban:.2f}''')
+        
+        return ratio
+
+    def _format3ToHigher(self,row):
+        ban4 = row['4连板及以上个数']
+        ban3_zuori = row['昨日3板数']
+        ban4_zuori = row['昨日4板及以上个数']
+        ratio = 0.0
+        if (ban3_zuori + ban4_zuori) == 0:
+            ratio = 0.0
+        else:
+            ratio = float(f'''{ban4/(ban3_zuori + ban4_zuori):.2f}''')
+        return ratio
+
+
+    def _DataFrameToSqls_UPDATE(self,datas,tableName,index_str):
+        sqls = []
+        for index, row in datas.iterrows():
+            sql = '''UPDATE %s SET ''' %(tableName)
+
+            for rowIndex, value in row.items():
+                sql = sql + '''`%s` = '%s',''' %(rowIndex,value)
+            sql = sql[:-1]
+            sql = sql + ''' WHERE `%s` = '%s'; '''%(index_str,index)
+            sqls.append(sql)
+        return sqls
+
+    def UpdateRatios(self):
+        #更新2进3成功率
+        #更新3进更高成功率
+        sql =f'''SELECT * FROM stock.fupan;'''
+        results, columns = self.dbConnection.Query(sql)
+        df = pd.DataFrame(results,columns=columns)
+
+        df["昨日2板数"] = df["2连板个数"].shift()
+        df["昨日3板数"] = df["3连板个数"].shift()
+        df["昨日4板及以上个数"] = df["4连板及以上个数"].shift()
+
+        df['2进3成功率'] = df.apply(lambda row: self._format2To3(row), axis=1)
+        df['3进高成功率'] = df.apply(lambda row: self._format3ToHigher(row), axis=1)
+        newDf = pd.DataFrame(df,columns=['日期','2进3成功率','3进高成功率'])
+        newDf.set_index(["日期",],drop=True,inplace=True)
+        sqls = self._DataFrameToSqls_UPDATE(newDf,tableName='fupan',index_str='日期')
+        for sql in sqls[-7:]:
+            self.dbConnection.Execute(sql)
+            print(sql)
+################################################################
+
+     
+    def _isGaoCaoOrBanGaoCao(self,df):
+        #高潮: 动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78
+        #半高潮: 只有 连板股的红盘比 >=0.78
+        lastRow = df.iloc[-1]
+        if lastRow['动能EX'] == 12 and lastRow['势能EX'] == 10:
+            return "高潮"
+        
+        if lastRow['连板股的红盘比'] >= 0.75 and lastRow['首板红盘比'] >= 0.75:
+            return "高潮"
+        
+        if lastRow['连板股的红盘比'] >= 0.75:
+            return "半高潮"
+
+        return ""
+
+    def __bingDian(self,row):
+        if row['动能EX'] <= -8 and row['势能EX'] <= -2:
+            return True
+        
+        return False
+
+    def __bingDian2(self,row):
+        if row['首板红盘比'] < 0.4 and row['连板股的红盘比'] <= 0.4:
+            return True
+        
+        return False
+    
+    def _isBingDian(self,df):
+        lastRow1 = df.iloc[-1]
+        lastRow2 = df.iloc[-2]
+        lastRow3 = df.iloc[-3]
+        lastRow4 = df.iloc[-4]
+
+        #冰点期判断 - 强势行情: 如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次
+        if lastRow1['动能EX'] == -12 and lastRow1['势能EX'] <= -2:
+            return "强势行情-冰点"
+        
+        r = [row for row in (lastRow1,lastRow2,lastRow3,lastRow4) if self.__bingDian(row) == True]
+        if len(r) >= 2:
+            return "强势行情-冰点"
+        
+        #冰点期判断 - 弱势行情: 如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6
+        s = [row for row in (lastRow1,lastRow2,lastRow3,lastRow4) if self.__bingDian2(row) == True]
+        if lastRow1['动能EX'] <= -8 and lastRow1['势能EX'] == -10 and len(s)>=1:
+            return "弱势行情-冰点"
+        
+        if lastRow1['动能EX'] <= -6 and lastRow1['势能EX'] <= -6 and lastRow2['动能EX'] <= -6 and lastRow2['势能EX'] <= -6:
+            return "弱势行情-冰点"
+        
+        return ""
+        
+
+    def _QingXuHigherThanYestoday(self,df):
+        lastRow1 = df.iloc[-1]
+        lastRow2 = df.iloc[-2]
+        if lastRow1["3进高成功率"] > lastRow2["3进高成功率"]:
+            return "情绪比昨日强 - 高位"
+        elif lastRow1["3进高成功率"] < lastRow2["3进高成功率"]:
+            return "情绪比昨日弱 - 高位"
+        else:
+            if lastRow1["2进3成功率"] > lastRow2["2进3成功率"]:
+                return "情绪比昨日强 - 低位"
+            elif lastRow1["2进3成功率"] < lastRow2["2进3成功率"]:
+                return "情绪比昨日弱 - 低位"
+
+        return ""
+            
+    
+    def PanduanQingXu(self):
+        '''
+            判断情绪:
+                高潮: 动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78
+                半高潮: 只有 连板股的红盘比 >=0.78
+                冰点期判断 - 强势行情: 如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次
+                冰点期判断 - 弱势行情: 如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6
+            今日情绪与昨日情绪相比
+                如果 3进高成功率 > 昨日 3进高成功率 ===> 强
+                如果 3进高成功率 < 昨日 3进高成功率 ===> 弱
+                如果 3进高成功率 = 昨日 3进高成功率
+                    2进3成功率 > 昨日 2进3成功率 ===> 强
+                    2进3成功率 < 昨日 2进3成功率 ===> 弱
+        '''
+            
+        sql =f'''SELECT * FROM stock.fupan;'''
+        results, columns = self.dbConnection.Query(sql)
+        df = pd.DataFrame(results,columns=columns)
+
+        gaocao = self._isGaoCaoOrBanGaoCao(df)
+        bingdian = self._isBingDian(df)
+        qingxu = self._QingXuHigherThanYestoday(df)
+
+        beizhu = ""
+        if gaocao!= "":
+            beizhu = f"今日情绪:{gaocao};"
+        
+        if bingdian!= "":
+            beizhu = f"今日情绪:{bingdian};"
+        
+        if qingxu!= "":
+            beizhu = f"{beizhu}{qingxu}"
+        
+        sql = f'''UPDATE `stock`.`fupan` SET `备注` = '{beizhu}' WHERE (`日期` = '{self.today}');'''
+        self.dbConnection.Execute(sql)
+
+################################################################
     def ZhuanQianXiaoYing(self):
         self.zhuanqianxiaoying_yestoday()
         self.zhangTingToday()
@@ -447,3 +610,5 @@ class CZhuanQianXiaoXing(object):
         self.WriteFuPanBiJi()
         self.UpdateDataToDB()
         self.PrintString()
+        self.UpdateRatios()
+        self.PanduanQingXu()
