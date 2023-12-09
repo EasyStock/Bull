@@ -79,6 +79,9 @@ class CJiSiLu(object):
         if row['剩余年限'] <= 1:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('剩余年限:',row['剩余年限'],"[>1];",chr(12288),end = '')
 
+        if row['剩余规模'] < 3.5:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('剩余规模:',row['剩余规模'],"[>=3.5];",chr(12288),end = '')
+
         alarmPattern = '[\s\S]*(公告要强赎|临近到期|最后交易日|最后转股日)+?[\s\S]*'
         if re.match(alarmPattern,row['提示']) != None:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('公告:',row['提示'].strip().split('\n')[0].split('：')[0],"[无强赎公告];",chr(12288),end = '')
@@ -161,6 +164,7 @@ class CJiSiLu(object):
             newDf = newDf[newDf['评级'].isin(["AAA","AA+","AA","AA-","A+"])]
             newDf = newDf[newDf['回售触发价']>0]
             newDf = newDf[newDf['剩余年限']>1]
+            newDf = newDf[newDf['剩余规模']>0.5]
             newDf = newDf[newDf['提示'].str.contains('[\s\S]*(公告要强赎|临近到期|最后交易日|最后转股日)+?[\s\S]*') == False]
             newDf.sort_values('PB',axis=0,ascending=False,inplace=True)
             self.logger.info(f'{newDf}')

@@ -20,7 +20,7 @@ def FormatCardOfZhuanZaiYuJing(date,df):
     contents = []
     tag = {"tag":"hr"}
     #alarmPattern = "[\s\S]*(平均市净率:|有息负债率:|流通市值:|评   级:|剩余年限:)+?[\s\S]*"
-    alarmPattern = "[\s\S]*(有息负债率:|评   级:|无强赎公告)+?[\s\S]*"
+    alarmPattern = "[\s\S]*(有息负债率:|评   级:|无强赎公告|剩余规模)+?[\s\S]*"
     result = False
     for _, row in df.iterrows():
         reasons = _fornatZhuanZaiReason(row["原因"])
