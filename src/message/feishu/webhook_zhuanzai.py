@@ -1,5 +1,5 @@
 from message.feishu.webhook_api import sendMessageByWebhook
-from message.feishu.messageformat_feishu import FormatCardOfZhuanZaiYuJing,FormatCardOfNewGaiNian, FormatCardOfNewGaiNian5Days
+from message.feishu.messageformat_feishu import FormatCardOfZhuanZaiYuJing,FormatCardOfNewGaiNian, FormatCardOfNewGaiNian5Days,FormatCardOfQiangShu
 import pandas as pd
 import json
 
@@ -12,6 +12,8 @@ def SendKeZhuanZaiYuJing(dbConnection,tradingDays,webhook,secret):
         return
 
     t = FormatCardOfZhuanZaiYuJing(tradingDays[-1],df)
+    if t is None:
+        return
     content = json.dumps(t,ensure_ascii=False)
     msg_type = "interactive"
     sendMessageByWebhook(webhook,secret,msg_type,content)
@@ -58,6 +60,52 @@ def Send5DaysKeZhuanZaiNewGaiNian(dbConnection,tradingDays,webhook,secret):
     
     title = f'''{last5Days} - {tradingDays[-1]} 近5个交易日新增加概念总结:'''
     msg = FormatCardOfNewGaiNian5Days(data,title)
+    content = json.dumps(msg,ensure_ascii=False)
+    msg_type = "interactive"
+    sendMessageByWebhook(webhook,secret,msg_type,content)
+
+
+def SendNDaysKeZhuanZaiQiangShu(dbConnection,tradingDays,webhook,secret,days = -5):
+    #近5日出现有强赎公告的
+    last5Days = tradingDays[days]
+    sql = f'''SELECT `日期`,`转债代码`, `转债名称`, `现价`, `提示` FROM stock.kezhuanzhai_all where `提示` !="" and `日期` >= "{last5Days}";'''
+    results, _ = dbConnection.Query(sql)
+    if len(results) == 0:
+        return
+    
+    data = {}
+    exceptions = ["不提前赎回","合格机构投资者可买","不行使提前赎回权利"]
+    for result in results:
+        date = result[0]
+        id = result[1]
+        name = result[2]
+        price = result[3]
+        tips = result[4].strip().split('\n')[0].split('：')[0]
+        flag = False
+        for exception in exceptions:
+            if tips.find(exception)!= -1:
+                flag = True
+                break
+        
+        if flag == True:
+            continue
+        if id not in data:
+            data[id] = {}
+        
+        if "公告" not in data[id]:
+            data[id]["公告"] = []
+
+        if tips not in data[id]["公告"]:
+            data[id]["公告"].append(tips)
+        
+        data[id]["现价"] = price
+        if "转债名称" not in data[id]:
+            data[id]["转债名称"] = name
+
+    print(data)
+    
+    title = f'''{last5Days} - {tradingDays[-1]} 近{-days}个交易日提示性公告:'''
+    msg = FormatCardOfQiangShu(data,title)
     content = json.dumps(msg,ensure_ascii=False)
     msg_type = "interactive"
     sendMessageByWebhook(webhook,secret,msg_type,content)

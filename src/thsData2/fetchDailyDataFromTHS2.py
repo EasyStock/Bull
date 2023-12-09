@@ -41,7 +41,7 @@ class CFetchDailyDataFromTHS2(object):
         ths.dateRange0 = newDate
         ths.dateRange1 = newDate
         ths.threshold = 4500
-        ths.iwc_token = "0ac9667416921831288847001"
+        ths.iwc_token = "0ac9665417016889621435948"
         df = ths.RequestMutiPageData(self.v,perPage)
         self.dataSize = df.shape[0]  #记录总共获取了多少条数据
         map = self.keywordTranslator(df)

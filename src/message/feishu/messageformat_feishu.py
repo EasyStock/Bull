@@ -19,8 +19,9 @@ def FormatCardOfZhuanZaiYuJing(date,df):
         return None
     contents = []
     tag = {"tag":"hr"}
-    #alarmPattern = "[\s\S]* 平均市净率:[\s\S]*|[\s\S]*有息负债率:[\s\S]*|[\s\S]*流通市值:[\s\S]*|[\s\S]*评   级:[\s\S]*|[\s\S]*剩余年限:[\s\S]*"
-    alarmPattern = "[\s\S]*(平均市净率:|有息负债率:|流通市值:|评   级:|剩余年限:)+?[\s\S]*"
+    #alarmPattern = "[\s\S]*(平均市净率:|有息负债率:|流通市值:|评   级:|剩余年限:)+?[\s\S]*"
+    alarmPattern = "[\s\S]*(有息负债率:|评   级:|无强赎公告)+?[\s\S]*"
+    result = False
     for _, row in df.iterrows():
         reasons = _fornatZhuanZaiReason(row["原因"])
         stockID = row["转债代码"]
@@ -32,6 +33,9 @@ def FormatCardOfZhuanZaiYuJing(date,df):
         content = {"content":s,"tag":"markdown"}
         contents.append(content)
         contents.append(tag)
+        result = True
+    if result == False:
+        return None
     t = f"条件不符合预警:{date}"
     title = {"content":t,"tag":"plain_text"}
     beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
@@ -66,7 +70,7 @@ def FormatCardOfNewGaiNian5Days(data,title):
         gaiNian = d[1]
         stocks = d[2]
         if len(stocks) == 0:
-            s = f'''**{index+1}. {date} - 新增概念:**{_markdownFontColor(gaiNian)},**但无此概念相关的可转债**'''
+            s = f'''{index+1}. {date}  新增概念:**{_markdownFontColor(gaiNian)}**,**但无此概念相关的可转债**'''
             line1 = {"content":s,"tag":"markdown"}
             elements.append(tag)
             elements.append(line1)
@@ -74,7 +78,7 @@ def FormatCardOfNewGaiNian5Days(data,title):
             stockID = stocks[0]
             stockName = stocks[1]
             stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债代码","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债名称","text_align":"center"}]}]}
-            s = f'''**{index+1}. {date} - 新增概念:**{_markdownFontColor(gaiNian)},**此概念相关的可转债如下:**'''
+            s = f'''{index+1}. {date}  新增概念:**{_markdownFontColor(gaiNian)}**,**此概念相关的可转债如下:**'''
             line1 = {"content":s,"tag":"markdown"}
             line2 = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]}],"horizontal_spacing":"small"}
             elements.append(tag)
@@ -125,3 +129,33 @@ def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
     title = f" 每日复盘 - {date}"
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 
+
+
+
+def FormatCardOfQiangShu(datas,title):
+    #强制赎回公告
+
+    if len(datas) == 0:
+        return None
+    elements = []
+    tag = {"tag":"hr"}
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**转债名称**","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**公告内容**","text_align":"center"}]}]}
+    elements.append(tag)
+    elements.append(stockHead)
+
+    for stockID in datas:
+        stockName = f'''{datas[stockID]["转债名称"]}'''
+        tips = "\n".join(datas[stockID]["公告"])
+        price = datas[stockID]["现价"]
+        if price <=140:
+            stockName = _markdownFontColor(stockName)
+            tips = _markdownFontColor(tips)
+        
+        line = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":tips,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+
+    elements.append(tag)
+    beizhu = {"elements":[{"content":"1. 转债现价 <= 140 显示红色\n2. 风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}

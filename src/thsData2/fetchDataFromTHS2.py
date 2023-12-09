@@ -17,12 +17,12 @@ class CFetchDataFromTHS_MultiPageMgr(object):
         self.condition = condition
         self.codelist = ""
         self.indexNameLimit = ""
-        self.logid = "ba3afeb2557781f4d95e5f28aa5024c5"
+        self.logid = "046fe0b4300450398d4944ff01ece60e"
         self.ret = 'json_all'
-        self.sessignid = "ba3afeb2557781f4d95e5f28aa5024c5"
+        self.sessignid = "046fe0b4300450398d4944ff01ece60e"
         self.dateRange0 = "20220902"
         self.dateRange1 = "20220902"
-        self.iwc_token = "0ac9667416921831288847001"
+        self.iwc_token = "0ac9665417016889621435948"
         self.user_id = "240679370"
         self.uuids = 24087
         self.query_type = 'stock'
@@ -117,7 +117,7 @@ class CFetchDataFromTHS2(object):
         self.sessignid = "ba3afeb2557781f4d95e5f28aa5024c5"
         self.dateRange0 = "20220902"
         self.dateRange1 = "20220902"
-        self.iwc_token = "0ac9667416921831288847001"
+        self.iwc_token = "0ac9665417016889621435948"
         self.user_id = "240679370"
         self.uuids = 24087
         self.query_type = 'stock'
@@ -169,14 +169,18 @@ class CFetchDataFromTHS2(object):
         url = "http://www.iwencai.com/gateway/urp/v7/landing/getDataList"
         payload = self.formatQueryString()
         headers = self.QueryHead(v)
-        response = requests.request("POST", url, headers=headers, data=payload)
-        js =json.loads(response.text)
-        components = js["answer"]["components"]
-        component = components[0]
-        datas = component["data"]["datas"]
-        df = pd.DataFrame(datas)
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload)
+            js =json.loads(response.text)
+            components = js["answer"]["components"]
+            component = components[0]
+            datas = component["data"]["datas"]
+            df = pd.DataFrame(datas)
+            return df
+        except:
+            return self.RequstData(v)
         #logger.error(f"共获取{df.shape[0]}条数据")
-        return df
+        
 
 
  

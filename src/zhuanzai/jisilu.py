@@ -7,6 +7,7 @@ from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
 import os
 import sys
 from workspace import workSpaceRoot,WorkSpaceFont
+import re
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -60,8 +61,8 @@ class CJiSiLu(object):
         if row['有息负债率'] > 70 or row['有息负债率']<0:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('有息负债率:',row['有息负债率'],"[0<x<70];",chr(12288),end = '')
 
-        if row['股票质押率'] < 0:
-            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('股票质押率:',row['股票质押率'],"[>=0];",chr(12288),end = '')
+        # if row['股票质押率'] < 0:
+        #     result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('股票质押率:',row['股票质押率'],"[>=0];",chr(12288),end = '')
         
         if row['流通市值（亿元)'] > 250:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('流通市值:',row['流通市值（亿元)'],"[<=250];",chr(12288),end = '')
@@ -77,6 +78,10 @@ class CJiSiLu(object):
 
         if row['剩余年限'] <= 1:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('剩余年限:',row['剩余年限'],"[>1];",chr(12288),end = '')
+
+        alarmPattern = '[\s\S]*(公告要强赎|临近到期|最后交易日|最后转股日)+?[\s\S]*'
+        if re.match(alarmPattern,row['提示']) != None:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('公告:',row['提示'].strip().split('\n')[0].split('：')[0],"[无强赎公告];",chr(12288),end = '')
 
         #print(result)
         return result
@@ -150,12 +155,13 @@ class CJiSiLu(object):
             newDf = newDf[newDf['PB']>=1.2]
             newDf = newDf[newDf['有息负债率']>0]
             newDf = newDf[newDf['有息负债率']<70]
-            newDf = newDf[newDf['股票质押率']>=0]
+            #newDf = newDf[newDf['股票质押率']>=0]
             newDf = newDf[newDf['流通市值（亿元)']<=250]
             #newDf = newDf[newDf['PB-溢价率']>=1.0]
             newDf = newDf[newDf['评级'].isin(["AAA","AA+","AA","AA-","A+"])]
             newDf = newDf[newDf['回售触发价']>0]
             newDf = newDf[newDf['剩余年限']>1]
+            newDf = newDf[newDf['提示'].str.contains('[\s\S]*(公告要强赎|临近到期|最后交易日|最后转股日)+?[\s\S]*') == False]
             newDf.sort_values('PB',axis=0,ascending=False,inplace=True)
             self.logger.info(f'{newDf}')
             self.logger.info(f'{newDf.shape}')
