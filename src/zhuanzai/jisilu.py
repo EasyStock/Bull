@@ -8,6 +8,7 @@ import os
 import sys
 from workspace import workSpaceRoot,WorkSpaceFont
 import re
+import time
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -29,6 +30,28 @@ NAME_MAP = {
     "curr_iss_amt":"剩余规模",
     "ytm_rt":"到期税前收益率",
     "bond_nm_tip":"提示",
+}
+
+
+NAME_MAP_Newstock = {
+"stock_cd":"股票代码",
+"stock_nm":"股票名称",
+"apply_dt":"申购日",
+"apply_dt2":"申购日期",
+"need_market_value":"需配市值",
+"apply_cd":"申购代码",
+"issue_price":"发行价",
+"individual_limit":"申购限额",
+"money_out_dt":"缴款日",
+"lucky_draw_rt":"中签率",
+"list_dt":"上市日期",
+"after_issue_show":"发行时总市值",
+"issue_show":"公开发行市值",
+"pub_pe":"发行市盈率",
+"avg_pe":"行业市盈率",
+"theory_price":"开板收盘价",
+"theory_profit":"单签收益",
+"underwriter":"承销商"
 }
 
 pd.set_option('display.unicode.ambiguous_as_wide',True)
@@ -264,3 +287,60 @@ class CJiSiLu(object):
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
         self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_剩余.jpg")
         #self.logger.info(str(df))
+
+
+########################################################################################################################
+#新股日历
+    
+    def GetNewStockCalendar(self):
+        self.logger.info(f'==============新股日历 begin:{datetime.datetime.utcnow()}==============================')
+        sse_head = {
+        'authority': 'www.jisilu.cn',
+        'accept': 'application/json, text/javascript, */*; q=0.01',
+        'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+        'content-type':'application/x-www-form-urlencoded; charset=UTF-8',
+
+        "origin": "https://www.jisilu.cn",
+        'referer': 'https://www.jisilu.cn/data/new_stock/',
+
+
+        "Host": "www.jisilu.cn",
+        "Init": "1",
+        
+        "sec-ch-ua": "\"Chromium\";v=\"119\", \"Google Chrome\";v=\"119\", \"Not=A?Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "macOS",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+
+        # "If-Modified-Since": "Sun, 16 Jan 2022 01:10:13 GMT",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+        "Cookie":f"{self.cookie}",
+        "x-requested-with":"XMLHttpRequest",
+        }
+        t = int(time.time()*1000)
+        url=f'''https://www.jisilu.cn/data/new_stock/apply/?___jsl=LST___t={t}'''
+
+        payload = "market%5B%5D=shmb&market%5B%5D=shkc&market%5B%5D=szmb&market%5B%5D=szcy&market%5B%5D=bj&rp=22&page=1&pageSize=1000"
+        response = requests.request("GET",url,headers=sse_head, data= payload)
+        #print(response, response.text)
+        if len(response.text)!=0:
+            j = response.json()
+            rows = j['rows']
+            datas = []
+            for row in rows:
+                cell = row['cell']
+                datas.append(cell)
+
+            df = pd.DataFrame(datas)
+            newDf = pd.DataFrame()
+            columns = NAME_MAP_Newstock.keys()
+            for column in columns:
+                newDf[NAME_MAP_Newstock[column]] = df[column]
+            print(newDf)
+
+            sqls = DataFrameToSqls_REPLACE(newDf,"newstocks")
+            for sql in sqls:
+                if self.dbConnection.Execute(sql) == False:
+                    sys.exit(1)

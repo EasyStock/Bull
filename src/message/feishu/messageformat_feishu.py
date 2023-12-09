@@ -36,7 +36,7 @@ def FormatCardOfZhuanZaiYuJing(date,df):
         result = True
     if result == False:
         return None
-    t = f"条件不符合预警:{date}"
+    t = f"预警与可能的机会提醒:{date}"
     title = {"content":t,"tag":"plain_text"}
     beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     contents.append(beizhu)
@@ -129,9 +129,6 @@ def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
     title = f" 每日复盘 - {date}"
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 
-
-
-
 def FormatCardOfQiangShu(datas,title):
     #强制赎回公告
 
@@ -150,12 +147,44 @@ def FormatCardOfQiangShu(datas,title):
         if price <=140:
             stockName = _markdownFontColor(stockName)
             tips = _markdownFontColor(tips)
-        
+
         line = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":tips,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    elements.append(tag)
+    beizhu = {"elements":[{"content":"1. 转债现价 <= 140 显示红色\n2. 风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
+
+
+def FormatCardOfNewStock(datas,title):
+    #新股发行
+    if len(datas) == 0:
+        return None
+    elements = []
+    tag = {"tag":"hr"}
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**名称**","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**日期**","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**类别**","text_align":"center"}]}]}
+    elements.append(tag)
+    elements.append(stockHead)
+
+    for index,stock in enumerate(datas):
+        stockName = stock[0]
+        date = stock[1]
+        type = stock[2]
+        background_style = "default"
+        if index % 2 == 1:
+            background_style = "grey"
+
+        if  type.find("北交所") != -1:
+            stockName = _markdownFontColor(stockName)
+            date = _markdownFontColor(date)
+            type = _markdownFontColor(type)
+
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":date,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":type,"text_align":"center"}]}],"horizontal_spacing":"small"}
         elements.append(line)
 
 
     elements.append(tag)
-    beizhu = {"elements":[{"content":"1. 转债现价 <= 140 显示红色\n2. 风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     elements.append(beizhu)
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}

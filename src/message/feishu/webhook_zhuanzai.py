@@ -1,7 +1,8 @@
 from message.feishu.webhook_api import sendMessageByWebhook
-from message.feishu.messageformat_feishu import FormatCardOfZhuanZaiYuJing,FormatCardOfNewGaiNian, FormatCardOfNewGaiNian5Days,FormatCardOfQiangShu
+from message.feishu.messageformat_feishu import FormatCardOfZhuanZaiYuJing,FormatCardOfNewGaiNian, FormatCardOfNewGaiNian5Days,FormatCardOfQiangShu,FormatCardOfNewStock
 import pandas as pd
 import json
+import re
 
 def SendKeZhuanZaiYuJing(dbConnection,tradingDays,webhook,secret):
     # 可转债不符合条件预警
@@ -106,6 +107,40 @@ def SendNDaysKeZhuanZaiQiangShu(dbConnection,tradingDays,webhook,secret,days = -
     
     title = f'''{last5Days} - {tradingDays[-1]} 近{-days}个交易日提示性公告:'''
     msg = FormatCardOfQiangShu(data,title)
+    content = json.dumps(msg,ensure_ascii=False)
+    msg_type = "interactive"
+    sendMessageByWebhook(webhook,secret,msg_type,content)
+
+
+def SendNewStocks(dbConnection,tradingDays,webhook,secret):
+    # 新股发行通知
+    sql = f'''SELECT `股票代码`,`股票名称`,`申购日` FROM stock.newstocks where `申购日期` >="{tradingDays[-1]}" order by `申购日期` ASC;'''
+    results, _ = dbConnection.Query(sql)
+    if len(results) == 0:
+        return
+    
+    data = []
+    for result in results:
+        stockID = result[0]
+        stockName = result[1]
+        date = result[2]
+        ban = "上交所"
+        if re.match('^00.*',stockID) is not None:
+            ban = "中小板"
+        elif re.match('^30.*',stockID) is not None:
+            ban = "创业板"
+        elif re.match('^60.*',stockID) is not None:
+            ban = "主板"
+        elif re.match('^68.*',stockID) is not None:
+            ban = "科创板"
+        elif re.match('^83.*',stockID) is not None:
+            ban = "北交所"   
+        else:
+            return "未知"
+        data.append((stockName,date,ban))
+    
+    title = f'''新股打新日历{tradingDays[-1]}:'''
+    msg = FormatCardOfNewStock(data,title)
     content = json.dumps(msg,ensure_ascii=False)
     msg_type = "interactive"
     sendMessageByWebhook(webhook,secret,msg_type,content)

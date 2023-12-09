@@ -14,12 +14,13 @@ from zhuanzai.jisilu_selenium import CJiSiLuSelenium
 def GetFromJisiluAndWriteToDB(logger):
     logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
     dbConnection = ConnectToDB()
-    try:
-        CJiSiLuSelenium().formatCookie(dbConnection)
-    except:
-        pass
+    # try:
+    #     CJiSiLuSelenium().formatCookie(dbConnection)
+    # except:
+    #     pass
     jisiLu = CJiSiLu(logger,dbConnection)
     jisiLu.GetFromJisiluAndWriteToDB()
+    jisiLu.GetNewStockCalendar()
     jisiLu.Categrate(CATEGRAGTE_KE_ZHUAN_ZAI)
 
     tradingDays = GetTradingDateLastN(dbConnection,3)
@@ -33,6 +34,13 @@ def AutoDownload():
         schedule.run_pending()
         time.sleep(1)
 
+def GetFromJisilu_NewStockAndWriteToDB(logger):
+    logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
+    dbConnection = ConnectToDB()
+
+    jisiLu = CJiSiLu(logger,dbConnection)
+    jisiLu.GetNewStockCalendar()
+    logger.info(f'==============end:{datetime.datetime.utcnow()}==============================')
 
 def compareWithIndexTest(logger):
     logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
@@ -57,7 +65,7 @@ def Test(logger):
 if __name__ == "__main__":
     logger = StartToInitLogger("集思录")
     
-    #compareWithIndexTest(logger)
+    compareWithIndexTest(logger)
     try:
         GetFromJisiluAndWriteToDB(logger)
     except Exception as e:
