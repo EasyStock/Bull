@@ -29,6 +29,7 @@ NAME_MAP = {
     "curr_iss_amt":"剩余规模",
     "ytm_rt":"到期税前收益率",
     "bond_nm_tip":"提示",
+    "total_market_value":"总市值（亿元)",
 }
 def jisilu(logger):
     logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
@@ -36,7 +37,7 @@ def jisilu(logger):
     'Accept': 'application/json, text/plain, */*',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Columns':'1,70,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,44,46,47,50,52,53,54,55,56,57,58,59,60,62,63,64,67,71,69',
+    'Columns':'1,70,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,44,46,47,50,52,53,54,55,56,57,58,59,60,62,63,64,67,71,69,72',
     "Connection": "keep-alive",
     "Host": "www.jisilu.cn",
     "Init": "1",
