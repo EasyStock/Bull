@@ -30,8 +30,8 @@ def AllInOne():
     DragonDaily()
     WriteJiTianJiBan()
     OneKeyKaiPanLa()
-    refreshAccessToken()
-    FengDan()
+    #refreshAccessToken()
+    #FengDan()
     WriteSummary()
 
 
