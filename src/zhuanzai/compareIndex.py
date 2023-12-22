@@ -18,7 +18,7 @@ class CCompareWithIndex(object):
         return  newDf1
 
     def GetZhuanZhuaiInfo(self,today,yestoday):
-        sql = f'''SELECT A.`日期`, A.`转债代码`,A.`转债名称`,A.`正股代码`, A.`正股名称`, A.`现价`,B.`现价` As '昨日价格' FROM stock.kezhuanzhai As A, (SELECT * FROM stock.kezhuanzhai where `日期`= "{yestoday}") AS B where A.`日期`= "{today}" and A.`转债代码` = B.`转债代码`;'''
+        sql = f'''SELECT A.`日期`, A.`转债代码`,A.`转债名称`,A.`正股代码`, A.`正股名称`, A.`现价`,B.`现价` As '昨日价格' FROM stock.kezhuanzhai_all As A, (SELECT * FROM stock.kezhuanzhai_all where `日期`= "{yestoday}") AS B where A.`日期`= "{today}" and A.`转债代码` = B.`转债代码`;'''
         result1,columns1 = self.dbConnection.Query(sql)
         newDf1=pd.DataFrame(result1,columns=columns1)
         #print(newDf1)
@@ -26,7 +26,7 @@ class CCompareWithIndex(object):
 
     def GetIndexInfoBySotckID(self,IndexInfo,stockID):
         if IndexInfo is None:
-            return (None,None)
+            return (None,None,None)
         indexID = None
         if re.match('^00.*',stockID) is not None:
             IndexID = "SZ399001" #深证成指
@@ -38,11 +38,13 @@ class CCompareWithIndex(object):
             IndexID = "SH000688" #科创50 
         else:
             IndexID =  None
-        
-        increase_rate = IndexInfo.loc[IndexID]["increase_rate"]
-        increase_rate = float(increase_rate.strip('%'))
-        name = IndexInfo.loc[IndexID]["prod_name"]
-        return (IndexID,increase_rate,name)
+        try:
+            increase_rate = IndexInfo.loc[IndexID]["increase_rate"]
+            increase_rate = float(increase_rate.strip('%'))
+            name = IndexInfo.loc[IndexID]["prod_name"]
+            return (IndexID,increase_rate,name)
+        except:
+            return (None,None,None)
     
     def ProcessData(self,indexInfo,df):
         for _, row in df.iterrows():
@@ -56,39 +58,63 @@ class CCompareWithIndex(object):
 
             zhangDiefu = (float(price) - float(price_last))/float(price_last)*100.0
             (IndexID,increase_rate,name) = self.GetIndexInfoBySotckID(indexInfo,stockID)
+            if IndexID is None or increase_rate is None or name is None:
+                continue
             delta = zhangDiefu - increase_rate
-            #print(stockID,IndexID,name,float(increase_rate),zhangDiefu)
-            flag = 0
-            # delta
-            # 0.02 -2.110
-            # 0.05 -1.510
-            # 0.10 -1.070
-            # 0.50  0.020
-            # 0.90  1.210
-            # 0.95  1.610
-            # 0.98  2.138
-            if delta <-2.11:
-                flag = -4
-            elif delta <-1.5:
-                flag = -3
-            elif delta <-1:
-                flag = -2
-            elif delta <-0.5:
-                flag = -1
-            elif delta <0.5:
-                flag = 0
-            elif delta <1.2:
-                flag = 1
-            elif delta <1.6:
-                flag = 2
-            elif delta <2.1:
-                flag = 3
-            else :
-                flag = 4
             #sql = f'''REPLACE INTO `stock`.`stockcompareindex` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
-            sql = f'''REPLACE INTO `stock`.`stockcompareindex` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`, `flag`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}', '{flag}');'''
+            sql = f'''REPLACE INTO `stock`.`stockcompareindex` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
             self.dbConnection.Execute(sql)
-    
+        
+    def _score(self,volumn,percentail,reversed = False):
+        result = 1
+        for index, value in percentail.items():
+            if float(volumn) <= float(value):
+                result = float(index)
+                break
+        
+        if reversed:
+            result = 1.1 - float(result)
+        
+        result = int(result * 10)
+        return result
+
+    def score(self,df,column,newColumn,percentail:list,reversed=False):
+        df[newColumn] = df.apply(lambda row: self._score(row[column],percentail[column],reversed), axis=1)
+
+    def CalcScore(self):
+        '''
+            delta 
+        0.1  -1.22 
+        0.2  -0.72  
+        0.3  -0.41  
+        0.4  -0.15  
+        0.5  0.08  
+        0.6  0.30   
+        0.7  0.54   
+        0.8  0.81  
+        0.9  1.27 
+        '''
+        sql = f'''SELECT * FROM stock.stockcompareindex;'''
+        results, columns = self.dbConnection.Query(sql)
+        df = pd.DataFrame(results,columns=columns)
+        df.set_index(["date","indexID","stockID"],drop=True,inplace=True)
+        df["increase_rate"] = df["increase_rate"].astype(float)
+        df["zhangdiefu"] = df["zhangdiefu"].astype(float)
+        t = df.quantile([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9])
+        print(t)
+        newDf = df[pd.isna(df['flag'])]
+        newDf.drop('flag', axis='columns',inplace=True)
+        self.score(newDf,'delta','flag',t,False)
+        for index, row in newDf.iterrows():
+            score = row['flag']
+            date = index[0]
+            indexID = index[1]
+            stockID = index[2]
+            sql = f'''UPDATE `stock`.`stockcompareindex` SET `flag` = '{score}' WHERE (`date` = '{date}') and (`indexID` = '{indexID}') and (`stockID` = '{stockID}');'''
+            #print(sql)
+            self.dbConnection.Execute(sql)
+            
+
 
     def CompareWithIndex(self,today,yestoday):
         self.logger.info(f'==============start to compare {today} ==============================')
@@ -121,7 +147,7 @@ class CZhuanzaiSelect(object):
         self.indexInfo.set_index(["StockID",],drop=True,inplace=True)
 
     def GetZhuanZhuaiInfo(self,today):
-        sql = f'''SELECT * FROM stock.kezhuanzhai where `日期` = "{today}";'''
+        sql = f'''SELECT * FROM stock.kezhuanzhai_all where `日期` = "{today}";'''
         result1,columns1 = self.dbConnection.Query(sql)
         self.zhuanZaiInfo=pd.DataFrame(result1,columns=columns1)
     
