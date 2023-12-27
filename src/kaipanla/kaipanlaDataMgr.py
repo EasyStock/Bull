@@ -2,7 +2,8 @@ from kaipanla.kaipanlaAPI import CkaiPanLaApi
 import datetime
 import json
 import pandas as pd
-
+import pytz
+import re
 
 class CKaiPanLaDataMgr(object):
     def __init__(self) -> None:
@@ -27,7 +28,7 @@ class CKaiPanLaDataMgr(object):
 
 
     def RequestData(self,date,params:dict):
-        today = datetime.date.today()
+        today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
         data = None
         if str(today) == str(date):
             data = self.RequestDataToday(params)
@@ -37,6 +38,63 @@ class CKaiPanLaDataMgr(object):
 
         return data
 
+class CKaiPanLaMultiPageDataMgr(object):
+    def __init__(self,st = 50) -> None:
+        self.index  = 0
+        self.st = st
+        self.df = None
+        self.page = 1
+        self.datas = []
+    
+    def _formatURL(self,params):
+        queryString1 = params["queryStringOfToday"].strip()
+        newIndex = f'''&Index={self.index}&'''
+        queryString1 = re.sub("&Index=\d{1,}&",newIndex,queryString1)
+        newSt1 = f'''&st={self.st}'''
+        queryString1 = re.sub("&st=\d{1,}",newSt1,queryString1)
+        params["queryStringOfToday"] = queryString1
+
+        queryString2 = params["queryStringOfHistory"].strip()
+        newSt2 = f'''&st={self.st}'''
+        queryString2 = re.sub("&Index=\d{1,}&",newIndex,queryString2)
+        queryString2 = re.sub("&st=\d{1,}",newSt2,queryString2)
+
+        params["queryStringOfHistory"] = queryString2
+        return params
+
+    def RequestData(self,date,params:dict):
+        #print(f"开始获取第{self.page}页数据,每页{self.st}条, 开始的索引是{self.index}")
+        dataMgr = CKaiPanLaDataMgr()
+        newParam = self._formatURL(params)
+        result = dataMgr.RequestData(date,newParam)
+        if result is not None:
+            js =json.loads(result)
+            l = js['list']
+            [self.datas.append(x) for x in l if x not in self.datas]
+            if self.page == 1:
+                if len(l) < self.st:
+                    self.df = pd.DataFrame(self.datas)
+                    print(f"总共获取了:{len(self.datas)}条数据")
+                    return self.df
+                else:
+                    self.index = self.page* self.st -1
+                    self.page = self.page + 1
+                    self.RequestData(date,newParam)
+            else:
+                if len(l) < self.st:
+                    #最后一页
+                    self.df = pd.DataFrame(self.datas)
+                    return self.df
+                else:
+                    self.index = self.page* self.st -1
+                    self.page = self.page + 1
+                    self.RequestData(date,newParam)
+        else:
+            self.df = pd.DataFrame(l)
+
+        print(f"总共获取了:{len(self.datas)}条数据")
+        return self.df
+    
 #=========================================================================================
 def DataFrameToSqls_INSERT_OR_IGNORE(datas,tableName):
     sqls = []
@@ -99,17 +157,11 @@ def RequestZhangTingDataByDates(dates,dbConnection): # 涨停数据
     # pd.set_option('display.unicode.ambiguous_as_wide',True)
     # pd.set_option('display.unicode.east_asian_width',True)
     # pd.set_option('display.width',180)
-    dataMgr = CKaiPanLaDataMgr()
     for date in dates:
         print(f"=======start to request 涨停 data of: {date}=================")
-        result = dataMgr.RequestData(date,KaiPanLaZhangTingListParam)
-        if result is not None:
-            js =json.loads(result)
-            l = js['list']
-            df = pd.DataFrame(l)
-            if df.empty:
-                continue
-
+        dataMgr = CKaiPanLaMultiPageDataMgr()
+        df = dataMgr.RequestData(date,KaiPanLaZhangTingListParam)
+        if df is not None and not df.empty:
             res = pd.DataFrame()
             
             res["stockID"] = df[0]
@@ -150,20 +202,12 @@ def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
-    # pd.set_option('display.unicode.ambiguous_as_wide',True)
-    # pd.set_option('display.unicode.east_asian_width',True)
-    # pd.set_option('display.width',180)
-    dataMgr = CKaiPanLaDataMgr()
+    
     for date in dates:
         print(f"=======start to request 炸板 data of: {date}=================")
-        result = dataMgr.RequestData(date,KaiPanLaZhaBanListParam)
-        if result is not None:
-            js =json.loads(result)
-            l = js['list']
-            df = pd.DataFrame(l)
-            if df.empty:
-                continue
-
+        dataMgr = CKaiPanLaMultiPageDataMgr()
+        df = dataMgr.RequestData(date,KaiPanLaZhaBanListParam)
+        if df is not None and not df.empty:
             res = pd.DataFrame()
             
             res["stockID"] = df[0]
@@ -205,20 +249,12 @@ def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
-    # pd.set_option('display.unicode.ambiguous_as_wide',True)
-    # pd.set_option('display.unicode.east_asian_width',True)
-    # pd.set_option('display.width',180)
-    dataMgr = CKaiPanLaDataMgr()
+
     for date in dates:
         print(f"=======start to request 跌停 data of: {date}=================")
-        result = dataMgr.RequestData(date,KaiPanLaDieTingListParam)
-        if result is not None:
-            js =json.loads(result)
-            l = js['list']
-            df = pd.DataFrame(l)
-            
-            if df.empty:
-                continue
+        dataMgr = CKaiPanLaMultiPageDataMgr()
+        df = dataMgr.RequestData(date,KaiPanLaDieTingListParam)
+        if df is not None and not df.empty:
             res = pd.DataFrame()
             
             res["stockID"] = df[0]
@@ -250,8 +286,6 @@ def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
             print(f'''{date} data is None''')
 
 
-
-
 def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
     KaiPanLaZhiranZhangTingListParam = {
         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
@@ -262,22 +296,13 @@ def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.12.0.1&a=HisDaBanList&apiv=w34&c=HisHomeDingPan&st=1000",
         "hostOfHistory":"apphis.longhuvip.com"
         }
-    # pd.set_option('display.unicode.ambiguous_as_wide',True)
-    # pd.set_option('display.unicode.east_asian_width',True)
-    # pd.set_option('display.width',180)
-    dataMgr = CKaiPanLaDataMgr()
+   
     for date in dates:
         print(f"=======start to request 自然涨停 data of: {date}=================")
-        result = dataMgr.RequestData(date,KaiPanLaZhiranZhangTingListParam)
-        if result is not None:
-            js =json.loads(result)
-            l = js['list']
-            df = pd.DataFrame(l)
-            if df.empty:
-                continue
-            #print(df)
+        dataMgr = CKaiPanLaMultiPageDataMgr()
+        df = dataMgr.RequestData(date,KaiPanLaZhiranZhangTingListParam)
+        if df is not None and not df.empty:
             res = pd.DataFrame()
-            
             res["stockID"] = df[0]
             res["stockName"] = df[1]
             res["time"] = df[6]

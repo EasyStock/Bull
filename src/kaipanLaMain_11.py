@@ -3,6 +3,7 @@ from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 import urllib3
 import datetime
+import pytz
 
 urllib3.disable_warnings()
 
@@ -61,7 +62,7 @@ def OneKeyKaiPanLa():
     lastN = 5
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,lastN)
-    today = datetime.date.today()
+    today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
     print("现在UTC时间是:",datetime.datetime.utcnow())
     if tradingDays[-1] == str(today) and datetime.datetime.utcnow().time() < datetime.time(8, 30):
         tradingDays = tradingDays[:-1]

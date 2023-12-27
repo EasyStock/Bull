@@ -9,6 +9,7 @@ import sys
 from workspace import workSpaceRoot,WorkSpaceFont
 import re
 import time
+import pytz
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -113,6 +114,32 @@ class CJiSiLu(object):
         #print(result)
         return result
 
+    def _formatNewTips(self,row):
+        icons = row["icons"]
+        msg = ""
+        if isinstance(icons,list):
+            return ""
+
+        if isinstance(icons,dict):
+            if "M" in icons:
+                m = icons["M"]
+                if m!=None and len(m) > 0:
+                    msg = msg + m
+                
+            if "G" in icons:
+                g = icons["G"]
+                if g!=None and len(g) > 0:
+                    msg = msg + g
+
+            if "R" in icons:
+                r = icons["R"]
+                if r!=None and len(r) > 0:
+                    msg = msg + r
+
+            if "O" in icons:
+                msg = msg + row["redeem_status"]
+
+        return msg
 
     def jisilu(self):
         self.logger.info(f'==============begin:{datetime.datetime.utcnow()}==============================')
@@ -120,7 +147,7 @@ class CJiSiLu(object):
         'Accept': 'application/json, text/plain, */*',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Columns':'1,70,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,44,46,47,50,52,53,54,55,56,57,58,59,60,62,63,64,67,71,69,72',
+        'Columns':'1,70,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,44,46,47,50,52,53,54,55,56,57,58,59,60,62,63,64,67,71,69,72,74',
         "Connection": "keep-alive",
         "Host": "www.jisilu.cn",
         "Init": "1",
@@ -146,6 +173,7 @@ class CJiSiLu(object):
             data = j['data']
             df = pd.DataFrame(data)
             df = df[df['price_tips']!="待上市"]
+            df["bond_nm_tip"] = df.apply(lambda row: self._formatNewTips(row), axis=1)
             #print(df.columns)
             
             newDf = pd.DataFrame()
@@ -211,7 +239,7 @@ class CJiSiLu(object):
         plt.savefig(fullPath)
     
     def GetFromJisiluAndWriteToDB(self):
-        self.today = datetime.date.today()
+        self.today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
         dates = GetTradingDateLastN(self.dbConnection,10)
         if self.today not in dates:
             self.today = dates[-1]

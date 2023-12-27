@@ -31,7 +31,7 @@ def SendKeZhuanZaiNewGaiNian(dbConnection,tradingDays,webhook,secret):
         sql1 = f'''INSERT IGNORE INTO `stock`.`stockgainiannew` (`日期`, `新概念`) VALUES ('{tradingDays[-1]}', '{gainian}');'''
         dbConnection.Execute(sql1)
 
-        sql2 = f'''SELECT A.`转债代码`,A.`转债名称` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and B.`所属概念` like '%{gainian}%' order by `PB` DESC;'''
+        sql2 = f'''SELECT A.`转债代码`,A.`转债名称` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and B.`所属概念` like '%{gainian}%' order by `PB` DESC;'''
         results2, _ = dbConnection.Query(sql2)
         msg = FormatCardOfNewGaiNian(tradingDays[-1],gainian,results2,["**转债代码**","**转债名称**"])
         content = json.dumps(msg,ensure_ascii=False)
@@ -55,7 +55,7 @@ def Send5DaysKeZhuanZaiNewGaiNian(dbConnection,tradingDays,webhook,secret):
     for result in results:
         date = result[0]
         gaiNian = result[1]
-        sql2 = f'''SELECT A.`转债代码`,A.`转债名称` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and B.`所属概念` like '%{gaiNian}%' order by `PB` DESC;'''
+        sql2 = f'''SELECT A.`转债代码`,A.`转债名称` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{tradingDays[-1]}' and B.`所属概念` like '%{gaiNian}%' order by `PB` DESC;'''
         results2, _ = dbConnection.Query(sql2)
         data.append((date,gaiNian,results2))
     

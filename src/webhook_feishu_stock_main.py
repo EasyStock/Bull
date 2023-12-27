@@ -3,6 +3,7 @@ from mysql.connect2DB import ConnectToDB
 from DBOperating import GetTradingDateLastN
 from time import sleep
 import datetime
+import pytz
 
 if __name__ == "__main__":
     import argparse
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     # args.webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a"
     # args.secret = "brYyzPbSks4OKnMgdwKvIh"
 
-    today = datetime.date.today()
+    today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
     print("现在UTC时间是:",datetime.datetime.utcnow())
     if tradingDays[-1] == str(today) and datetime.datetime.utcnow().time() < datetime.time(9, 0):
         tradingDays = tradingDays[:-1]

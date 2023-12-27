@@ -3,12 +3,12 @@ from fupan.tradingDate import GetTradingDateLastN
 from fupan.fupanSummary import Summary
 from fupan.fupanSummary2 import CFupanSummary
 import datetime
-
+import pytz
 
 def WriteSummary():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,70)
-    today = datetime.date.today()
+    today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
     d = tradingDays[-1]
     print("现在UTC时间是:",datetime.datetime.utcnow())
     if tradingDays[-1] == str(today) and datetime.datetime.utcnow().time() < datetime.time(8, 30):

@@ -4,6 +4,7 @@ import re
 from thsData.fetchDataFromTHS import CFetchDataFromTHS
 import datetime
 import logging
+import pytz
 
 DAILY_COLUMNS_MAP= {
     '股票代码' : '^股票代码',
@@ -56,7 +57,7 @@ class CFetchDailyDataFromTHS(object):
         if self.dataFrame is None:
             return result
         
-        today = datetime.date.today()
+        today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
         basicInfoDF = pd.DataFrame(self.dataFrame,columns = columns)
         basicInfoDF['更新日期'] = str(today)
         result = self._DataFrameToSqls_INSERT_OR_REPLACE(basicInfoDF,tableName)

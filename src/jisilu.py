@@ -10,6 +10,7 @@ from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
 import os
 import re
 from DBOperating import GetTradingDateLastN
+import pytz
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -112,7 +113,7 @@ def ReadFileToDB():
                 
 def GetFromJisiluAndWriteToDB():
     logger = StartToInitLogger("集思录")
-    today = datetime.date.today()
+    today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
     dbConnection = ConnectToDB()
     dates = GetTradingDateLastN(dbConnection,10)
     if today not in dates:
