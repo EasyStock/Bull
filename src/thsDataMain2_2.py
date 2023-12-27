@@ -140,9 +140,6 @@ def Test():
 
 if __name__ == '__main__':
     logger = StartToInitLogger("同花顺日常数据_new")
-    try:
-        oneKeyDailyData(logger)
-    except Exception as e:
-        sys.exit(1)
+    oneKeyDailyData(logger)
 
 

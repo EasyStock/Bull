@@ -64,10 +64,6 @@ def Test(logger):
 
 if __name__ == "__main__":
     logger = StartToInitLogger("集思录")
-    
-    compareWithIndexTest(logger)
-    try:
-        GetFromJisiluAndWriteToDB(logger)
-    except Exception as e:
-        print(e)
-        sys.exit(1)
+    GetFromJisiluAndWriteToDB(logger)
+    # #compareWithIndexTest(logger)
+

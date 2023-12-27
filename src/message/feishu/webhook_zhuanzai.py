@@ -134,13 +134,16 @@ def SendNewStocks(dbConnection,tradingDays,webhook,secret):
         elif re.match('^68.*',stockID) is not None:
             ban = "科创板"
         elif re.match('^8.*',stockID) is not None:
-            ban = "北交所"   
+            ban = "北交所"
+            data.append((stockName,date,ban))  
         else:
             ban = "未知"
-        data.append((stockName,date,ban))
+       
     
     title = f'''新股打新日历{tradingDays[-1]}:'''
     msg = FormatCardOfNewStock(data,title)
+    if msg is None:
+        return
     content = json.dumps(msg,ensure_ascii=False)
     msg_type = "interactive"
     sendMessageByWebhook(webhook,secret,msg_type,content)

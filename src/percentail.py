@@ -31,5 +31,33 @@ def CalcPercentail():
     print(s)
     s.to_excel('/tmp/Percentail2.xlsx')
 
+def CalcPercentail1():
+    pd.set_option('display.unicode.ambiguous_as_wide',True)
+    pd.set_option('display.unicode.east_asian_width',True)
+    pd.set_option('display.width',360)
+    dbConnection = ConnectToDB()
+    sql = '''SELECT * FROM stock.kezhuanzhai_all where `日期` = "2023-12-26"'''
+    data, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(data=data,columns=columns)
+    df.dropna(inplace= True)
+    newColunms = ["日期","转债代码","转债名称","现价","成交额(万元)","PB","剩余规模"]
+    newDF = pd.DataFrame(df,columns=newColunms)
+    newDF.set_index(["日期","转债代码","转债名称"],drop=True,inplace=True)
+    newDF['剩余规模'] = newDF['剩余规模'].apply(lambda x:x[:-1]).astype(float)
+    newDF['剩余规模'] = newDF['剩余规模']*10000
+    newDF["成交额/剩余规模"] = newDF["成交额(万元)"]/newDF["剩余规模"]
+    newDF.dropna()
+    # newDF['炸板率'] = newDF['炸板率'].apply(lambda x:x[:-1]).astype(float)
+    # newDF['两市量'] = newDF['两市量'].apply(lambda x:x[:-1]).astype(float)
+
+    # for c in newColunms:
+    #     newDF[c] = newDF[c].astype(float)
+
+    t = newDF.quantile([0.02, 0.05, 0.1, 0.5,0.9, 0.95, 0.98])
+    
+    print(t)
+    print(newDF)
+    newDF.to_excel('/tmp/Percentail2.xlsx')
+
 if __name__ == "__main__":
-    CalcPercentail()
+    CalcPercentail1()
