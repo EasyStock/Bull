@@ -50,6 +50,8 @@ class CReDian(object):
         self.lianbanDF.reset_index(inplace=True)
         self.shoubanDF.reset_index(inplace=True)
 
+        sql = f'''REPLACE INTO `stock`.`rediandaily` (`日期`, `热点`) VALUES ('{self.today}', '{self.reDianBankuai1};{self.reDianBankuai2}');'''
+        self.dbConnection.Execute(sql)
         # # print(self.reDianBankuai1DF)
         # # print(self.reDianBankuai2DF)
         # for r in ret[:2]:
@@ -92,7 +94,8 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
 
 def SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret):
     #每日复盘
-    sql = f'''SELECT * FROM stock.fuPan where `日期` = "{tradingDays[-1]}" ;'''
+    last3Days = tuple(tradingDays[-3:])
+    sql = f'''SELECT * FROM stock.fuPan where `日期` in {last3Days} ;'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     if df.empty:

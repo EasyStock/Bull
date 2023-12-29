@@ -492,10 +492,10 @@ class CZhuanQianXiaoXing(object):
         #高潮: 动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78
         #半高潮: 只有 连板股的红盘比 >=0.78
         lastRow = df.iloc[-1]
-        if lastRow['动能EX'] == 12 and lastRow['势能EX'] == 10:
+        if int(lastRow['动能EX']) == 12 and int(lastRow['势能EX']) == 10:
             return "高潮"
         
-        if lastRow['连板股的红盘比'] >= 0.75 and lastRow['首板红盘比'] >= 0.75:
+        if float(lastRow['连板股的红盘比']) >= 0.75 and float(lastRow['首板红盘比']) >= 0.75:
             return "高潮"
         
         if lastRow['连板股的红盘比'] >= 0.75:
@@ -504,7 +504,7 @@ class CZhuanQianXiaoXing(object):
         return ""
 
     def __bingDian(self,row):
-        if row['动能EX'] <= -8 and row['势能EX'] <= -2:
+        if int(row['动能EX']) <= -8 and int(row['势能EX']) <= -2:
             return True
         
         return False
@@ -522,7 +522,7 @@ class CZhuanQianXiaoXing(object):
         lastRow4 = df.iloc[-4]
 
         #冰点期判断 - 强势行情: 如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次
-        if lastRow1['动能EX'] == -12 and lastRow1['势能EX'] <= -2:
+        if int(lastRow1['动能EX']) == -12 and int(lastRow1['势能EX']) <= -2:
             return "强势行情-冰点"
         
         r = [row for row in (lastRow1,lastRow2,lastRow3,lastRow4) if self.__bingDian(row) == True]
@@ -531,10 +531,10 @@ class CZhuanQianXiaoXing(object):
         
         #冰点期判断 - 弱势行情: 如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6
         s = [row for row in (lastRow1,lastRow2,lastRow3,lastRow4) if self.__bingDian2(row) == True]
-        if lastRow1['动能EX'] <= -8 and lastRow1['势能EX'] == -10 and len(s)>=1:
+        if int(lastRow1['动能EX']) <= -8 and int(lastRow1['势能EX']) == -10 and len(s)>=1:
             return "弱势行情-冰点"
         
-        if lastRow1['动能EX'] <= -6 and lastRow1['势能EX'] <= -6 and lastRow2['动能EX'] <= -6 and lastRow2['势能EX'] <= -6:
+        if int(lastRow1['动能EX']) <= -6 and int(lastRow1['势能EX']) <= -6 and int(lastRow2['动能EX']) <= -6 and int(lastRow2['势能EX']) <= -6:
             return "弱势行情-冰点"
         
         return ""

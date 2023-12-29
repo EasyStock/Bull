@@ -38,29 +38,53 @@ def FormatCardOfZhuanZaiYuJing(date,df):
         return None
     t = f"预警与可能的机会提醒:{date}"
     title = {"content":t,"tag":"plain_text"}
-    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    beizhu = {"elements":[{"content":"说明:当出现以下几种情况会出现本条消息:\n1. 有息负债率大于70了\n2. 评级不符了\n3. 公告要强赎 或 临近到期\n4. 剩余规模<3.5\n\n风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     contents.append(beizhu)
     ret = {"config":{"wide_screen_mode":True},"elements":contents, "header":{"template":"red","title":title}}
     return ret
 
-def FormatCardOfNewGaiNian(date,gainian, stocks,titles):
+def FormatCardOfNewGaiNian(date,gainian, stocks,titles,showDetails = False):
     elements = []
     tag = {"tag":"hr"}
     stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]}]}
     elements.append(tag)
     elements.append(stockHead)
 
-    for stock in stocks:
-        stockID = f'''{stock[0]}'''
-        stockName = f'''{stock[1]}'''
-        line = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]}],"horizontal_spacing":"small"}
-        elements.append(line)
+    if showDetails:
+        for stock in stocks:
+            stockID = f'''{stock[0]}'''
+            stockName = f'''{stock[1]}'''
+            line = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]}],"horizontal_spacing":"small"}
+            elements.append(line)
 
     elements.append(tag)
     beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     elements.append(beizhu)
     title = f"{date} 新增概念:{gainian}"
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"turquoise","title":{"content":title,"tag":"plain_text"}}}
+
+def FormatCardOfReDianToday(date,redian,stocks,titles):
+    elements = []
+    tag = {"tag":"hr"}
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]}]}
+    elements.append(tag)
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index,stock in enumerate(stocks):
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = stock[0]
+        stockName = f'''{stock[1][0]}'''
+        r = f'''{stock[1][1]}'''
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":r,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    elements.append(tag)
+    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    title = f"{date} 今日炒作热点: {redian}"
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 
 def FormatCardOfNewGaiNian5Days(data,title):
     tag = {"tag":"hr"}
@@ -74,7 +98,6 @@ def FormatCardOfNewGaiNian5Days(data,title):
             line1 = {"content":s,"tag":"markdown"}
             elements.append(tag)
             elements.append(line1)
-            elements.append(tag)
         else:
             s = f'''{index+1}. {date}  新增概念:**{_markdownFontColor(gaiNian)}**,**此概念相关的可转债如下:**'''
             line1 = {"content":s,"tag":"markdown"}
@@ -84,11 +107,10 @@ def FormatCardOfNewGaiNian5Days(data,title):
             for s in stocks:
                 stockID = s[0]
                 stockName = s[1]
-
                 line2 = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]}],"horizontal_spacing":"small"}
-                
                 elements.append(line2)
-            elements.append(tag)
+                
+        elements.append(tag)
 
     beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     elements.append(beizhu)
@@ -105,21 +127,30 @@ def _markdown(data):
     return tag
 
 
+def _fomatItem(df,lable,key,color = "red",showYesterday = True):
+    if showYesterday:
+        return f'''{lable}:{_markdownFontColor(df[key].iloc[-1],color)}(昨日:{_markdownFontColor(df[key].iloc[-2],color)})'''
+    else:
+        return f'''{lable}:{_markdownFontColor(df[key].iloc[-1],color)}'''
 
 def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
     elements = []
     tag = {"tag":"hr"}
     avgLianBanCount = f'''{df["平均连板数量"][0]:.1f}'''
 
-    line1 = f'''{_markdownFontHighlight("一. 市场总体情况:")}\n**1.** 今成交量:{_markdownFontColor(df["两市量"][0])},增量:{_markdownFontColor(df["增量"][0])}\n**2.** 红盘:{_markdownFontColor(df["红盘"][0])}, 绿盘: {_markdownFontColor(df["绿盘"][0],"green")}\n**3.** 涨停: {_markdownFontColor(df["实际涨停"][0])}, 跌停: {_markdownFontColor(df["跌停"][0])}\n**4.** 炸板: {_markdownFontColor(df["炸板"][0])}，炸板率: {_markdownFontColor(df["炸板率"][0])}\n**5.** 连板个数: {_markdownFontColor(df["连板数量"][0])},近30个交易日最多连板个数: {_markdownFontColor(df["最高连板数量"][0])},最少连板个数: {_markdownFontColor(df["最低连板数量"][0])},平均连板个数: {_markdownFontColor(avgLianBanCount)}'''
+    line1 = f'''{_markdownFontHighlight("一. 市场总体情况:")}\n**1.** {_fomatItem(df,"今成交量","两市量")},{_fomatItem(df,"增量","增量",showYesterday=False)}\n**2.** {_fomatItem(df,"红盘","红盘")}, {_fomatItem(df,"绿盘","绿盘","green")}\n**3.** {_fomatItem(df,"涨停","实际涨停")}, {_fomatItem(df,"跌停","跌停","green")}\n**4.** {_fomatItem(df,"炸板","炸板","green")}，{_fomatItem(df,"炸板率","炸板率","red")}\n**5.** {_fomatItem(df,"连板个数","连板数量","red")},近30个交易日最多连板个数: {_markdownFontColor(df["最高连板数量"][0])},最少连板个数: {_markdownFontColor(df["最低连板数量"][0])},平均连板个数: {_markdownFontColor(avgLianBanCount)}'''
     elements.append(_markdown(line1))
     elements.append(tag)
 
-    line2 = f'''{_markdownFontHighlight("二. 市场情绪:")}\n今日势能:{_markdownFontColor(df["势能EX"][0])}, 动能:{_markdownFontColor(df["动能EX"][0])}, 连板股的红盘比:{_markdownFontColor(df["连板股的红盘比"][0])}, 首板红盘比:{_markdownFontColor(df["首板红盘比"][0])}, 备注:{_markdownFontColor(df["备注"][0])}\n\n**情绪判断标准**\n**1. 高潮:** {_markdownFontColor("动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78","green")}\n**2. 半高潮:** {_markdownFontColor("只有 连板股的红盘比 >=0.78","green")}\n**3. 冰点期判断 - 强势行情:** {_markdownFontColor("如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次","green")}\n**4. 冰点期判断 - 弱势行情:** {_markdownFontColor("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6","green")}'''
+    line2 = f'''{_markdownFontHighlight("二. 市场情绪:")}\n{_fomatItem(df,"今日势能","势能EX")},{_fomatItem(df,"动能","动能EX")}, {_fomatItem(df,"连板股的红盘比","连板股的红盘比")}, {_fomatItem(df,"首板红盘比","首板红盘比")}, 备注:{_markdownFontColor(df["备注"][0])}\n\n**情绪判断标准**\n**1. 高潮:** {_markdownFontColor("动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78","green")}\n**2. 半高潮:** {_markdownFontColor("只有 连板股的红盘比 >=0.78","green")}\n**3. 冰点期判断 - 强势行情:** {_markdownFontColor("如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次","green")}\n**4. 冰点期判断 - 弱势行情:** {_markdownFontColor("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6","green")}'''
     elements.append(_markdown(line2))
     elements.append(tag)
 
-    line3 = f'''{_markdownFontHighlight("三. 超短情况:")}\n**1.**10CM首板奖励率:{_markdownFontColor(df["10CM首板奖励率"][0])}%,10CM连板奖励率:{_markdownFontColor(df["10CM连板奖励率"][0])}%\n**2.**20CM首板奖励率:{_markdownFontColor(df["20CM首板奖励率"][0])}%,20CM连板奖励率:{_markdownFontColor(df["20CM连板奖励率"][0])}%\n**3.**2连板个股:{_markdownFontColor(df["2连板个数"][0])}个,近30日最大2连板个股:{_markdownFontColor(df["最大2连板个数"][0])}个\n**4.**3连板个股:{_markdownFontColor(df["3连板个数"][0])}个: {_markdownFontColor(df["3连个股"][0])}\n**5.**4连及以上个股: {_markdownFontColor(df["4连板及以上个数"][0])}个,{_markdownFontColor(df["4连及以上个股"][0])}\n**6.**近30个交易日高度板: {_markdownFontColor(df["最大高度板"][0])} 板'''
+    pojudian = ""
+    if int(df["2连板个数"].iloc[-1]) >=9:
+        pojudian = _markdownFontColor("(今天可能是破局点)")
+    
+    line3 = f'''{_markdownFontHighlight("三. 超短情况:")}\n**1.**10CM首板奖励率:{_markdownFontColor(df["10CM首板奖励率"].iloc[-1])}%(昨日:{_markdownFontColor(df["10CM首板奖励率"].iloc[-2])}%),10CM连板奖励率:{_markdownFontColor(df["10CM连板奖励率"].iloc[-1])}%(昨日:{_markdownFontColor(df["10CM连板奖励率"].iloc[-2])})\n**2.**20CM首板奖励率:{_markdownFontColor(df["20CM首板奖励率"].iloc[-1])}%(昨日:{_markdownFontColor(df["20CM首板奖励率"].iloc[-2])}%),20CM连板奖励率:{_markdownFontColor(df["20CM连板奖励率"].iloc[-1])}%(昨日:{_markdownFontColor(df["20CM连板奖励率"].iloc[-2])}%)\n**3.**{_fomatItem(df,"2连板个股","2连板个数")}{pojudian},近30日最大2连板个股:{_markdownFontColor(df["最大2连板个数"].iloc[-1])}个\n**4.**{_fomatItem(df,"3连板个股","3连板个数")}: {_markdownFontColor(df["3连个股"].iloc[-1])}\n**5.**{_fomatItem(df,"4连及以上个股","4连板及以上个数")},{_markdownFontColor(df["4连及以上个股"].iloc[-1])}\n**6.**近30个交易日高度板: {_markdownFontColor(df["最大高度板"].iloc[-1])} 板'''
     elements.append(_markdown(line3))
     elements.append(tag)
 
@@ -134,7 +165,6 @@ def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
 
 def FormatCardOfQiangShu(datas,title):
     #强制赎回公告
-
     if len(datas) == 0:
         return None
     elements = []
@@ -155,7 +185,7 @@ def FormatCardOfQiangShu(datas,title):
         elements.append(line)
 
     elements.append(tag)
-    beizhu = {"elements":[{"content":"1. 转债现价 <= 140 显示红色\n2. 风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    beizhu = {"elements":[{"content":"说明:转债现价 <= 140 显示红色\n\n风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     elements.append(beizhu)
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 

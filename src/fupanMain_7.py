@@ -134,7 +134,28 @@ def GetFuPanList(dbConnection,tradingDay):
     jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     logger.info(fullPath)
-    
+
+    dF2 =  df[df["连续涨停天数"]==2]
+    fullPath = f"{rootDir}2板_{tradingDay}.jpg"
+    jpgDataFrame = pd.DataFrame(dF2,columns=["股票代码","股票简称"])
+    jpgDataFrame.reset_index(drop=True,inplace=True)
+    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+    logger.info(fullPath)
+
+    dF3 =  df[df["连续涨停天数"]==3]
+    fullPath = f"{rootDir}3板_{tradingDay}.jpg"
+    jpgDataFrame = pd.DataFrame(dF3,columns=["股票代码","股票简称"])
+    jpgDataFrame.reset_index(drop=True,inplace=True)
+    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+    logger.info(fullPath)
+
+    dF4 =  df[df["连续涨停天数"]>=4]
+    fullPath = f"{rootDir}4板_{tradingDay}.jpg"
+    jpgDataFrame = pd.DataFrame(dF4,columns=["股票代码","股票简称"])
+    jpgDataFrame.reset_index(drop=True,inplace=True)
+    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
+    logger.info(fullPath)
+
 
 def FupanDaily():
     dbConnection = ConnectToDB()
