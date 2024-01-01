@@ -1,0 +1,23 @@
+FROM node:current-slim
+
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt install default-jdk -y
+
+RUN apt-get install python3 -y
+RUN apt-get install python3-pip -y 
+
+RUN pip3 install openpyxl --break-system-packages
+RUN pip3 install requests --break-system-packages
+RUN pip3 install sqlparse --break-system-packages
+RUN pip3 install schedule --break-system-packages
+RUN pip3 install selenium --break-system-packages
+RUN pip3 install PyExecJS --break-system-packages
+
+RUN mkdir -p /home/jenkins
+WORKDIR /home/jenkins
+RUN npm install jsdom
+
+RUN echo "--------build jenkins agent done--------------"
+CMD /bin/bash
+
