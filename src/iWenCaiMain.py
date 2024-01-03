@@ -5,13 +5,12 @@ from iWenCai.FetchStockDailyData import CFetchStockDailyData
 from DBOperating import GetTradingDateLastN
 from ColoredLog import StartToInitLogger
 
-def TestGetBanKuaiZhishuData(dbConnection,tradingDays):
-    lastDay = tradingDays[-2]
-    lastDay = "2021-12-10"
+def GetBanKuaiZhishuData(dbConnection,tradingDays):
+    lastDay = tradingDays[-1]
     f = CFetchBanKuaiData(dbConnection,lastDay)
     f.RequestAllPagesDataAndWriteToDB(100)
 
-def TestGetBanKuaiZhishuDataLastNDays(dbConnection,N):
+def GetBanKuaiZhishuDataLastNDays(dbConnection,N):
     tradingDays = GetTradingDateLastN(dbConnection,N)
     for treadingDay in tradingDays:
         print(f"============================开始获取板块指数{treadingDay}====================================")
@@ -44,8 +43,9 @@ def TestGetDailyData(dbConnection):
 if __name__ == '__main__':
     logger = StartToInitLogger("爱问财获取数据")
     dbConnection = ConnectToDB()
-    tradingDays = GetTradingDateLastN(dbConnection,3)
+    lastN = 1
+    tradingDays = GetTradingDateLastN(dbConnection,lastN)
 
-    #TestGetBanKuaiZhishuData(dbConnection,tradingDays)
-    #TestGetBanKuaiZhishuDataLastNDays(dbConnection,3)
-    TestGetDailyData(dbConnection)
+    #GetBanKuaiZhishuData(dbConnection,tradingDays)
+    GetBanKuaiZhishuDataLastNDays(dbConnection,lastN)
+    #TestGetDailyData(dbConnection)

@@ -58,6 +58,9 @@ class CFetchBanKuaiData(object):
     def RequestAllPagesDataAndWriteToDB(self,perPage=100):
         api = CIWenCaiAPI(dbConnection=self.dbConnection)
         df = api.RequestAllPagesData(self.payload,perPage)
+        if df.empty:
+            return None
+        
         map = self.keywordTranslator(df)
         self.dataFrame = pd.DataFrame()
         for key in map:
