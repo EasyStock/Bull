@@ -64,6 +64,7 @@ def OneKeyKaiPanLa():
     RequestKaiPanLaZhangDieTingJiashu(dbConnection,tradingDays,lastN)
     RequestKaiPanLaZhaBanData(dbConnection,tradingDays,lastN)
     CalcZhaBanRatio(dbConnection,tradingDays)
+    RequestIndexData(tradingDays,dbConnection)
 
 def Test():
     lastN = 1000

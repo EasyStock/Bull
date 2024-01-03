@@ -2,7 +2,7 @@
 import requests
 import pandas as pd
 import datetime
-from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
+from mysql.connect2DB import DataFrameToSqls_REPLACE
 from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
 import os
 import sys
@@ -302,7 +302,6 @@ class CJiSiLu(object):
         if os.path.exists(folderRoot) == False:
             os.makedirs(folderRoot)
 
-        
         for key in categrateMap:
             self.logger.info(f"\n=========={key}=============")
             df = GetKeZhuanzai(self.dbConnection,date,categrateMap[key])

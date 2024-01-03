@@ -10,7 +10,6 @@ import datetime
 import re
 import sys
 from workspace import workSpaceRoot
-import traceback
 
 class CFuPan(object):
     def __init__(self,logger, dbConnection,lastN=-1) -> None:
