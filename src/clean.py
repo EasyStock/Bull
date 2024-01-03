@@ -128,7 +128,7 @@ def RemoveBigFolder(folder):
             RemoveUselessFiles(fullPath)
 
 if __name__ == "__main__":
-    folder = '/Volumes/Data/Docker/Data/Code/src/'
+    folder = '/Volumes/Data/Code/EasyStock/Bull/src'
     StartToInitLogger("CalcSize")
     #RemoveBigFolder(folder)
     RemoveUselessFiles(folder)

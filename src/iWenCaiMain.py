@@ -10,10 +10,9 @@ def GetBanKuaiZhishuData(dbConnection,tradingDays):
     f = CFetchBanKuaiData(dbConnection,lastDay)
     f.RequestAllPagesDataAndWriteToDB(100)
 
-def GetBanKuaiZhishuDataLastNDays(dbConnection,N):
-    tradingDays = GetTradingDateLastN(dbConnection,N)
+def GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays,logger):
     for treadingDay in tradingDays:
-        print(f"============================开始获取板块指数{treadingDay}====================================")
+        logger.info(f"============================开始获取板块指数{treadingDay}====================================")
         f = CFetchBanKuaiData(dbConnection,treadingDay)
         f.RequestAllPagesDataAndWriteToDB(100)
 

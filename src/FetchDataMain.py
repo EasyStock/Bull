@@ -97,7 +97,7 @@ def _GetDaLiangLanbBanData(dbConnection,dates,logger):
     daliang.RequestDaliangLanBanDataEX()
 
 def _GetNoZhangTingLanBanData(dbConnection,date,logger):
-    logger.error("开始获取烂长上影线数据")
+    logger.error("\n\n======开始获取烂长上影线数据=====")
     #上影线数据
     dailyFetcher = CFetchNoZhangTingData(dbConnection,date)
     dailyFetcher.FetchNoZhangTingData()
@@ -121,7 +121,7 @@ def GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger):
 
     _GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     _GetNoZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
-    GetBanKuaiZhishuDataLastNDays(dbConnection,3)
+    GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays[-3:],logger)
     logger.info(f'==============结束从同花顺上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
 def GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger):
@@ -150,7 +150,7 @@ if __name__ == "__main__":
     lastN = 15
     tradingDays = GetTradingDateLastN(dbConnection,lastN)
     now = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
-    print("现在是北京时间是:",now)
+    logger.error(f"现在是北京时间是:{now}")
 
     import argparse
     parser = argparse.ArgumentParser()
@@ -158,16 +158,16 @@ if __name__ == "__main__":
     -o : options
     '''
 
-    parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="0. 获取全部数据, 1. 从集思录上获取数据 2. 从同花顺上获取数据 3. 从开盘啦上获取数据 4. 从东方财富网上获取数据")
+    parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="0. 获取全部数据, 1. 从同花顺上获取数据 2. 从集思录上获取数据 3. 从开盘啦上获取数据 4. 从东方财富网上获取数据")
     args = parser.parse_args()
     #args.options = [0,1,2,3,4]
     if 0 in args.options:
         ######################
-        #从集思录上获取数据
-        GetDataFromJisiluAndWriteToDB(dbConnection,logger)
-
         #从同花顺上获取数据
         GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
+
+        #从集思录上获取数据
+        GetDataFromJisiluAndWriteToDB(dbConnection,logger)
 
         #从开盘啦上获取数据
         GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger)
@@ -176,13 +176,14 @@ if __name__ == "__main__":
         GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
         ###################### 
     else:
-        if 1 in args.options:
-            #从集思录上获取数据
-            GetDataFromJisiluAndWriteToDB(dbConnection,logger)
 
-        if 2 in args.options:
+        if 1 in args.options:
             #从同花顺上获取数据
             GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
+
+        if 2 in args.options:
+            #从集思录上获取数据
+            GetDataFromJisiluAndWriteToDB(dbConnection,logger)
 
         if 3 in args.options:
             #从开盘啦上获取数据

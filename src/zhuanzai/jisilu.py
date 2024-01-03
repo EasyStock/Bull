@@ -168,8 +168,6 @@ class CJiSiLu(object):
         #print(response, response.text)
         if len(response.text)!=0:
             j = response.json()
-            print(j['code'])
-            print(j['prompt'])
             data = j['data']
             df = pd.DataFrame(data)
             df = df[df['price_tips']!="待上市"]
@@ -267,7 +265,7 @@ class CJiSiLu(object):
                 if index + step <= size:
                     tmp = df.iloc[index:index+step,]
                 fullPath = f"{folderRoot}{self.today}_{int(index/step+1)}.jpg"
-                print(fullPath)
+                self.logger.info(fullPath)
                 jpgDataFrame = pd.DataFrame(tmp,columns=["转债代码","转债名称"])
                 self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)
 
@@ -366,7 +364,7 @@ class CJiSiLu(object):
             columns = NAME_MAP_Newstock.keys()
             for column in columns:
                 newDf[NAME_MAP_Newstock[column]] = df[column]
-            print(newDf)
+            self.logger.info(str(newDf))
 
             sqls = DataFrameToSqls_REPLACE(newDf,"newstocks")
             for sql in sqls:

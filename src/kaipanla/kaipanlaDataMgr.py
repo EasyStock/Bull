@@ -4,6 +4,8 @@ import json
 import pandas as pd
 import pytz
 import re
+import logging
+logger = logging.getLogger()
 
 class CKaiPanLaDataMgr(object):
     def __init__(self) -> None:
@@ -63,10 +65,9 @@ class CKaiPanLaMultiPageDataMgr(object):
         return params
 
     def RequestData(self,date,params:dict):
-        #print(f"开始获取第{self.page}页数据,每页{self.st}条, 开始的索引是{self.index}")
+        #logger.warning(f"开始获取第{self.page}页数据,每页{self.st}条, 开始的索引是{self.index}")
         dataMgr = CKaiPanLaDataMgr()
         newParam = self._formatURL(params)
-        #print(newParam)
         result = dataMgr.RequestData(date,newParam)
         if result is not None:
             js =json.loads(result)
@@ -75,7 +76,7 @@ class CKaiPanLaMultiPageDataMgr(object):
             if self.page == 1:
                 if len(l) < self.st:
                     self.df = pd.DataFrame(self.datas)
-                    print(f"总共获取了:{len(self.datas)}条数据")
+                    logger.warning(f"总共获取了:{len(self.datas)}条数据")
                     return self.df
                 else:
                     self.index = self.page* self.st -1
@@ -93,7 +94,7 @@ class CKaiPanLaMultiPageDataMgr(object):
         else:
             self.df = pd.DataFrame(l)
 
-        print(f"总共获取了:{len(self.datas)}条数据")
+        logger.warning(f"总共获取了:{len(self.datas)}条数据")
         return self.df
     
 #=========================================================================================
@@ -119,18 +120,18 @@ def _formatVolumn(volumn,delta = 1.0):
 
 def RequestZhangDieTingJiashu(dates,dbConnection):  #涨跌停家数
     KaiPanLaVolumnParam = {
-    "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+    "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
     "queryStringOfToday":"PhoneOSNew=2&VerSion=5.12.0.1&a=ZhangFuDetail&apiv=w34&c=HomeDingPan",
-    "hostOfToday":"apphq.longhuvip.com",
+    "hostOfToday":f"apphq.longhuvip.com",
     #====================
-    "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+    "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
     "queryStringOfHistory" :"Day={0}&PhoneOSNew=2&VerSion=5.12.0.1&a=HisZhangFuDetail&apiv=w34&c=HisHomeDingPan",
-    "hostOfHistory":"apphis.longhuvip.com"
+    "hostOfHistory":f"apphis.longhuvip.com"
     }
     all = {}
     dataMgr = CKaiPanLaDataMgr()
     for date in dates:
-        print(f"=======start to request 涨跌停家数 data of: {date}=================")
+        logger.warning(f"=======start to request 涨跌停家数 data of: {date}=================")
         result = dataMgr.RequestData(date,KaiPanLaVolumnParam)
         if result is not None:
             js =json.loads(result)
@@ -138,25 +139,25 @@ def RequestZhangDieTingJiashu(dates,dbConnection):  #涨跌停家数
             zhangTing = float(js['info']['SJZT'])
             all[date] = (zhangTing,dieTing)
         else:
-            print(f'''{date} data is None''')
+            logger.error(f'''{date} data is None''')
         
     return all
 
 def RequestVolumnDataByDates(dates,dbConnection):  #大盘成交量
     KaiPanLaVolumnParam = {
-    "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+    "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
     "queryStringOfToday":"PhoneOSNew=2&Type=0&VerSion=5.11.0.3&a=MarketCapacity&apiv=w33&c=HomeDingPan",
-    "hostOfToday":"apphq.longhuvip.com",
+    "hostOfToday":f"apphq.longhuvip.com",
     #====================
-    "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+    "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
     "queryStringOfHistory" :"Date={0}&PhoneOSNew=2&Type=0&VerSion=5.12.0.1&a=MarketCapacity&apiv=w34&c=HisHomeDingPan",
-    "hostOfHistory":"apphis.longhuvip.com"
+    "hostOfHistory":f"apphis.longhuvip.com"
     }
 
     res = {}
     dataMgr = CKaiPanLaDataMgr()
     for date in dates:
-        print(f"=======start to request 两市成交量 data of: {date}=================")
+        logger.warning(f"=======start to request 两市成交量 data of: {date}=================")
         result = dataMgr.RequestData(date,KaiPanLaVolumnParam)
         if result is not None:
             js =json.loads(result)
@@ -169,25 +170,25 @@ def RequestVolumnDataByDates(dates,dbConnection):  #大盘成交量
             dbConnection.Execute(sql)
             res[date] = (f"{last/10000:.0f}亿",f"{delta/10000:.0f}亿",f"{ratio:.2f}%")
         else:
-            print(f'''{date} data is None''')
+            logger.error(f'''{date} data is None''')
     return res
 
 # def RequestZhangTingDataByDates(dates,dbConnection): # 涨停数据
 #     KaiPanLaZhangTingListParam = {
-#         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+#         "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
 #         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=1&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
-#         "hostOfToday":"apphq.longhuvip.com",
+#         "hostOfToday":f"https://apphq.longhuvip.com",
 #         #====================
-#         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+#         "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
 #         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=6&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=1000",
-#         "hostOfHistory":"apphis.longhuvip.com"
+#         "hostOfHistory":f"https://apphis.longhuvip.com"
 #         }
     
 #     # pd.set_option('display.unicode.ambiguous_as_wide',True)
 #     # pd.set_option('display.unicode.east_asian_width',True)
 #     # pd.set_option('display.width',180)
 #     for date in dates:
-#         print(f"=======start to request 涨停 data of: {date}=================")
+#         logger.warning(f"=======start to request 涨停 data of: {date}=================")
 #         dataMgr = CKaiPanLaMultiPageDataMgr()
 #         df = dataMgr.RequestData(date,KaiPanLaZhangTingListParam)
 #         if df is not None and not df.empty:
@@ -216,25 +217,24 @@ def RequestVolumnDataByDates(dates,dbConnection):  #大盘成交量
 #             res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
 #             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_zhangting`")
 #             for sql in sqls:
-#                 #print(sql)
 #                 dbConnection.Execute(sql)
 #         else:
-#             print(f'''{date} data is None''')
+#             logger.warning(f'''{date} data is None''')
 
 def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
     KaiPanLaZhaBanListParam = {
-        "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+        "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
                              
         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
-        "hostOfToday":"apphq.longhuvip.com",
+        "hostOfToday":f"apphq.longhuvip.com",
         #====================
-        "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+        "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=2&Type=4&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
-        "hostOfHistory":"apphis.longhuvip.com"
+        "hostOfHistory":f"apphis.longhuvip.com"
         }
     ret = {}
     for date in dates:
-        print(f"=======start to request 炸板 data of: {date}=================")
+        logger.warning(f"=======start to request 炸板 data of: {date}=================")
         dataMgr = CKaiPanLaMultiPageDataMgr()
         df = dataMgr.RequestData(date,KaiPanLaZhaBanListParam)
         if df is not None and not df.empty:
@@ -264,26 +264,25 @@ def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
             ret[date] = res.shape[0]
             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_zhaban`")
             for sql in sqls:
-                #print(sql)
                 dbConnection.Execute(sql)
         else:
-            print(f'''{date} data is None''')
+            logger.error(f'''{date} data is None''')
     return ret
 
 # def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
 #     KaiPanLaDieTingListParam = {
-#         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+#         "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
                              
 #         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=10",
-#         "hostOfToday":"apphq.longhuvip.com",
+#         "hostOfToday":f"https://apphq.longhuvip.com",
 #         #====================
-#         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+#         "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
 #         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
-#         "hostOfHistory":"apphis.longhuvip.com"
+#         "hostOfHistory":f"https://apphis.longhuvip.com"
 #         }
    
 #     for date in dates:
-#         print(f"=======start to request 跌停 data of: {date}=================")
+#         logger.warning(f"=======start to request 跌停 data of: {date}=================")
 #         dataMgr = CKaiPanLaMultiPageDataMgr(20)
 #         df = dataMgr.RequestData(date,KaiPanLaDieTingListParam)
 #         if df is not None and not df.empty:
@@ -309,28 +308,26 @@ def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
 #             res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
 #             res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
 #             res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
-#             #print(res)
 #             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_dieting`")
 #             for sql in sqls:
-#                 #print(sql)
 #                 dbConnection.Execute(sql)
 #         else:
-#             print(f'''{date} data is None''')
+#             logger.warning(f'''{date} data is None''')
 
 
 # def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
 #     KaiPanLaZhiranZhangTingListParam = {
-#         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+#         "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
 #         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
-#         "hostOfToday":"apphq.longhuvip.com",
+#         "hostOfToday":f"https://apphq.longhuvip.com",
 #         #====================
-#         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+#         "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
 #         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
-#         "hostOfHistory":"apphis.longhuvip.com"
+#         "hostOfHistory":f"https://apphis.longhuvip.com"
 #         }
    
 #     for date in dates:
-#         print(f"=======start to request 自然涨停 data of: {date}=================")
+#         logger.warning(f"=======start to request 自然涨停 data of: {date}=================")
 #         dataMgr = CKaiPanLaMultiPageDataMgr()
 #         df = dataMgr.RequestData(date,KaiPanLaZhiranZhangTingListParam)
 #         if df is not None and not df.empty:
@@ -358,25 +355,24 @@ def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
 #             res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
 #             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_ziranzhangting`")
 #             for sql in sqls:
-#                 #print(sql)
 #                 dbConnection.Execute(sql)
 #         else:
-#             print(f'''{date} data is None''')
+#             logger.warning(f'''{date} data is None''')
 
 def RequestIndexData(dates,dbConnection): #大盘指数数据
     IndexListParam = {
-        "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+        "urlOfToday":f"https://apphq.longhuvip.com/w1/api/index.php",
         "queryStringOfToday":"DeviceID=72697ee95ed4399fac9914eba97c8ede3bfddb7c&PhoneOSNew=2&StockIDList=SH000001%2CSZ399001%2CSZ399006%2CSH000688&Token=919d7846d93da295c163371c85cfd81c&UserID=1585460&VerSion=5.11.0.3&a=RefreshStockList&apiv=w33&c=UserSelectStock",
-        "hostOfToday":"apphq.longhuvip.com",
+        "hostOfToday":f"apphq.longhuvip.com",
         #====================
-        "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+        "urlOfHistory":f"https://apphis.longhuvip.com/w1/api/index.php",
         "queryStringOfHistory" :"Day={0}&PhoneOSNew=2&VerSion=5.11.0.3&a=GetZsReal&apiv=w33&c=StockL2History",
-        "hostOfHistory":"apphis.longhuvip.com"
+        "hostOfHistory":f"apphis.longhuvip.com"
         }
     dataMgr = CKaiPanLaDataMgr()
     all = []
     for date in dates:
-        print(f"=======start to request 指数 data of: {date}=================")
+        logger.warning(f"=======start to request 指数 data of: {date}=================")
         result = dataMgr.RequestData(date,IndexListParam)
         if result is not None:
             js =json.loads(result)
@@ -385,14 +381,13 @@ def RequestIndexData(dates,dbConnection): #大盘指数数据
                 item["date"] = date
                 all.append(item)
         else:
-            print(f'''{date} data is None''')
+            logger.error(f'''{date} data is None''')
 
     column = ["date","StockID","prod_name","increase_amount","increase_rate","last_px","turnover"]
     df = pd.DataFrame(all,columns= column)
-    print(df)
+    logger.warning(str(df))
     sqls = DataFrameToSqls_INSERT_OR_IGNORE(df,"`stock`.`kaipanla_index`")
     for sql in sqls:
-        #print(sql)
         dbConnection.Execute(sql)
 
 
