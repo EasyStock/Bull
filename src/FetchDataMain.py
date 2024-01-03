@@ -26,7 +26,7 @@ def _GetTHS_V():
 
 def _GetDailyDataEx(dbConnection,date,logger):
     # 从同花顺上获取所有股票的基础数据和成交数据
-    logger.error("\n\n======开始同花顺上获取每日复盘数据=====")
+    logger.info("\n\n======开始同花顺上获取每日复盘数据=====")
     v = _GetTHS_V()
     daily = CFetchDailyDataFromTHS2(date,v)
     daily.RequestDailyData_MultiPages()
@@ -108,7 +108,7 @@ def GetDataFromJisiluAndWriteToDB(dbConnection,logger):
     jisiLu = CJiSiLu(logger,dbConnection)
     jisiLu.GetFromJisiluAndWriteToDB()
     jisiLu.GetNewStockCalendar()
-    logger.info(f'==============结束从集思录上获取数据:{datetime.datetime.utcnow()}==============================')
+    logger.info(f'==============结束从集思录上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
 def GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger):
     logger.info(f'==============开始从同花顺上获取数据:{datetime.datetime.utcnow()}==============================')
@@ -122,7 +122,7 @@ def GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger):
     _GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     _GetNoZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
     GetBanKuaiZhishuDataLastNDays(dbConnection,3)
-    logger.info(f'==============结束从同花顺上获取数据:{datetime.datetime.utcnow()}==============================')
+    logger.info(f'==============结束从同花顺上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
 def GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger):
     logger.info(f'==============开始从开盘啦上获取数据:{datetime.datetime.utcnow()}==============================')
@@ -130,7 +130,7 @@ def GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger):
     if len(tradingDays)>lasN:
         tradingDays = tradingDays[-lasN:]
     RequestIndexData(tradingDays,dbConnection)
-    logger.info(f'==============结束从开盘啦上获取数据:{datetime.datetime.utcnow()}==============================')
+    logger.info(f'==============结束从开盘啦上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
 def GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger):
     logger.info(f'==============开始从东方财富网上获取数据:{datetime.datetime.utcnow()}==============================')
@@ -140,7 +140,7 @@ def GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger):
     f = CDragonFetcher()
     f.FetchDailyDataAndToDB(date,tableName,dbConnection)
 
-    logger.info(f'==============结束从东方财富网上获取数据:{datetime.datetime.utcnow()}==============================')
+    logger.info(f'==============结束从东方财富网上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
 #####################################入口函数######################################################
     
@@ -155,41 +155,40 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     helpStr = f'''
-    -0 : options
+    -o : options
     '''
 
     parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="0. 获取全部数据, 1. 从集思录上获取数据 2. 从同花顺上获取数据 3. 从开盘啦上获取数据 4. 从东方财富网上获取数据")
     args = parser.parse_args()
-    # args.options = [0,1,2,3,4]
-    if args.webhook and args.secret:
-        if 0 in args.options:
-            ######################
+    #args.options = [0,1,2,3,4]
+    if 0 in args.options:
+        ######################
+        #从集思录上获取数据
+        GetDataFromJisiluAndWriteToDB(dbConnection,logger)
+
+        #从同花顺上获取数据
+        GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
+
+        #从开盘啦上获取数据
+        GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger)
+
+        #从东方财富网上获取数据
+        GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
+        ###################### 
+    else:
+        if 1 in args.options:
             #从集思录上获取数据
             GetDataFromJisiluAndWriteToDB(dbConnection,logger)
 
+        if 2 in args.options:
             #从同花顺上获取数据
             GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
 
+        if 3 in args.options:
             #从开盘啦上获取数据
             GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger)
 
+        if 4 in args.options:
             #从东方财富网上获取数据
             GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
-            ###################### 
-        else:
-            if 1 in args.options:
-                #从集思录上获取数据
-                GetDataFromJisiluAndWriteToDB(dbConnection,logger)
-
-            if 2 in args.options:
-                #从同花顺上获取数据
-                GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
-
-            if 3 in args.options:
-                #从开盘啦上获取数据
-                GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger)
-
-            if 4 in args.options:
-                #从东方财富网上获取数据
-                GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
 

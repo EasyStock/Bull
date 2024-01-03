@@ -40,8 +40,10 @@ def AnalysisDataOfKeZhuanZhai(dbConnection,tradingDays,logger):
 
     #和指数相比，计算强弱
     comparer = CCompareWithIndex(dbConnection,logger)
+    if len(tradingDays) > 5:
+        tradingDays = tradingDays[-5:]
     comparer.CompareWithIndex_ALL(tradingDays)
-    logger.info(f'==============结束分析可转债:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
+    logger.info(f'==============结束分析可转债:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     logger.info(f'==============开始分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
@@ -85,15 +87,15 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     fupanSummary.WirteFupanSummary()
 
     _updateKaiPanLaData(dbConnection,tradingDays,3)
-    logger.info(f'==============结束分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
+    logger.info(f'==============结束分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
     logger.info(f'==============开始发送可转债分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
     groups = [
-        ("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
         #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
-        #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
-        #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
+        ("https://open.feishu.cn/open-apis/bot/v2/hook/cddb5b9f-d4e5-48b2-862a-37f77c44a0a5","sUNRDcO4erOybcDNaAD8Hb"), #可转债免费推送群
+        ("https://open.feishu.cn/open-apis/bot/v2/hook/c0a8b97e-6817-49df-a653-2116e4e30fdd","QOWgXDc90zhxN7fVuULL9f"), #可转债付费推送群
+        
     ]
     for group in groups:
         webhook = group[0]
@@ -110,16 +112,14 @@ def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
         SendNewStocks(dbConnection,tradingDays,webhook,secret)
         #今日热点
         SendReDianOfToday(dbConnection,tradingDays,webhook,secret)
-    logger.info(f'==============结束发送可转债分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
+    logger.info(f'==============结束发送可转债分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 
 def SendReportOfStock(dbConnection,tradingDays,logger):
     logger.info(f'==============开始发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
     groups = [
-        ("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
         #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
-        #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
-        #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
+        ("https://open.feishu.cn/open-apis/bot/v2/hook/9c3b588e-a528-4c92-a9dd-a44e29abf2fb","VaT4TcvmILA0lYAv9cjbcc"), #每日复盘群
     ]
     for group in groups:
         webhook = group[0]
@@ -127,14 +127,14 @@ def SendReportOfStock(dbConnection,tradingDays,logger):
         SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret)
         time.sleep(3)
         SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret)
-    logger.info(f'==============结束发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
+    logger.info(f'==============结束发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 
 #####################################################################################################
 if __name__ == "__main__":
     logger = StartToInitLogger("分析数据入口")
     dbConnection = ConnectToDB()
-    lastN = 15
+    lastN = 50
     tradingDays = GetTradingDateLastN(dbConnection,lastN)
     now = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
     print("现在是北京时间是:",now)
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     '''
     parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="0.分析并发布分析结果 1. 分析可转债数据, 2. 分析股票数据 3. 发送可转债分析结果, 发送股票分析结果")
     args = parser.parse_args()
-    # args.options = [0,1,2,3,4,5,6]
+    #args.options = [0,1,2,3,4]
 
     if 0 in args.options:
         ######################
