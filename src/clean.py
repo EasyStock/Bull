@@ -5,7 +5,8 @@ from ColoredLog import StartToInitLogger
 import logging
 logger = logging.getLogger()
 
-cleanDir = [".git",".DS_Store",".gitignore"]
+# cleanDir = [".git",".DS_Store",".gitignore"]
+cleanDir = ["__pycache__",".DS_Store"]
 
 def ToSizeInfo(size):
     if size < 1024:
@@ -127,7 +128,7 @@ def RemoveBigFolder(folder):
             RemoveUselessFiles(fullPath)
 
 if __name__ == "__main__":
-    folder = '/Volumes/Data 2/Code'
+    folder = '/Volumes/Data/Docker/Data/Code/src/'
     StartToInitLogger("CalcSize")
-    RemoveBigFolder(folder)
-    #RemoveUselessFiles(folder)
+    #RemoveBigFolder(folder)
+    RemoveUselessFiles(folder)

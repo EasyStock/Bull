@@ -4,15 +4,15 @@ import pandas as pd
 
 STOCK_DAILY_COLUMNS_MAP= {
     '股票代码' : '^股票代码',
-    '开盘价':"^开盘价:前复权(元)D",
-    '收盘价' : '^收盘价:前复权(元)D',
-    '最高价' : '^最高价:前复权(元)D',
-    '最低价' : '^最低价:前复权(元)D',
-    '成交量' : '^成交量(股)D',
-    '成交额' : '^成交额(元)D',
-    '涨跌幅' :"^涨跌幅:前复权(%)D",
-    '上市天数':"^上市天数(天)D",
-    '所属概念':"^所属概念",
+    '开盘价'  :"^开盘价:前复权D",
+    '收盘价' : '^收盘价:前复权D',
+    '最高价' : '^最高价:前复权D',
+    '最低价' : '^最低价:前复权D',
+    '成交量' : '^成交量D',
+    '成交额' : '^成交额D',
+    '涨跌幅' :"^涨跌幅:前复权D",
+    '上市天数':"^上市天数D",
+    '所属概念':"^所属概念$",
 }
 
 class CFetchStockDailyData(object):
@@ -25,7 +25,7 @@ class CFetchStockDailyData(object):
                 "query_area": "",
                 "block_list": "",
                 "add_info": "{\"urp\":{\"scene\":1,\"company\":1,\"business\":1},\"contentType\":\"json\",\"searchInfo\":true}",
-                "question": f'''{self.today.replace("-",".")} 前复权开盘价，前复权收盘价，前复权最高价，前复权最低价，前复权涨跌幅, 成交量，成交额，上市天数,所属概念''',
+                "question": f'''日期{self.today} 前复权开盘价，前复权收盘价，前复权最高价，前复权最低价，前复权涨跌幅, {self.today}成交量，{self.today}成交额，上市天数,所属概念''',
                 "perpage": "100",
                 "page": 1,
                 "secondary_intent": "stock",

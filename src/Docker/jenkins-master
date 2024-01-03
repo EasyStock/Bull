@@ -12,3 +12,9 @@ docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Dat
 docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Data/ -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent2 -e LANG=C.UTF-8 jenkins_agent:2.0 /bin/bash -c "wget http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/jenkinsAgent2/jenkins-agent.jnlp -secret a3c8e56123c19ce9fef14a13b2ff15f1c476da9553d49b1ac3274cdff23ceba7 -workDir /home/jenkins/"
 
 docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Data/ -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent3 -e LANG=C.UTF-8 jenkins_agent:2.0 /bin/bash -c "wget http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/jenkinsAgent1/jenkins-agent.jnlp -secret c1ffdd1e3d4be332a9dcf8389692eb26a0b0ad14c1053a9ea68632ac2a2afb15 -workDir /home/jenkins/"
+
+
+
+docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Data/ -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_Debian1 -e LANG=C.UTF-8 jenkins_agent:3.0 /bin/bash -c "curl -sO http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/jenkinsAgent%5FDebian1/jenkins-agent.jnlp -secret 81f8c6b5aedcac73511a324d6bab7c419b9a57bd5f13c231bd4fd090e5076e4f -workDir /home/jenkins/"
+docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Data/ -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_Debian2 -e LANG=C.UTF-8 jenkins_agent:3.0 /bin/bash -c "curl -sO http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/jenkinsAgent%5FDebian2/jenkins-agent.jnlp -secret 5fe18d4ef81fbbe291aee69408d003d4cf9a3813b3da68e69e3be824d79e82fc -workDir /home/jenkins/"
+

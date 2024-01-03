@@ -13,8 +13,17 @@ RUN pip3 install sqlparse --break-system-packages
 RUN pip3 install schedule --break-system-packages
 RUN pip3 install selenium --break-system-packages
 RUN pip3 install PyExecJS --break-system-packages
+RUN pip3 install pymysql --break-system-packages
+RUN pip3 install pandas --break-system-packages
+RUN pip3 install pyparsing --break-system-packages
+RUN pip3 install matplotlib --break-system-packages
+
 
 RUN mkdir -p /home/jenkins
+RUN mkdir -p /home/jenkins
+
+RUN mkdir -p /root/.fonts
+COPY ./SimHei.ttf /root/.fonts/
 WORKDIR /home/jenkins
 RUN npm install jsdom
 
