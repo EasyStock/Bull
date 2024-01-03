@@ -284,7 +284,7 @@ def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
    
     for date in dates:
         print(f"=======start to request 跌停 data of: {date}=================")
-        dataMgr = CKaiPanLaMultiPageDataMgr()
+        dataMgr = CKaiPanLaMultiPageDataMgr(20)
         df = dataMgr.RequestData(date,KaiPanLaDieTingListParam)
         if df is not None and not df.empty:
             res = pd.DataFrame()
