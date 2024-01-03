@@ -172,54 +172,54 @@ def RequestVolumnDataByDates(dates,dbConnection):  #大盘成交量
             print(f'''{date} data is None''')
     return res
 
-def RequestZhangTingDataByDates(dates,dbConnection): # 涨停数据
-    KaiPanLaZhangTingListParam = {
-        "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=1&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
-        "hostOfToday":"apphq.longhuvip.com",
-        #====================
-        "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=6&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=1000",
-        "hostOfHistory":"apphis.longhuvip.com"
-        }
+# def RequestZhangTingDataByDates(dates,dbConnection): # 涨停数据
+#     KaiPanLaZhangTingListParam = {
+#         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+#         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=1&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
+#         "hostOfToday":"apphq.longhuvip.com",
+#         #====================
+#         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+#         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=1&PhoneOSNew=2&PidType=1&Type=6&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=1000",
+#         "hostOfHistory":"apphis.longhuvip.com"
+#         }
     
-    # pd.set_option('display.unicode.ambiguous_as_wide',True)
-    # pd.set_option('display.unicode.east_asian_width',True)
-    # pd.set_option('display.width',180)
-    for date in dates:
-        print(f"=======start to request 涨停 data of: {date}=================")
-        dataMgr = CKaiPanLaMultiPageDataMgr()
-        df = dataMgr.RequestData(date,KaiPanLaZhangTingListParam)
-        if df is not None and not df.empty:
-            res = pd.DataFrame()
+#     # pd.set_option('display.unicode.ambiguous_as_wide',True)
+#     # pd.set_option('display.unicode.east_asian_width',True)
+#     # pd.set_option('display.width',180)
+#     for date in dates:
+#         print(f"=======start to request 涨停 data of: {date}=================")
+#         dataMgr = CKaiPanLaMultiPageDataMgr()
+#         df = dataMgr.RequestData(date,KaiPanLaZhangTingListParam)
+#         if df is not None and not df.empty:
+#             res = pd.DataFrame()
             
-            res["stockID"] = df[0]
-            res["stockName"] = df[1]
-            res["firstTime"] = df[6]
-            res["status"] = df[9]
-            res["reason"] = df[16]
-            res["bankuai"] = df[11]
-            res["lastTime"] = df[25]
-            res["fengdanMax"] = df[23]
-            res["fengdan"] = df[8]
-            res["jinge"] = df[12]
-            res["volumn"] = df[13]
-            res["huanshou"] = df[14]
-            res["liutong"] = df[15]
-            res["date"] = str(date)
-            res['firstTime'] = res.apply(lambda row: _timestampToStr(row['firstTime']), axis=1)
-            res['lastTime'] = res.apply(lambda row: _timestampToStr(row['lastTime']), axis=1)
-            res['fengdanMax'] = res.apply(lambda row: _formatVolumn(row['fengdanMax']), axis=1)
-            res['fengdan'] = res.apply(lambda row: _formatVolumn(row['fengdan']), axis=1)
-            res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
-            res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
-            res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
-            sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_zhangting`")
-            for sql in sqls:
-                #print(sql)
-                dbConnection.Execute(sql)
-        else:
-            print(f'''{date} data is None''')
+#             res["stockID"] = df[0]
+#             res["stockName"] = df[1]
+#             res["firstTime"] = df[6]
+#             res["status"] = df[9]
+#             res["reason"] = df[16]
+#             res["bankuai"] = df[11]
+#             res["lastTime"] = df[25]
+#             res["fengdanMax"] = df[23]
+#             res["fengdan"] = df[8]
+#             res["jinge"] = df[12]
+#             res["volumn"] = df[13]
+#             res["huanshou"] = df[14]
+#             res["liutong"] = df[15]
+#             res["date"] = str(date)
+#             res['firstTime'] = res.apply(lambda row: _timestampToStr(row['firstTime']), axis=1)
+#             res['lastTime'] = res.apply(lambda row: _timestampToStr(row['lastTime']), axis=1)
+#             res['fengdanMax'] = res.apply(lambda row: _formatVolumn(row['fengdanMax']), axis=1)
+#             res['fengdan'] = res.apply(lambda row: _formatVolumn(row['fengdan']), axis=1)
+#             res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
+#             res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
+#             res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
+#             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_zhangting`")
+#             for sql in sqls:
+#                 #print(sql)
+#                 dbConnection.Execute(sql)
+#         else:
+#             print(f'''{date} data is None''')
 
 def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
     KaiPanLaZhaBanListParam = {
@@ -270,98 +270,98 @@ def RequestZhaBanDataByDates(dates,dbConnection): #炸板数据
             print(f'''{date} data is None''')
     return ret
 
-def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
-    KaiPanLaDieTingListParam = {
-        "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+# def RequestDieTingDataByDates(dates,dbConnection): #跌停数据
+#     KaiPanLaDieTingListParam = {
+#         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
                              
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=10",
-        "hostOfToday":"apphq.longhuvip.com",
-        #====================
-        "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
-        "hostOfHistory":"apphis.longhuvip.com"
-        }
+#         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=10",
+#         "hostOfToday":"apphq.longhuvip.com",
+#         #====================
+#         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+#         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=3&Type=4&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
+#         "hostOfHistory":"apphis.longhuvip.com"
+#         }
    
-    for date in dates:
-        print(f"=======start to request 跌停 data of: {date}=================")
-        dataMgr = CKaiPanLaMultiPageDataMgr(20)
-        df = dataMgr.RequestData(date,KaiPanLaDieTingListParam)
-        if df is not None and not df.empty:
-            res = pd.DataFrame()
+#     for date in dates:
+#         print(f"=======start to request 跌停 data of: {date}=================")
+#         dataMgr = CKaiPanLaMultiPageDataMgr(20)
+#         df = dataMgr.RequestData(date,KaiPanLaDieTingListParam)
+#         if df is not None and not df.empty:
+#             res = pd.DataFrame()
             
-            res["stockID"] = df[0]
-            res["stockName"] = df[1]
+#             res["stockID"] = df[0]
+#             res["stockName"] = df[1]
 
-            res["time"] = df[6]
-            res["fengdan"] = df[8]
+#             res["time"] = df[6]
+#             res["fengdan"] = df[8]
 
-            res["bankuai"] = df[11]
+#             res["bankuai"] = df[11]
 
-            res["jinge"] = df[12]
-            res["volumn"] = df[13]
-            res["huanshou"] = df[14]
-            res["liutong"] = df[15]
-            res["date"] = str(date)
+#             res["jinge"] = df[12]
+#             res["volumn"] = df[13]
+#             res["huanshou"] = df[14]
+#             res["liutong"] = df[15]
+#             res["date"] = str(date)
 
-            res['time'] = res.apply(lambda row: _timestampToStr(row['time']), axis=1)
+#             res['time'] = res.apply(lambda row: _timestampToStr(row['time']), axis=1)
 
-            res['fengdan'] = res.apply(lambda row: _formatVolumn(row['fengdan']), axis=1)
-            res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
-            res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
-            res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
-            #print(res)
-            sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_dieting`")
-            for sql in sqls:
-                #print(sql)
-                dbConnection.Execute(sql)
-        else:
-            print(f'''{date} data is None''')
+#             res['fengdan'] = res.apply(lambda row: _formatVolumn(row['fengdan']), axis=1)
+#             res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
+#             res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
+#             res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
+#             #print(res)
+#             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_dieting`")
+#             for sql in sqls:
+#                 #print(sql)
+#                 dbConnection.Execute(sql)
+#         else:
+#             print(f'''{date} data is None''')
 
 
-def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
-    KaiPanLaZhiranZhangTingListParam = {
-        "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
-        "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
-        "hostOfToday":"apphq.longhuvip.com",
-        #====================
-        "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
-        "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
-        "hostOfHistory":"apphis.longhuvip.com"
-        }
+# def RequestZhiRanZhangTingDataByDates(dates,dbConnection): # 自然涨停数据
+#     KaiPanLaZhiranZhangTingListParam = {
+#         "urlOfToday":"https://apphq.longhuvip.com/w1/api/index.php",
+#         "queryStringOfToday":"Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.11.0.3&a=DaBanList&apiv=w33&c=HomeDingPan&st=100",
+#         "hostOfToday":"apphq.longhuvip.com",
+#         #====================
+#         "urlOfHistory":"https://apphis.longhuvip.com/w1/api/index.php",
+#         "queryStringOfHistory" :"Day={0}&Filter=0&FilterGem=0&FilterMotherboard=0&FilterTIB=0&Index=0&Is_st=1&Order=0&PhoneOSNew=2&PidType=4&Type=6&VerSion=5.11.0.3&a=HisDaBanList&apiv=w33&c=HisHomeDingPan&st=100",
+#         "hostOfHistory":"apphis.longhuvip.com"
+#         }
    
-    for date in dates:
-        print(f"=======start to request 自然涨停 data of: {date}=================")
-        dataMgr = CKaiPanLaMultiPageDataMgr()
-        df = dataMgr.RequestData(date,KaiPanLaZhiranZhangTingListParam)
-        if df is not None and not df.empty:
-            res = pd.DataFrame()
-            res["stockID"] = df[0]
-            res["stockName"] = df[1]
-            res["time"] = df[6]
-            res["status"] = df[9]
-            res["reason"] = df[16]
-            res["bankuai"] = df[11]
+#     for date in dates:
+#         print(f"=======start to request 自然涨停 data of: {date}=================")
+#         dataMgr = CKaiPanLaMultiPageDataMgr()
+#         df = dataMgr.RequestData(date,KaiPanLaZhiranZhangTingListParam)
+#         if df is not None and not df.empty:
+#             res = pd.DataFrame()
+#             res["stockID"] = df[0]
+#             res["stockName"] = df[1]
+#             res["time"] = df[6]
+#             res["status"] = df[9]
+#             res["reason"] = df[16]
+#             res["bankuai"] = df[11]
 
-            res["fengdanMax"] = df[23]
-            res["fengdan"] = df[8]
-            res["jinge"] = df[12]
-            res["volumn"] = df[13]
-            res["huanshou"] = df[14]
-            res["liutong"] = df[15]
-            res["date"] = str(date)
+#             res["fengdanMax"] = df[23]
+#             res["fengdan"] = df[8]
+#             res["jinge"] = df[12]
+#             res["volumn"] = df[13]
+#             res["huanshou"] = df[14]
+#             res["liutong"] = df[15]
+#             res["date"] = str(date)
 
-            res['time'] = res.apply(lambda row: _timestampToStr(row['time']), axis=1)
-            res['fengdanMax'] = res.apply(lambda row: _formatVolumn(row['fengdanMax']), axis=1)
-            res['fengdan'] = res.apply(lambda row: _formatVolumn(row['fengdan']), axis=1)
-            res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
-            res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
-            res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
-            sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_ziranzhangting`")
-            for sql in sqls:
-                #print(sql)
-                dbConnection.Execute(sql)
-        else:
-            print(f'''{date} data is None''')
+#             res['time'] = res.apply(lambda row: _timestampToStr(row['time']), axis=1)
+#             res['fengdanMax'] = res.apply(lambda row: _formatVolumn(row['fengdanMax']), axis=1)
+#             res['fengdan'] = res.apply(lambda row: _formatVolumn(row['fengdan']), axis=1)
+#             res['jinge'] = res.apply(lambda row: _formatVolumn(row['jinge']), axis=1)
+#             res['volumn'] = res.apply(lambda row: _formatVolumn(row['volumn']), axis=1)
+#             res['liutong'] = res.apply(lambda row: _formatVolumn(row['liutong']), axis=1)
+#             sqls = DataFrameToSqls_INSERT_OR_IGNORE(res,"`stock`.`kaipanla_ziranzhangting`")
+#             for sql in sqls:
+#                 #print(sql)
+#                 dbConnection.Execute(sql)
+#         else:
+#             print(f'''{date} data is None''')
 
 def RequestIndexData(dates,dbConnection): #大盘指数数据
     IndexListParam = {
