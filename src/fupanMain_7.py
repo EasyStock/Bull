@@ -81,6 +81,7 @@ def ConvertDataFrameToJPG(df,fullPath):
     ax.yaxis.set_visible(False)  # hide the y axis
     table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
     plt.savefig(fullPath)
+    plt.close()
 
 
 def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
@@ -129,28 +130,28 @@ def GetFuPanList(dbConnection,tradingDay):
     logger.info(fullPath)
 
     shoubanDF =  df[df["连续涨停天数"]==1]
-    fullPath = f"{rootDir}首板_{tradingDay}.jpg"
+    fullPath = f"{rootDir}板1_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(shoubanDF,columns=["股票代码","股票简称"])
     jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     logger.info(fullPath)
 
     dF2 =  df[df["连续涨停天数"]==2]
-    fullPath = f"{rootDir}2板_{tradingDay}.jpg"
+    fullPath = f"{rootDir}板2_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(dF2,columns=["股票代码","股票简称"])
     jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     logger.info(fullPath)
 
     dF3 =  df[df["连续涨停天数"]==3]
-    fullPath = f"{rootDir}3板_{tradingDay}.jpg"
+    fullPath = f"{rootDir}板3_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(dF3,columns=["股票代码","股票简称"])
     jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     logger.info(fullPath)
 
     dF4 =  df[df["连续涨停天数"]>=4]
-    fullPath = f"{rootDir}4板_{tradingDay}.jpg"
+    fullPath = f"{rootDir}板4_{tradingDay}.jpg"
     jpgDataFrame = pd.DataFrame(dF4,columns=["股票代码","股票简称"])
     jpgDataFrame.reset_index(drop=True,inplace=True)
     ConvertDataFrameToJPG(jpgDataFrame,fullPath)

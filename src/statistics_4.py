@@ -3,6 +3,7 @@ from DBOperating import GetTradingDateLastN,GetZhangTingDataBy,GetZhangTingData,
 from mysql.connect2DB import ConnectToDB
 from categrate import CATEGRAGTE
 import logging
+import pandas as pd
 from workspace import workSpaceRoot,WorkSpaceFont
 logger = logging.getLogger()
 
@@ -80,18 +81,23 @@ def AnalysisZhangTingReason(dbConnection):
 
     reasons = list(set(reasons))
     reasonResults = {}
+    rootFolder = f'''{workSpaceRoot}/复盘/股票/{date}/'''
     for reason in reasons:
-        sql = f"select count(*) from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and A.`涨停原因类别` like '%{reason}%' ;"
-        result ,_ = dbConnection.Query(sql)
-        count = result[0][0]
+        sql = f'''select A.* from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and A.`涨停原因类别` like '%{reason}%' order by `连续涨停天数`DESC ,`最终涨停时间` ASC;'''
+        result ,columns = dbConnection.Query(sql)
+        df = pd.DataFrame(result, columns = columns)
+        count = df.shape[0]
+        if count >=3:
+            fullPath = f"{rootFolder}{count}_{reason}.jpg"
+            jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称","连续涨停天数"])
+            logger.info(fullPath)
+            ConvertDataFrameToJPG(jpgDataFrame,fullPath)
         reasonResults[reason] = count
     
     ret = sorted(reasonResults.items(), key=lambda d: d[1],reverse=True)
     for r in ret:
         if r[1] >=2:
             print(r)
-
-
 
 def ConvertDataFrameToJPG(df,fullPath):
     from pandas.plotting import table
@@ -104,6 +110,7 @@ def ConvertDataFrameToJPG(df,fullPath):
     ax.yaxis.set_visible(False)  # hide the y axis
     table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
     plt.savefig(fullPath)
+    plt.close()
     
 def categrateZhangTing(dbConnection):
     import pandas as pd

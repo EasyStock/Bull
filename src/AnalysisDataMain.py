@@ -92,9 +92,9 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
 def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
     logger.info(f'==============开始发送可转债分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
     groups = [
-        #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
-        ("https://open.feishu.cn/open-apis/bot/v2/hook/cddb5b9f-d4e5-48b2-862a-37f77c44a0a5","sUNRDcO4erOybcDNaAD8Hb"), #可转债免费推送群
-        ("https://open.feishu.cn/open-apis/bot/v2/hook/c0a8b97e-6817-49df-a653-2116e4e30fdd","QOWgXDc90zhxN7fVuULL9f"), #可转债付费推送群
+        ("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
+        #("https://open.feishu.cn/open-apis/bot/v2/hook/cddb5b9f-d4e5-48b2-862a-37f77c44a0a5","sUNRDcO4erOybcDNaAD8Hb"), #可转债免费推送群
+        #("https://open.feishu.cn/open-apis/bot/v2/hook/c0a8b97e-6817-49df-a653-2116e4e30fdd","QOWgXDc90zhxN7fVuULL9f"), #可转债付费推送群
         
     ]
     for group in groups:
@@ -118,8 +118,8 @@ def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
 def SendReportOfStock(dbConnection,tradingDays,logger):
     logger.info(f'==============开始发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
     groups = [
-        #("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
-        ("https://open.feishu.cn/open-apis/bot/v2/hook/9c3b588e-a528-4c92-a9dd-a44e29abf2fb","VaT4TcvmILA0lYAv9cjbcc"), #每日复盘群
+        ("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
+        #("https://open.feishu.cn/open-apis/bot/v2/hook/9c3b588e-a528-4c92-a9dd-a44e29abf2fb","VaT4TcvmILA0lYAv9cjbcc"), #每日复盘群
     ]
     for group in groups:
         webhook = group[0]

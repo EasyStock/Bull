@@ -75,6 +75,7 @@ class CYizhiban(object):
         ax.yaxis.set_visible(False)  # hide the y axis
         table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
         plt.savefig(fullPath)
+        plt.close()
 
     def YiZhiBan(self):
         print("CYizhiban.YiZhiBan begin.")

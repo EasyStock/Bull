@@ -95,6 +95,7 @@ class CFetchDaliangLanBanDataFromTHS2(object):
         ax.yaxis.set_visible(False)  # hide the y axis
         table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
         plt.savefig(fullPath)
+        plt.close()
 
     def DataFrameToJPG(self,df,columns,rootPath, fileName):
         size = df.shape[0]
