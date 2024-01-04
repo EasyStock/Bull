@@ -24,7 +24,7 @@ class CWriteZhangTingTiDuiToXLSX(object):
         self.rows = 0
         self.date = date
         self.sheetName = f'''涨停梯队'''
-        self.title = f'''涨停梯队复盘表({self.date})'''
+        self.title = f'''涨停梯队复盘表 ({self.date})'''
     
     def formatColumnsWidth(self,sheet):
         sheet.column_dimensions['A'].width = 15
@@ -43,6 +43,9 @@ class CWriteZhangTingTiDuiToXLSX(object):
         mergeCell = f'A{rowIndex}:H{rowIndex}'
         sheet.merge_cells(mergeCell)
         self.formatRowHeight(sheet,rowIndex,rowHight)
+        for column in range(1,9):
+            cell = sheet.cell(row = rowIndex, column = column)
+            cell.border = border
 
     def addTitle(self,sheet):
         cell = sheet.cell(1,1)
@@ -83,9 +86,9 @@ class CWriteZhangTingTiDuiToXLSX(object):
             for index,data in enumerate(datas):
                 gaiNian,df = data
                 if index == 0:
+                    self.mergeRow(sheet,2,32)
                     cell = sheet.cell(2,1)
                     cell.value = f'''"{gaiNian}" 概念'''
-                    self.mergeRow(sheet,2,32)
                     self.formatGaiNianStyle(cell)
 
                     self.rows = 2
