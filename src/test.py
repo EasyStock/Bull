@@ -77,8 +77,59 @@ def UpdateData(dbConnection):
         
     print(sqls[:5])
 
-if __name__ == "__main__":
+
+def ReadXLS():
+    import openpyxl
+    wb = openpyxl.load_workbook('/Volumes/Data/111.xlsx')
+    print(wb.sheetnames, '\n')
+    active_sheet = wb.active
+    cell = active_sheet['A1']
+    print(cell,cell.fill.bgcolor)
+    print(cell,cell.value)
+    print(cell,cell.font)
+
+def WriteXLS():
     dbConnection = ConnectToDB()
+    # import numpy as np
+    # from openpyxl.utils import get_column_letter
+    from openpyxl.styles import Font  # 导入字体模块
+    from openpyxl.styles import PatternFill  # 导入填充模块
+    from openpyxl.styles import Border,Side,Alignment,Font
+
+
+    sql = f'''SELECT * FROM stock.stockzhangting where `日期` = "2024-01-04" order by `连续涨停天数` DESC;'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    fullPath = "/tmp/222.xlsx"
+    align = Alignment(horizontal='center',vertical='center',wrap_text=True)
+    fille = PatternFill('solid', fgColor= 'ffff00')  # 设置填充颜色为 橙色
+    font1 = Font(name='宋体', size=28, italic=False, color="ff0000", bold=True)
+    font2 = Font(name='宋体', size=28, italic=False, color="ffFFFF", bold=True)
+    with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
+        df.to_excel(excelWriter, sheet_name="涨停梯队", index=False,startrow=1,header=True)
+        ws = excelWriter.sheets['涨停梯队']
+        ws.cell(1,1).value = '涨停梯队复盘表'
+
+        mergeCell = f'A{1}:H{1}'
+        ws.merge_cells(mergeCell)
+        
+        ws.cell(1,1).alignment = align
+        ws.cell(1,1).fill = fille
+        ws.cell(1,1).font = font1
+        ws.row_dimensions[1].height=40
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 15
+        ws.column_dimensions['C'].width = 15
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 85
+        ws.column_dimensions['F'].width = 85
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 15
+
+
+if __name__ == "__main__":
+    #dbConnection = ConnectToDB()
     # Test1_BuyTogether(dbConnection,10028451,10656871)
     # Test1_SellTogether(dbConnection,10028451,10656871)
-    UpdateData(dbConnection)
+    #UpdateData(dbConnection)
+    WriteXLS()
