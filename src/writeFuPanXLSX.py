@@ -8,9 +8,6 @@ import os
 
 
 def WriteFuPanSummaryToXLSX(dbConnection,tradingDays):
-    # dbConnection = ConnectToDB()
-    # tradingDays = GetTradingDateLastN(dbConnection,15)
-    
     rootFolder = f'''{workSpaceRoot}/复盘/复盘摘要/'''
     if os.path.exists(rootFolder) == False:
         os.makedirs(rootFolder)
@@ -39,4 +36,6 @@ def Test1():
 
 
 if __name__ == '__main__':
-    WriteFuPanSummaryToXLSX()
+    dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,15)
+    WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
