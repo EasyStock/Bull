@@ -83,7 +83,7 @@ def FormatCardOfReDianToday(date,redian,stocks,titles):
     elements.append(tag)
     beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     elements.append(beizhu)
-    title = f"{date} 今日炒作热点: {redian}"
+    title = f"{date} 今日炒作热点: {redian},有此概念的可转债如下:"
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 
 def FormatCardOfNewGaiNian5Days(data,title):
@@ -138,11 +138,11 @@ def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
     tag = {"tag":"hr"}
     avgLianBanCount = f'''{df["平均连板数量"][0]:.1f}'''
 
-    line1 = f'''{_markdownFontHighlight("一. 市场总体情况:")}\n**1.** {_fomatItem(df,"今成交量","两市量")},{_fomatItem(df,"增量","增量",showYesterday=False)}\n**2.** {_fomatItem(df,"红盘","红盘")}, {_fomatItem(df,"绿盘","绿盘","green")}\n**3.** {_fomatItem(df,"涨停","实际涨停")}, {_fomatItem(df,"跌停","跌停","green")}\n**4.** {_fomatItem(df,"炸板","炸板","green")}，{_fomatItem(df,"炸板率","炸板率","red")}\n**5.** {_fomatItem(df,"连板个数","连板数量","red")},近30个交易日最多连板个数: {_markdownFontColor(df["最高连板数量"][0])},最少连板个数: {_markdownFontColor(df["最低连板数量"][0])},平均连板个数: {_markdownFontColor(avgLianBanCount)}'''
+    line1 = f'''{_markdownFontHighlight("一. 市场总体情况:")}\n**1.** {_fomatItem(df,"今成交量","两市量")},{_fomatItem(df,"增量","增量",showYesterday=False)}\n**2.** {_fomatItem(df,"红盘","红盘")}, {_fomatItem(df,"绿盘","绿盘","green")}\n**3.** {_fomatItem(df,"涨停","实际涨停")}, {_fomatItem(df,"跌停","跌停","green")}\n**4.** {_fomatItem(df,"炸板","炸板","green")}，{_fomatItem(df,"炸板率","炸板率","red")}\n**5.** {_fomatItem(df,"连板个数","连板数量","red")},近30个交易日最多连板个数: {_markdownFontColor(df["最高连板数量"].iloc[-1])},最少连板个数: {_markdownFontColor(df["最低连板数量"].iloc[-1])},平均连板个数: {_markdownFontColor(avgLianBanCount)}'''
     elements.append(_markdown(line1))
     elements.append(tag)
 
-    line2 = f'''{_markdownFontHighlight("二. 市场情绪:")}\n{_fomatItem(df,"今日势能","势能EX")},{_fomatItem(df,"动能","动能EX")}, {_fomatItem(df,"连板股的红盘比","连板股的红盘比")}, {_fomatItem(df,"首板红盘比","首板红盘比")}, 备注:{_markdownFontColor(df["备注"][0])}\n\n**情绪判断标准**\n**1. 高潮:** {_markdownFontColor("动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78","green")}\n**2. 半高潮:** {_markdownFontColor("只有 连板股的红盘比 >=0.78","green")}\n**3. 冰点期判断 - 强势行情:** {_markdownFontColor("如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次","green")}\n**4. 冰点期判断 - 弱势行情:** {_markdownFontColor("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6","green")}'''
+    line2 = f'''{_markdownFontHighlight("二. 市场情绪:")}\n{_fomatItem(df,"今日势能","势能EX")},{_fomatItem(df,"动能","动能EX")}, {_fomatItem(df,"连板股的红盘比","连板股的红盘比")}, {_fomatItem(df,"首板红盘比","首板红盘比")}, 备注:{_markdownFontColor(df["备注"].iloc[-1])}\n\n**情绪判断标准**\n**1. 高潮:** {_markdownFontColor("动能综合值=12 且 势能综合值=10 或者 连板股的红盘比 >=0.78 首板股的红盘比 >=0.78","green")}\n**2. 半高潮:** {_markdownFontColor("只有 连板股的红盘比 >=0.78","green")}\n**3. 冰点期判断 - 强势行情:** {_markdownFontColor("如果动能综合值 =-12 且 势能综合值 <=-2 或者 (动能综合值<=-8 且 势能综合值<=-2) 出现两次","green")}\n**4. 冰点期判断 - 弱势行情:** {_markdownFontColor("如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6","green")}'''
     elements.append(_markdown(line2))
     elements.append(tag)
 
