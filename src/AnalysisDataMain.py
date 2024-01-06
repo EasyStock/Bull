@@ -16,6 +16,7 @@ from fupan.jiTianjiBan import GetAllJiTianJiBan
 from kaipanLaMain_11 import RequestKaiPanLaVolumnData,RequestKaiPanLaZhangDieTingJiashu,RequestKaiPanLaZhaBanData,CalcZhaBanRatio
 from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday
 from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_Stock
+from writeFuPanXLSX import WriteFuPanSummaryToXLSX
 
 import pytz
 import datetime
@@ -82,11 +83,14 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     #写上几天几板数据
     GetAllJiTianJiBan(dbConnection,tradingDays)
     
+    _updateKaiPanLaData(dbConnection,tradingDays,3)
+    
     #写复盘总结
     fupanSummary = CFupanSummary(dbConnection,tradingDays[-1])
     fupanSummary.WirteFupanSummary()
 
-    _updateKaiPanLaData(dbConnection,tradingDays,3)
+    #写复盘摘要到Excel
+    WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
     logger.info(f'==============结束分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
