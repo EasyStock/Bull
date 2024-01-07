@@ -102,10 +102,10 @@ class CFupanDetail(object):
         cell.border = border
         self.rows = self.rows + 1
 
-    def AddFenGeHang(self,sheet):
+    def AddFenGeHang(self,sheet,fillColor = '000000'):
         self.mergeRow(sheet,self.rows+1,"A","K",32)
         cell = sheet.cell(self.rows+1,1)
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor= fillColor)
         self.rows = self.rows + 1
 
 
@@ -201,11 +201,12 @@ class CFupanDetail(object):
                 if c >= 5:
                     cell1.alignment = alignment_left
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
-                if index > size:
-                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FF0000', bold=True)
                 cell1.fill = PatternFill('solid', fgColor="000000")
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
+                if index > size:
+                    cell1.fill = PatternFill('solid', fgColor="009DDE")
+                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FFFFFF', bold=True)
                 cell1.border = border
             
         self.index = self.index + 1
@@ -220,7 +221,7 @@ class CFupanDetail(object):
         if df.empty:
             return
         
-        count = df.shape[0] + 1
+        count = df.shape[0] + 2
         startRow = self.rows+1
         endRow = startRow + count -1
         self.mergeColumn(sheet,"A",startRow,endRow)
@@ -239,11 +240,17 @@ class CFupanDetail(object):
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
-                if index == count-1:
-                    #cell1.fill = PatternFill('solid', fgColor="00FF00")
-                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FF0000', bold=True)
+                if index == count-2:
+                    cell1.fill = PatternFill('solid', fgColor="009DDE")
+                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FFFFFF', bold=True)
                 cell1.border = border
-            
+        self.mergeRow(sheet,endRow,"B","K",24)
+        cell1 = sheet.cell(endRow,2)
+        cell1.alignment = alignment_left
+        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.value =  f'''结论:'''
+        cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
+        cell1.border = border  
         self.index = self.index + 1
         self.rows = self.rows + count
 
@@ -291,7 +298,7 @@ class CFupanDetail(object):
         df = pd.DataFrame(result, columns = columns)
         if df.empty:
             return
-        red = InlineFont(color='FF0000',sz=self.contextFontSize)
+        red = InlineFont(color='009DDE',sz=self.contextFontSize)
         black = InlineFont(color='000000',sz=self.contextFontSize)
         count = 2
         startRow = self.rows+1
@@ -332,7 +339,7 @@ class CFupanDetail(object):
         if df.empty:
             return
         df["备注"] =df["备注"].str.replace(';', '\n')
-        count = df.shape[0] + 1
+        count = df.shape[0] + 2
         startRow = self.rows+1
         endRow = startRow + count -1
         self.mergeColumn(sheet,"A",startRow,endRow)
@@ -351,11 +358,19 @@ class CFupanDetail(object):
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
-                if index == count-1:
-                    ##cell1.fill = PatternFill('solid', fgColor="00FF00")
-                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FF0000', bold=True)
+                if index == count-2:
+                    cell1.fill = PatternFill('solid', fgColor="009DDE")
+                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FFFFFF', bold=True)
                 cell1.border = border
-            
+    
+        self.mergeRow(sheet,endRow,"B","K",24)
+        cell1 = sheet.cell(endRow,2)
+        cell1.alignment = alignment_left
+        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.value =  f'''结论:'''
+        cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
+        cell1.border = border 
+
         self.index = self.index + 1
         self.rows = self.rows + count
 
@@ -383,7 +398,7 @@ class CFupanDetail(object):
         # df["3连个股"] = df.apply(lambda row: self._format1(row['3连个股']), axis=1)
         # df["4连及以上个股"] = df.apply(lambda row: self._format1(row['4连及以上个股']), axis=1)
         newDf = pd.DataFrame(df, columns = ["日期","首板个数", "2连板个数", "3连板个数", "4连板及以上个数", "高度板", "3连个股","1","4连及以上个股","2"])
-        count = df.shape[0] + 1
+        count = df.shape[0] + 2
         startRow = self.rows+1
         endRow = startRow + count -1
         self.mergeColumn(sheet,"A",startRow,endRow)
@@ -405,11 +420,19 @@ class CFupanDetail(object):
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
-                if index == count-1:
-                    #cell1.fill = PatternFill('solid', fgColor="00FF00")
-                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FF0000', bold=True)
+                if index == count-2:
+                    cell1.fill = PatternFill('solid', fgColor="009DDE")
+                    cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FFFFFF', bold=True)
                 cell1.border = border
         
+        self.mergeRow(sheet,endRow,"B","K",24)
+        cell1 = sheet.cell(endRow,2)
+        cell1.alignment = alignment_left
+        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.value =  f'''结论:'''
+        cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
+        cell1.border = border 
+
         self.index = self.index + 1
         self.rows = self.rows + count
 
@@ -532,5 +555,4 @@ class CFupanDetail(object):
         self.keZhuanZai(sheet) #可转债观察池
         self.AddFenGeHang(sheet)
         self.QiTa(sheet)#其他
-        self.AddFenGeHang(sheet)
         self.formatColumnsWidth(sheet)

@@ -14,7 +14,16 @@ alignment = Alignment(
          horizontal='center',
          vertical='center',
          text_rotation=0,
-         indent=0
+         indent=0,
+         wrapText=True
+     )
+
+alignment_left = Alignment(
+         horizontal='left',
+         vertical='center',
+         text_rotation=0,
+         indent=0,
+         wrapText=True
      )
 
 class CWriteZhangTingTiDuiToXLSX(object):
@@ -152,6 +161,8 @@ class CWriteZhangTingTiDuiToXLSX(object):
                 cell = sheet.cell(row = startRow + index, column = column)
                 cell.border = border
                 cell.alignment = alignment
+                if column >=8 and index > 1:
+                    cell.alignment = alignment_left
                 cell.fill = PatternFill('solid', fgColor="000000")
                 if index % 2 != 0:
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
