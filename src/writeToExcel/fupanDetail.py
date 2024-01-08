@@ -293,7 +293,7 @@ class CFupanDetail(object):
     def AddRedianBankuai(self,sheet):
         #热点板块
         #市场情绪数据
-        sql = f'''SELECT * FROM stock.rediandaily where `日期` >= "{self.tradingDays[-2]}";'''
+        sql = f'''SELECT * FROM stock.rediandaily where `日期` >= "{self.tradingDays[-5]}";'''
         result ,columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(result, columns = columns)
         if df.empty:
@@ -317,7 +317,10 @@ class CFupanDetail(object):
         cell1.alignment = alignment_left
         cell1.fill = PatternFill('solid', fgColor="000000")
         cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
-        rich_string1 = CellRichText([TextBlock(black, "昨日热点: "), TextBlock(red, f'{result[-2][1]}')])
+        msg = ""
+        for i in range(-5,0):
+            msg = msg + f'''{result[i][1]}({result[i][0]})    '''
+        rich_string1 = CellRichText([TextBlock(black, "前5日热点: "), TextBlock(red, msg)])
         cell1.value = rich_string1
 
         cell2 = sheet.cell(startRow+1,2)

@@ -142,6 +142,10 @@ def GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger):
 
     logger.info(f'==============结束从东方财富网上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
+def updateFinishedStatus(dbConnection,tradingDays):
+    sql =f'''REPLACE INTO `stock`.`jenkins_status` (`date`, `data`, `analysis`) VALUES ('{tradingDays[-1]}', '1', '0');'''
+    dbConnection.Execute(sql)
+
 #####################################入口函数######################################################
     
 if __name__ == "__main__":
@@ -175,6 +179,8 @@ if __name__ == "__main__":
         #从东方财富网上获取数据
         GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
         ###################### 
+
+        updateFinishedStatus(dbConnection,tradingDays)
     else:
 
         if 1 in args.options:
@@ -193,3 +199,4 @@ if __name__ == "__main__":
             #从东方财富网上获取数据
             GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
 
+        updateFinishedStatus(dbConnection,tradingDays)

@@ -114,11 +114,27 @@ def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
         SendNDaysKeZhuanZaiQiangShu(dbConnection,tradingDays,webhook,secret,-5)
         #北交所打新
         SendNewStocks(dbConnection,tradingDays,webhook,secret)
-        #今日热点
-        SendReDianOfToday(dbConnection,tradingDays,webhook,secret)
+        # #今日热点
+        # SendReDianOfToday(dbConnection,tradingDays,webhook,secret)
     logger.info(f'==============结束发送可转债分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 
+def updateFinishedStatus(dbConnection,tradingDays):
+    sql =f'''UPDATE `stock`.`jenkins_status` SET `analysis` = '1' WHERE (`date` = '{tradingDays[-1]}');'''
+    dbConnection.Execute(sql)
+
+def getDataStatus(dbConnection,tradingDays,logger):
+    sql =f'''SELECT * FROM jenkins_status WHERE (`date` = '{tradingDays[-1]}');'''
+    results, _ = dbConnection.Query(sql)
+    try:
+        if results[0][1] == 1 and results[0][2] == 0:
+            return True
+    except:
+        pass
+    
+    logger.error("data not ready!")
+    return False
+    
 def SendReportOfStock(dbConnection,tradingDays,logger):
     logger.info(f'==============开始发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================')
     groups = [
@@ -135,7 +151,8 @@ def SendReportOfStock(dbConnection,tradingDays,logger):
 
 
 #####################################################################################################
-if __name__ == "__main__":
+
+def Main():
     logger = StartToInitLogger("分析数据入口")
     dbConnection = ConnectToDB()
     lastN = 50
@@ -152,6 +169,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     #args.options = [0,1,2,3,4]
 
+    if getDataStatus(dbConnection,tradingDays,logger) == False:
+        return None
+    
     if 0 in args.options:
         ######################
         #分析可转债数据
@@ -182,3 +202,8 @@ if __name__ == "__main__":
         if 4 in args.options:
             #发送股票分析结果
             SendReportOfStock(dbConnection,tradingDays,logger)
+
+
+if __name__ == "__main__":
+    Main()
+

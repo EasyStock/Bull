@@ -4,7 +4,6 @@ from mysql.connect2DB import ConnectToDB
 from categrate import CATEGRAGTE
 import logging
 import pandas as pd
-from FuPanXLSX.zhangTingTidui import CWriteZhangTingTiDuiToXLSX
 
 from workspace import workSpaceRoot,WorkSpaceFont
 logger = logging.getLogger()
@@ -101,10 +100,6 @@ def AnalysisZhangTingReason(dbConnection):
     ret = sorted(reasonResults.items(), key=lambda d: d[1][0],reverse=True)
     sql = f'''REPLACE INTO `stock`.`rediandaily` (`日期`, `热点`) VALUES ('{date}', '{ret[0][0]};{ret[1][0]}');'''
     dbConnection.Execute(sql)
-    xlsxfullPath = f"{rootFolder}涨停梯队_{date}.xlsx"
-    dataFrames = [(item[0],item[1][1]) for item in ret if item[1][0]>=3]
-    write = CWriteZhangTingTiDuiToXLSX(date)
-    write.WriteZhangTingTiDuiToXLSX(xlsxfullPath,dataFrames)
     # for r in ret:
     #     if r[1] >=2:
     #         print(r)

@@ -36,5 +36,5 @@ if __name__ == "__main__":
         if 5 in args.options:
             SendNewStocks(dbConnection,tradingDays,args.webhook,args.secret)
 
-        if 6 in args.options:
-            SendReDianOfToday(dbConnection,tradingDays,args.webhook,args.secret)
+        # if 6 in args.options:
+        #     SendReDianOfToday(dbConnection,tradingDays,args.webhook,args.secret)
