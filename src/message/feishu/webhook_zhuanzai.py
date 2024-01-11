@@ -176,12 +176,12 @@ def SendNewStocks(dbConnection,tradingDays,webhook,secret):
     msg_type = "interactive"
     sendMessageByWebhook(webhook,secret,msg_type,content)
 
-def SendkeZhuanZaiScore(dbConnection,date,diDianDate,webhook,secret,score = 5):
-    sql = f'''select A.`转债代码`,B.`转债名称`,A.`总分`,A.`抗跌分数周期`,A.`领涨分数周期` from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{date}" and B.`日期` = "{diDianDate}"  and A.`转债代码` = B.`转债代码` and A.`总分` >{score} order by A.`总分` DESC;'''
+def SendkeZhuanZaiScore(dbConnection,date,diDianDate,webhook,secret,limit = 50):
+    sql = f'''select A.`转债代码`,B.`转债名称`,A.`总分`,A.`抗跌分数周期`,A.`领涨分数周期` from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{date}" and B.`日期` = "{diDianDate}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC limit {limit};'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
-    title = ["**转债代码**","**转债名称**","**分数**"]
-    msg = FormatCardOfKeZhuanZaiScore(date,df,title,diDianDate,score)
+    title = ["**序号**","**代码**","**名称**","**分数**"]
+    msg = FormatCardOfKeZhuanZaiScore(date,df,title,diDianDate,limit)
     
     content = json.dumps(msg,ensure_ascii=False)
     #print(content)

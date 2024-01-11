@@ -203,6 +203,8 @@ def Main():
             #发送股票分析结果
             SendReportOfStock(dbConnection,tradingDays,logger)
 
+    updateFinishedStatus(dbConnection,tradingDays)
+
 
 if __name__ == "__main__":
     Main()

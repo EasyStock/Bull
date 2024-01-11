@@ -223,15 +223,15 @@ def FormatCardOfNewStock(datas,title):
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 
 
-def FormatCardOfKeZhuanZaiScore(date,df,titles,diDianDate,score):
+def FormatCardOfKeZhuanZaiScore(date,df,titles,diDianDate,limit):
     ###可转债综合分数通知
     elements = []
     tag = {"tag":"hr"}
-    s = f'''<font color="red">下跌区间:\n{df.iloc[0]["抗跌分数周期"]}\n\n上涨区间:\n{df.iloc[0]["领涨分数周期"]}\n\n最低时间点:{diDianDate}\n\n分数阈值:大于{score}分</font>'''
+    s = f'''<font color="red">下跌区间:\n{df.iloc[0]["抗跌分数周期"]}\n\n上涨区间:\n{df.iloc[0]["领涨分数周期"]}\n\n最低时间点:{diDianDate}\n\n</font>'''
     line1 = {"content":s,"tag":"markdown"}
     elements.append(line1)
 
-    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]}]}
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[3],"text_align":"center"}]}]}
     elements.append(tag)
     elements.append(stockHead)
 
@@ -242,11 +242,11 @@ def FormatCardOfKeZhuanZaiScore(date,df,titles,diDianDate,score):
         stockID = row["转债代码"]
         stockName = row["转债名称"]
         r = f'''{row["总分"]:.2f}'''
-        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":r,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":str(index+1),"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":r,"text_align":"center"}]}],"horizontal_spacing":"small"}
         elements.append(line)
 
     elements.append(tag)
     beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     elements.append(beizhu)
-    title = f'''{date} 抗跌、反弹、成交量、剩余规模 综合评分'''
+    title = f'''{date} 抗跌、反弹、成交量、剩余规模 综合评分 前{limit}个'''
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
