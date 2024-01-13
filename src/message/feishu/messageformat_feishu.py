@@ -20,7 +20,7 @@ def FormatCardOfZhuanZaiYuJing(date,df):
     contents = []
     tag = {"tag":"hr"}
     #alarmPattern = "[\s\S]*(平均市净率:|有息负债率:|流通市值:|评   级:|剩余年限:)+?[\s\S]*"
-    alarmPattern = "[\s\S]*(有息负债率:|评   级:|无强赎公告|剩余规模)+?[\s\S]*"
+    alarmPattern = "[\s\S]*(有息负债率:|评   级:|无强赎公告|剩余规模|ST)+?[\s\S]*"
     result = False
     for _, row in df.iterrows():
         reasons = _fornatZhuanZaiReason(row["原因"])
@@ -38,7 +38,7 @@ def FormatCardOfZhuanZaiYuJing(date,df):
         return None
     t = f"预警与可能的机会提醒:{date}"
     title = {"content":t,"tag":"plain_text"}
-    beizhu = {"elements":[{"content":"说明:当出现以下几种情况会出现本条消息:\n1. 有息负债率大于70了\n2. 评级不符了\n3. 公告要强赎 或 临近到期\n4. 剩余规模<3.5\n\n风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    beizhu = {"elements":[{"content":"说明:当出现以下几种情况会出现本条消息:\n1. 有息负债率大于70了\n2. 评级不符了\n3. 公告要强赎 或 临近到期\n4. 剩余规模<3.5\n5. 正股被ST了\n\n风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
     contents.append(beizhu)
     ret = {"config":{"wide_screen_mode":True},"elements":contents, "header":{"template":"red","title":title}}
     return ret

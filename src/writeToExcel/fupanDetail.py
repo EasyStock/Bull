@@ -522,7 +522,7 @@ class CFupanDetail(object):
         self._AddNLines(sheet,"其他",3)
 
     def WriteFuPanSummaryToXLSX(self,excelWriter:pd.ExcelWriter):
-        self.sheetName = f'''每日复盘'''
+        self.sheetName = f'''股票复盘'''
         self.title = f'''每日复盘记录({self.tradingDays[-1]})'''
         tmp = pd.DataFrame()
         tmp.to_excel(excelWriter, sheet_name= self.sheetName)
