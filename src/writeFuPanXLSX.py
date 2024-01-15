@@ -5,6 +5,7 @@ from fupan.tradingDate import GetTradingDateLastN
 from writeToExcel.zhangTingTidui import CWriteZhangTingTiDuiToXLSX
 from writeToExcel.zhuanzhai import CZhuanZaiDetail
 from writeToExcel.writeZhuanZaiGaiNian import CWriteZhuanZaiGaiNianToXLSX
+from writeToExcel.fupanDetailEx import CFupanDetailEx
 from workspace import workSpaceRoot
 import os
 
@@ -33,13 +34,15 @@ def Test1():
     # detail = CFupanDetail(dbConnection,tradingDays)
     # zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1])
     # zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
-    gainian = CWriteZhuanZaiGaiNianToXLSX(dbConnection,tradingDays[-1])
+    #gainian = CWriteZhuanZaiGaiNianToXLSX(dbConnection,tradingDays[-1])
+    detailEx = CFupanDetailEx(dbConnection,tradingDays[-1])
     with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
         # detail.WriteFuPanSummaryToXLSX(excelWriter)
         # zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
         # zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
         # zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
-        gainian.WriteZhuanZaiGainToToXLS(excelWriter)
+        #gainian.WriteZhuanZaiGainToToXLS(excelWriter)
+        detailEx.WriteFuPanDetailExToToXLS(excelWriter)
 
 
 if __name__ == '__main__':

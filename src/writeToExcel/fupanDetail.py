@@ -215,7 +215,7 @@ class CFupanDetail(object):
 
     def AddShiChangQingxuData(self,excelWriter:pd.ExcelWriter,sheet):
         #市场情绪数据
-        sql = f'''SELECT `日期`,`红盘`,`绿盘`,`两市量`,`增量`,`实际涨停`,`跌停`,`炸板`,`炸板率`,`连板` as `连板个数` FROM stock.fupan where `日期` >= "{self.tradingDays[-5]}" limit 5;'''
+        sql = f'''SELECT `日期`,`红盘`,`绿盘`,`两市量`,`增量`,`实际涨停`,`跌停`,`炸板`,`炸板率`,`连板` as `连板个数` FROM stock.fupan where `日期` >= "{self.tradingDays[-10]}" limit 10;'''
         result ,columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(result, columns = columns)
         if df.empty:
@@ -338,7 +338,7 @@ class CFupanDetail(object):
     
     def AddQingXuZongJie1(self,excelWriter:pd.ExcelWriter,sheet):
         #市场情绪总结,1, 市场总体情绪，2，短线情绪
-        sql = f'''SELECT `日期`,`10CM首板奖励率`, `10CM连板奖励率`, `20CM连板奖励率`, `20CM首板奖励率`, `连板股的红盘比`,`首板红盘比`, `动能EX` as `动能`, `势能EX` as `势能`,`备注` FROM stock.fupan where `日期` >= "{self.tradingDays[-5]}" limit 10'''
+        sql = f'''SELECT `日期`,`10CM首板奖励率`, `10CM连板奖励率`, `20CM连板奖励率`, `20CM首板奖励率`, `连板股的红盘比`,`首板红盘比`, `动能EX` as `动能`, `势能EX` as `势能`,`备注` FROM stock.fupan where `日期` >= "{self.tradingDays[-10]}" limit 10'''
         result ,columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(result, columns = columns)
         if df.empty:
@@ -393,7 +393,7 @@ class CFupanDetail(object):
     
     def AddQingXuZongJie2(self,excelWriter:pd.ExcelWriter,sheet):
         #市场情绪总结,1, 市场总体情绪，2，短线情绪
-        sql = f'''SELECT `日期`,`首板个数`, `2连板个数`, `3连板个数`, `4连板及以上个数`, `高度板`, `3连个股`,`4连及以上个股` FROM stock.fupan where `日期` >= "{self.tradingDays[-5]}" limit 10'''
+        sql = f'''SELECT `日期`,`首板个数`, `2连板个数`, `3连板个数`, `4连板及以上个数`, `高度板`, `3连个股`,`4连及以上个股` FROM stock.fupan where `日期` >= "{self.tradingDays[-10]}" limit 10'''
         result ,columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(result, columns = columns)
         if df.empty:

@@ -10,7 +10,7 @@ def SendKeZhuanZaiYuJing(dbConnection,tradingDays,webhook,secret):
     select `转债代码`,`转债名称`,`筛选结果`as `原因`  FROM stock.kezhuanzhai_all where `日期` = "{tradingDays[-1]}" and `转债代码` in
             (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-2]}" and  `转债代码` not in (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-1]}") 
             UNION
-            select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-2]}" and  `转债代码` in (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-1]}" and `正股名称`  like "%ST%") ## and `正股名称` not like "%ST%"
+            select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-2]}" and  `转债代码` in (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-1]}" and `正股名称`  like "%ST%") and `正股名称` not like "%ST%"
             )   
          '''
     results, columns = dbConnection.Query(sql)
