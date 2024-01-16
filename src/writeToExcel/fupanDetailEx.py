@@ -45,7 +45,7 @@ class CFupanDetailEx(object):
         self.index = 1
         self.contextFontSize = 16
         self.sheetName = "详细复盘数据"
-        self.title = None
+        self.title = f"{self.tradingDays[-1]} 每日指标数据详细"
 
     def formatColumnsWidth(self,sheet):
         sheet.column_dimensions['A'].width = 12
@@ -94,6 +94,16 @@ class CFupanDetailEx(object):
         df.set_index(["日期",],drop=True,inplace=True)
         return df
     
+    def addTitle(self,sheet):
+        self.mergeRow(sheet,1,"A","O",140)
+        cell = sheet.cell(1,1)
+        cell.alignment = alignment_center
+        cell.fill = PatternFill('solid', fgColor="009DDC")
+        cell.value =  self.title
+        cell.font = Font(name='宋体', size=48, italic=False, color='FFFFFF', bold=True)
+        cell.border = border
+        self.rows = self.rows + 1
+
     def _score(self,volumn,percentail,reversed = False):
         result = 1
         for index, value in percentail.items():
@@ -119,12 +129,30 @@ class CFupanDetailEx(object):
         rows = 10
         newDf = df1[-rows:]
         newDf.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows)
+        sheet = excelWriter.sheets[self.sheetName]
+        # 有表头
+        for r in range(self.rows+1,self.rows+rows+2):
+            for c in range(1,16):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                if r == self.rows+ rows + 1: 
+                    cell.fill = PatternFill('solid', fgColor="CCEEFF")
+                    cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
         self.rows = self.rows + rows + 1
 
         t = df1.quantile([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9])
-        t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
-        self.rows = self.rows + t.shape[0] + 4
-
+        t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3,header=False)
+        for r in range(self.rows+4,self.rows+10+3):
+            for c in range(1,16):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+        self.rows = self.rows + t.shape[0] + 3
 
         scoreDf = pd.DataFrame(df,columns = [])
         for c in column1:
@@ -137,6 +165,17 @@ class CFupanDetailEx(object):
 
         rows = 10
         scoreDf[-rows:].to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
+        # 有表头
+        for r in range(self.rows+4,self.rows+rows+5):
+            for c in range(1,16):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                if r == self.rows+ rows + 4: 
+                    cell.fill = PatternFill('solid', fgColor="CCEEFF")
+                    cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
         self.rows = self.rows  + rows + 4
     
     def _WirtePart2DataToXlsx(self,df,excelWriter:pd.ExcelWriter):
@@ -149,11 +188,31 @@ class CFupanDetailEx(object):
         rows = 10
         newDf = df2[-rows:]
         newDf.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
+        sheet = excelWriter.sheets[self.sheetName]
+        # 有表头
+        for r in range(self.rows+4,self.rows+rows+5):
+            for c in range(1,14):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                if r == self.rows+ rows + 4: 
+                    cell.fill = PatternFill('solid', fgColor="CCEEFF")
+                    cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+
         self.rows = self.rows + rows + 4
         
         t = df2.quantile([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9])
-        t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+ 3)
-        self.rows = self.rows + t.shape[0] + 4
+        t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+ 3,header=False)
+        for r in range(self.rows+4,self.rows+10+3):
+            for c in range(1,14):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+        self.rows = self.rows + t.shape[0] + 3
 
         scoreDf = pd.DataFrame(df,columns = [])
         for c in column2:
@@ -166,6 +225,18 @@ class CFupanDetailEx(object):
 
         rows = 10
         scoreDf[-rows:].to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
+            # 有表头
+        for r in range(self.rows+4,self.rows+rows+5):
+            for c in range(1,14):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                if r == self.rows+ rows + 4: 
+                    cell.fill = PatternFill('solid', fgColor="CCEEFF")
+                    cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+
         self.rows = self.rows  + rows + 4
 
 
@@ -179,11 +250,31 @@ class CFupanDetailEx(object):
         rows = 10
         newDf = df3[-rows:]
         newDf.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
+        sheet = excelWriter.sheets[self.sheetName]
+        # 有表头
+        for r in range(self.rows+4,self.rows+rows+5):
+            for c in range(1,15):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                if r == self.rows+ rows + 4: 
+                    cell.fill = PatternFill('solid', fgColor="CCEEFF")
+                    cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
         self.rows = self.rows + rows + 4
 
 
         t = df3.quantile([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9])
-        t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
+        t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3,header=False)
+        for r in range(self.rows+4,self.rows+10+3):
+            for c in range(1,15):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                
         self.rows = self.rows + t.shape[0] + 4
 
         scoreDf = pd.DataFrame(df,columns = [])
@@ -197,10 +288,26 @@ class CFupanDetailEx(object):
 
         rows = 10
         scoreDf[-rows:].to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
+        for r in range(self.rows+4,self.rows+rows+5):
+            for c in range(1,15):
+                cell = sheet.cell(row = r, column = c)
+                cell.border = border
+                cell.alignment = alignment_center
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+                cell.fill = PatternFill('solid', fgColor="000000")
+                if r == self.rows+ rows + 4: 
+                    cell.fill = PatternFill('solid', fgColor="CCEEFF")
+                    cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+
         self.rows = self.rows  + rows + 4
 
     def WriteFuPanDetailExToToXLS(self,excelWriter:pd.ExcelWriter):
+        df = pd.DataFrame()
+        df.to_excel(excelWriter, sheet_name= self.sheetName,index=False)
+        
         df = self._getFuPanDetail()
+        sheet = excelWriter.sheets[self.sheetName]
+        self.addTitle(sheet)
         self._WirtePart1DataToXlsx(df,excelWriter)
         self._WirtePart2DataToXlsx(df,excelWriter)
         self._WirtePart3DataToXlsx(df,excelWriter)

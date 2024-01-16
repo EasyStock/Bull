@@ -44,21 +44,23 @@ class CZhuanZaiDetail(object):
         self.rows = 0
         self.index = 1
         self.contextFontSize = 16
-        self.sheetName = None
+        self.sheetName = "可转债复盘"
         self.title = None
 
     def formatColumnsWidth(self,sheet):
-        sheet.column_dimensions['A'].width = 20
-        sheet.column_dimensions['B'].width = 15
-        sheet.column_dimensions['C'].width = 15
-        sheet.column_dimensions['D'].width = 15
-        sheet.column_dimensions['E'].width = 15
-        sheet.column_dimensions['F'].width = 15
-        sheet.column_dimensions['G'].width = 15
-        sheet.column_dimensions['H'].width = 15
-        sheet.column_dimensions['I'].width = 35
-        sheet.column_dimensions['J'].width = 15
-        sheet.column_dimensions['K'].width = 35
+        sheet.column_dimensions['A'].width = 12
+        sheet.column_dimensions['B'].width = 12
+        sheet.column_dimensions['C'].width = 12
+        sheet.column_dimensions['D'].width = 10
+        sheet.column_dimensions['E'].width = 14
+        sheet.column_dimensions['F'].width = 14
+        sheet.column_dimensions['G'].width = 14
+        sheet.column_dimensions['H'].width = 5
+        sheet.column_dimensions['I'].width = 16
+        sheet.column_dimensions['J'].width = 10
+        sheet.column_dimensions['K'].width = 12
+        sheet.column_dimensions['L'].width = 18
+        sheet.column_dimensions['M'].width = 120
     
     def formatRowHeight(self,sheet,rowIndex,height):
         sheet.row_dimensions[rowIndex].height=height
@@ -83,7 +85,7 @@ class CZhuanZaiDetail(object):
             cell.border = border
 
     def addTitle(self,sheet):
-        self.mergeRow(sheet,1,"A","K",68)
+        self.mergeRow(sheet,1,"A","M",140)
         cell = sheet.cell(1,1)
         cell.alignment = alignment_center
         cell.fill = PatternFill('solid', fgColor="009DDC")
@@ -92,33 +94,57 @@ class CZhuanZaiDetail(object):
         cell.border = border
         self.rows = self.rows + 1
 
-    
-    def WriteZhuanZaiInfoToExcel(self,excelWriter,threshold = 2000):
-        sql = f'''SELECT `日期`,`转债代码`,`转债名称`,`现价`,`成交额(万元)`,`PB`,`总市值（亿元)`,`溢价率`,`剩余规模`,`行业` FROM stock.kezhuanzhai where `日期` = "{self.tradingDays[-1]}" and `成交额(万元)` > {threshold} and `转债代码` in (SELECT `转债代码` FROM stock.kezhuanzhai where `日期` = "{self.tradingDays[-2]}" and `成交额(万元)` < {threshold})'''
+    def WriteBigVolumnOfZhuanZhaiToXLSX(self,excelWriter,threshold):
+        sql = f'''SELECT `转债代码` FROM stock.kezhuanzhai where `日期` = "{self.tradingDays[-2]}" and `成交额(万元)` > {threshold}'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
-        sheetName = "可转债复盘"
-        df.to_excel(excelWriter, sheet_name= sheetName,index=False,startrow=1)
-        sheet = excelWriter.sheets[sheetName]
-        cell = sheet.cell(1,1)
-        cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="B5C6EA")
-        cell.value =  f"{self.tradingDays[-1]} 可转债成交额大于{threshold}"
-        cell.font = Font(name='宋体', size=28, italic=False, color='000000', bold=True)
-        cell.border = border
-        self.mergeRow(sheet,1,"A","J",40)
-        startRow = 1
-        endRow = startRow + df.shape[0] +1
-        for index in range(1,endRow):
-            for column in range(1,11):
-                cell = sheet.cell(row = startRow + index, column = column)
+        stockIDs = list(df["转债代码"])
+        
+        ret = []
+        exceptGaiNian = ["融资融券","转融券标的","深股通","沪股通","富时罗素概念","富时罗素概念股","标普道琼斯A股","MSCI概念",]
+        for stockID in stockIDs:
+            sql1 = f'''select A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`成交额(万元)`,A.`PB`,A.`总市值（亿元)`,A.`溢价率`,A.`剩余规模`,A.`行业`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`转债代码` = "{stockID}" and A.`日期` > "{self.tradingDays[-30]}" order by A.`日期` ASC; '''
+            results, columns = self.dbConnection.Query(sql1)
+            df1 = pd.DataFrame(results,columns=columns)
+            df1.dropna(inplace= True)
+
+            if df1.shape[0] < 20:
+                continue
+            df1["成交额MA10"] = df1['成交额(万元)'].rolling(10).mean()
+            df1["成交额MA20"] = df1['成交额(万元)'].rolling(20).mean()
+            for e in exceptGaiNian:
+                df1["所属概念"] = df1['所属概念'].str.replace(e,"")
+
+            df1["所属概念"] = df1['所属概念'].str.replace(";+",";",regex=True).str.strip(";")
+
+            if  df1['成交额(万元)'].iloc[-1] > 2.0* df1["成交额MA10"].iloc[-1] or df1['成交额(万元)'].iloc[-1] > 2.0* df1["成交额MA20"].iloc[-1]:
+                ret.append(df1.iloc[-1].to_dict())
+
+        newDf = pd.DataFrame(ret,columns = ["日期","转债代码","转债名称","现价","成交额(万元)","成交额MA10","成交额MA20","PB","总市值（亿元)","溢价率","剩余规模","行业","所属概念"])
+        newDf.to_excel(excelWriter, sheet_name= self.sheetName,index=False,startrow=self.rows)
+
+        sheet = excelWriter.sheets[self.sheetName]
+        startRow = self.rows  + 1
+        endRow = startRow + newDf.shape[0] + 1
+        for index in range(startRow,endRow):
+            for column in range(1,14):
+                cell = sheet.cell(row = index, column = column)
                 cell.border = border
                 cell.alignment = alignment_center
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
                 if index % 2 != 0:
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
-                cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.border = border
+                else:
+                    cell.fill = PatternFill('solid', fgColor="000000")
+                
+        self.rows = self.rows + newDf.shape[0]
 
-
+    
+    def WriteZhuanZaiInfoToExcel(self,excelWriter,threshold = 2000):
+        df = pd.DataFrame()
+        df.to_excel(excelWriter, sheet_name= self.sheetName,index=False)
+        self.title = f"{self.tradingDays[-1]} 转债成交额大于{threshold}万元\n且大于MA10、MA20 2倍以上"
+        sheet = excelWriter.sheets[self.sheetName]
+        self.addTitle(sheet)
+        self.WriteBigVolumnOfZhuanZhaiToXLSX(excelWriter,threshold)
         self.formatColumnsWidth(sheet)

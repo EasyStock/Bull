@@ -30,6 +30,14 @@ alignment_left = Alignment(
          wrapText=True
      )
 
+alignment_left_top = Alignment(
+         horizontal='left',
+         vertical='top',
+         text_rotation=0,
+         indent=0,
+         wrapText=True
+     )
+
 #文字竖排
 alignment_vertical = Alignment(
     horizontal='center', 
@@ -288,7 +296,42 @@ class CFupanDetail(object):
 
     def AddMacketingLove(self,sheet):
         #市场偏好
-        self._AddNLines(sheet,"市场偏好",3)
+        count = 4
+        startRow = self.rows+1
+        endRow = startRow + count -1
+        self.mergeColumn(sheet,"A",startRow,endRow)
+        cell = sheet.cell(startRow,1)
+        cell.alignment = alignment_center
+        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.value =  f'''{self.index}.市场偏好'''
+        cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
+        cell.border = border
+
+        mergeCell = f'B{self.rows+1}:K{self.rows+3}'
+        sheet.merge_cells(mergeCell)
+
+        for index in range(0,count-1):
+             self.formatRowHeight(sheet,self.rows+index+1,32)
+             cell1 = sheet.cell(startRow + index,11)
+             cell1.border = border
+  
+        cell1 = sheet.cell(startRow,2)
+        cell1.alignment = alignment_left_top
+        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='009DDE', bold=True)
+        cell1.border = border
+        cell1.value = '\U000025A1短线抱团       \U000025A1趋势      \U000025A1可转债        \U000025A1新股/次新股       \U000025A1老妖股        \U000025A1二波      \U000025A1高价股        \U000025A1小盘股        \U000025A1炒数字        \U000025A1炒地图\n \
+\U000025A1特殊字符(例如龙字辈)       \U000025A1一字板        \U000025A1反包      \U000025A1业绩/业绩预增        \U000025A1无'
+        self.mergeRow(sheet,endRow,"B","K",24)
+        cell1 = sheet.cell(endRow,2)
+        cell1.alignment = alignment_left
+        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.value =  f'''结论:'''
+        cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
+        cell1.border = border 
+
+        self.index = self.index + 1
+        self.rows = self.rows + count
 
     def AddRedianBankuai(self,sheet):
         #热点板块
