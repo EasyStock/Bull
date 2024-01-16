@@ -179,7 +179,7 @@ class CFupanDetailEx(object):
         self.rows = self.rows  + rows + 4
     
     def _WirtePart2DataToXlsx(self,df,excelWriter:pd.ExcelWriter):
-        column2 = ["首板率","连板率","昨日首板溢价率","昨日首板晋级率","昨日2板溢价率","昨日2板晋级率","昨日3板溢价率","昨日3板晋级率","昨日4板及以上溢价率","昨日4板及以上晋级率","2进3成功率","3进高成功率"]
+        column2 = ["10CM首板奖励率","10CM连板奖励率","首板率","连板率","昨日首板溢价率","昨日首板晋级率","昨日2板溢价率","昨日2板晋级率","昨日3板溢价率","昨日3板晋级率","昨日4板及以上溢价率","昨日4板及以上晋级率","2进3成功率","3进高成功率"]
         df2 = pd.DataFrame(df,columns = column2)
         df2.dropna(inplace= True)
         for c in column2:
@@ -191,7 +191,7 @@ class CFupanDetailEx(object):
         sheet = excelWriter.sheets[self.sheetName]
         # 有表头
         for r in range(self.rows+4,self.rows+rows+5):
-            for c in range(1,14):
+            for c in range(1,16):
                 cell = sheet.cell(row = r, column = c)
                 cell.border = border
                 cell.alignment = alignment_center
@@ -206,7 +206,7 @@ class CFupanDetailEx(object):
         t = df2.quantile([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9])
         t.to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+ 3,header=False)
         for r in range(self.rows+4,self.rows+10+3):
-            for c in range(1,14):
+            for c in range(1,16):
                 cell = sheet.cell(row = r, column = c)
                 cell.border = border
                 cell.alignment = alignment_center
@@ -227,7 +227,7 @@ class CFupanDetailEx(object):
         scoreDf[-rows:].to_excel(excelWriter, sheet_name= self.sheetName,index=True,startrow=self.rows+3)
             # 有表头
         for r in range(self.rows+4,self.rows+rows+5):
-            for c in range(1,14):
+            for c in range(1,16):
                 cell = sheet.cell(row = r, column = c)
                 cell.border = border
                 cell.alignment = alignment_center
