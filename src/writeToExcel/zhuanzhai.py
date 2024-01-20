@@ -3,7 +3,9 @@ import pandas as pd
 from openpyxl.cell.text import InlineFont
 from openpyxl.cell.rich_text import TextBlock, CellRichText
 from openpyxl.utils import column_index_from_string
-
+from Utility.convertDataFrameToJPG import DataFrameToJPG
+from workspace import workSpaceRoot
+import os
 
 # 边框
 border = Border(
@@ -94,8 +96,28 @@ class CZhuanZaiDetail(object):
         cell.border = border
         self.rows = self.rows + 1
 
+    def ConverBigVolumnOfZhuanZhaiToJEPG(self, res):
+        result = []
+        for r in res:
+            zhuanZaiDaiMa = r["转债代码"]
+            zhuanZai_name = r["转债名称"]
+            stockID = r["股票代码"]
+            stockName = r["股票简称"]
+            dict1 = {"代码": zhuanZaiDaiMa,"名称":zhuanZai_name}
+            dict2 = {"代码": stockID,"名称":stockName}
+            result.append(dict1)
+            result.append(dict2)
+
+        jpgDataFrame = pd.DataFrame(result, columns=("代码","名称"))
+        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{self.tradingDays[-1]}/'''
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
+
+        DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"可转债放量")
+        
+
     def WriteBigVolumnOfZhuanZhaiToXLSX(self,excelWriter,threshold):
-        sql = f'''SELECT `转债代码` FROM stock.kezhuanzhai where `日期` = "{self.tradingDays[-2]}" and `成交额(万元)` > {threshold}'''
+        sql = f'''SELECT `转债代码` FROM stock.kezhuanzhai where `日期` = "{self.tradingDays[-1]}" and `成交额(万元)` > {threshold}'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         stockIDs = list(df["转债代码"])
@@ -103,7 +125,7 @@ class CZhuanZaiDetail(object):
         ret = []
         exceptGaiNian = ["融资融券","转融券标的","深股通","沪股通","富时罗素概念","富时罗素概念股","标普道琼斯A股","MSCI概念",]
         for stockID in stockIDs:
-            sql1 = f'''select A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`成交额(万元)`,A.`PB`,A.`总市值（亿元)`,A.`溢价率`,A.`剩余规模`,A.`行业`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`转债代码` = "{stockID}" and A.`日期` > "{self.tradingDays[-30]}" order by A.`日期` ASC; '''
+            sql1 = f'''select A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`成交额(万元)`,A.`PB`,A.`总市值（亿元)`,A.`溢价率`,A.`剩余规模`,A.`行业`,B.`股票代码`,`股票简称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`转债代码` = "{stockID}" and A.`日期` > "{self.tradingDays[-30]}" order by A.`日期` ASC; '''
             results, columns = self.dbConnection.Query(sql1)
             df1 = pd.DataFrame(results,columns=columns)
             df1.dropna(inplace= True)
@@ -120,6 +142,7 @@ class CZhuanZaiDetail(object):
             if  df1['成交额(万元)'].iloc[-1] > 2.0* df1["成交额MA10"].iloc[-1] or df1['成交额(万元)'].iloc[-1] > 2.0* df1["成交额MA20"].iloc[-1]:
                 ret.append(df1.iloc[-1].to_dict())
 
+        self.ConverBigVolumnOfZhuanZhaiToJEPG(ret)
         newDf = pd.DataFrame(ret,columns = ["日期","转债代码","转债名称","现价","成交额(万元)","成交额MA10","成交额MA20","PB","总市值（亿元)","溢价率","剩余规模","行业","所属概念"])
         newDf.to_excel(excelWriter, sheet_name= self.sheetName,index=False,startrow=self.rows)
 

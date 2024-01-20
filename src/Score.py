@@ -1,7 +1,7 @@
 from mysql.connect2DB import ConnectToDB
 from score.scoreMgr import CScoreMgr
 
-from message.feishu.webhook_zhuanzai import SendkeZhuanZaiScore
+
 
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
@@ -25,30 +25,32 @@ if __name__ == "__main__":
     #         "endDay":"2023-12-29",
     #     }
     # }
+    # indexParam = {
+    #     "抗跌分数":{
+    #         "startDay":"2024-01-02",
+    #         "endDay":"2024-01-17",
+    #     },
+    #     "领涨分数":{
+    #         "startDay":"2024-01-18",
+    #         "endDay":"2024-01-18",
+    #     }
+    # }
+
     indexParam = {
         "抗跌分数":{
             "startDay":"2024-01-02",
-            "endDay":"2024-01-10",
+            "endDay":"2024-01-19",
         },
         "领涨分数":{
-            "startDay":"2024-01-10",
-            "endDay":"2024-01-11",
+            "startDay":"2024-01-02",
+            "endDay":"2024-01-19",
         }
     }
 
-    maxDate = max(indexParam ["抗跌分数"]["endDay"],indexParam ["领涨分数"]["endDay"])
+
     mgr = CScoreMgr(dbConnection)
-    sql = f"SELECT `日期` FROM stock.treadingDay where `开市` =1 and `交易所`='SSE' and `日期`>='{maxDate}'"
-    res,_ = dbConnection.Query(sql)
-    results = [r[0] for r in res]
-    date = results[0]
-    diDianDate = indexParam ["抗跌分数"]["endDay"] #最低点的时候价格
-    mgr.Score(date,indexParam)
-    mgr.Select(date,diDianDate)
-    webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/e156ab0d-9d9d-4bc4-a4b5-faf9ad6344c2"
-    secret = "chzCzY4VkzctfN2qvtxARg"
-    # webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a" # 测试API
-    # secret = "brYyzPbSks4OKnMgdwKvIh"
+    mgr.Score(indexParam)
+    mgr.Select(indexParam)
+
 
     
-    SendkeZhuanZaiScore(dbConnection,date,diDianDate,webhook,secret,50)

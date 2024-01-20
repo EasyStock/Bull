@@ -131,6 +131,7 @@ class CCompareWithIndex(object):
             today = tradingDays[index+1]
             yesteday = tradingDay
             self.CompareWithIndex(today,yesteday)
+        self.CalcScore()
 
 
 class CZhuanzaiSelect(object):
