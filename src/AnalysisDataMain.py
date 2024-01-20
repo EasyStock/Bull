@@ -17,6 +17,7 @@ from kaipanLaMain_11 import RequestKaiPanLaVolumnData,RequestKaiPanLaZhangDieTin
 from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday
 from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_Stock
 from writeFuPanXLSX import WriteFuPanSummaryToXLSX
+from ValidateData import Validate_ALL
 
 import pytz
 import datetime
@@ -186,6 +187,8 @@ def Main():
         #发送股票分析结果
         SendReportOfStock(dbConnection,tradingDays,logger)
         ######################
+
+        Validate_ALL(dbConnection,tradingDays)
     else:
         if 1 in args.options:
             #分析可转债数据
