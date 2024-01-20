@@ -342,6 +342,21 @@ class CScoreMgr(object):
             elif key == "抗跌分数":
                 self.QuJianStr = self.QuJianStr + f'''下跌区间: {s}  -  {e}      '''
 
+    def _BothStockAndZhuanZaiToJPEG(self,df,folder,name):
+        result = []
+        for _, row in df.iterrows():
+            zhuanZaiDaiMa = row["转债代码"]
+            zhuanZai_name = row["转债名称"]
+            stockID = row["正股代码"]
+            stockName = row["正股名称"]
+            dict1 = {"代码": zhuanZaiDaiMa,"名称":zhuanZai_name}
+            dict2 = {"代码": stockID,"名称":stockName}
+            result.append(dict1)
+            result.append(dict2)
+        jpgDataFrame = pd.DataFrame(result, columns=("代码","名称"))
+        jpgDataFrame.index = jpgDataFrame.index + 1
+        DataFrameToJPG(jpgDataFrame,("代码","名称"),folder,name)
+
     def Select(self,indexParams:map):
         self._preprocessing(indexParams)
         sql = f'''select A.`转债代码`,B.`转债名称`,B.`正股代码`,B.`正股名称`,A.`成交量分数`,A.`抗跌分数`,A.`领涨分数`,A.`剩余规模分数`,A.`总分`from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{self.date}" and B.`日期` = "{self.diDianDate}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC;'''
@@ -374,20 +389,8 @@ class CScoreMgr(object):
         xlsx.title = f'''可转债评分表 ({self.date})'''
         xlsx.firtLineInfo = self.QuJianStr
         xlsx.WriteScoreToXLSX(df,xlsxFileName)
-        result = []
-        for _, row in df.iterrows():
-            zhuanZaiDaiMa = row["转债代码"]
-            zhuanZai_name = row["转债名称"]
-            stockID = row["正股代码"]
-            stockName = row["正股名称"]
-            dict1 = {"代码": zhuanZaiDaiMa,"名称":zhuanZai_name}
-            dict2 = {"代码": stockID,"名称":stockName}
-            result.append(dict1)
-            result.append(dict2)
-
-        jpgDataFrame = pd.DataFrame(result, columns=("代码","名称"))
-        DataFrameToJPG(jpgDataFrame,("代码","名称"),fodler,"可转债评分_带正股")
-
+        self._BothStockAndZhuanZaiToJPEG(df,fodler,"可转债评分_带正股")
+        self._BothStockAndZhuanZaiToJPEG(newDF,fodler,"可转债评分_完全符合条件_带正股")
         webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/e156ab0d-9d9d-4bc4-a4b5-faf9ad6344c2"
         secret = "chzCzY4VkzctfN2qvtxARg"
         # webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a" # 测试API

@@ -46,8 +46,7 @@ if __name__ == "__main__":
             "endDay":"2024-01-19",
         }
     }
-
-
+    
     mgr = CScoreMgr(dbConnection)
     mgr.Score(indexParam)
     mgr.Select(indexParam)
