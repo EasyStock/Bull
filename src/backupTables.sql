@@ -365,7 +365,7 @@ CREATE TABLE `stockbasicinfo_test` (
   UNIQUE KEY `股票代码_UNIQUE` (`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
-CREATE TABLE `stockcompareindex` (
+CREATE TABLE `compareindex_zai` (
   `date` varchar(45) NOT NULL,
   `indexID` varchar(45) NOT NULL COMMENT '指数ID',
   `stockID` varchar(45) NOT NULL,

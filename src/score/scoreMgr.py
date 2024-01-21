@@ -247,7 +247,7 @@ class CScoreMgr(object):
         
     def CalcStrongerThanIndexScore(self,startDay,endDay,columnName):
         # 技术比指数强的分数值，1.比指数抗跌，2 比指数涨的多
-        sql = f'''SELECT stockID as `转债代码`,avg(flag) as {columnName} FROM stock.stockcompareindex where `date`>= '{startDay}' and `date` <= '{endDay}' group by stockID order by {columnName} DESC;'''
+        sql = f'''SELECT stockID as `转债代码`,avg(flag) as {columnName} FROM stock.compareindex_zai where `date`>= '{startDay}' and `date` <= '{endDay}' group by stockID order by {columnName} DESC;'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         df.set_index(["转债代码",],drop=True,inplace=True)

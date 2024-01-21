@@ -61,8 +61,8 @@ class CCompareWithIndex(object):
             if IndexID is None or increase_rate is None or name is None:
                 continue
             delta = zhangDiefu - increase_rate
-            #sql = f'''REPLACE INTO `stock`.`stockcompareindex` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
-            sql = f'''REPLACE INTO `stock`.`stockcompareindex` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
+            #sql = f'''REPLACE INTO `stock`.`compareindex_zai` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
+            sql = f'''REPLACE INTO `stock`.`compareindex_zai` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{kezhuanzaiID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
             self.dbConnection.Execute(sql)
         
     def _score(self,volumn,percentail,reversed = False):
@@ -94,7 +94,7 @@ class CCompareWithIndex(object):
         0.8  0.81  
         0.9  1.27 
         '''
-        sql = f'''SELECT * FROM stock.stockcompareindex;'''
+        sql = f'''SELECT * FROM stock.compareindex_zai;'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         df.set_index(["date","indexID","stockID"],drop=True,inplace=True)
@@ -110,7 +110,7 @@ class CCompareWithIndex(object):
             date = index[0]
             indexID = index[1]
             stockID = index[2]
-            sql = f'''UPDATE `stock`.`stockcompareindex` SET `flag` = '{score}' WHERE (`date` = '{date}') and (`indexID` = '{indexID}') and (`stockID` = '{stockID}');'''
+            sql = f'''UPDATE `stock`.`compareindex_zai` SET `flag` = '{score}' WHERE (`date` = '{date}') and (`indexID` = '{indexID}') and (`stockID` = '{stockID}');'''
             #print(sql)
             self.dbConnection.Execute(sql)
             
@@ -180,7 +180,7 @@ class CZhuanzaiSelect(object):
     
 
     def SelectFrom(self,start,end):
-        sql = f'''SELECT * FROM stock.stockcompareindex where `date` >= "{start}" and `date` <= "{end}";'''
+        sql = f'''SELECT * FROM stock.compareindex_zai where `date` >= "{start}" and `date` <= "{end}";'''
         result1,columns1 = self.dbConnection.Query(sql)
         df=pd.DataFrame(result1,columns=columns1)
         groups = df.groupby("stockID")

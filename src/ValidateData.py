@@ -56,10 +56,10 @@ def ValidateZhuanZaiInfo(dbConnection,tradingDays):
 
 def ValidateZhuanZaiCompareIndexInfo(dbConnection,tradingDays):
     # 7. 可转债对比指数分数
-    sql = f'''SELECT count(*) FROM stock.stockcompareindex where `date` = "{tradingDays[-1]}";'''
+    sql = f'''SELECT count(*) FROM stock.compareindex_zai where `date` = "{tradingDays[-1]}";'''
     _Validata(dbConnection,sql,1)
 
-    sql1 = f'''SELECT count(*) FROM stock.stockcompareindex where `date` = "{tradingDays[-1]}" and flag is NULL;'''
+    sql1 = f'''SELECT count(*) FROM stock.compareindex_zai where `date` = "{tradingDays[-1]}" and flag is NULL;'''
     _Validata1(dbConnection,sql1,1)
 
 def ValidateBanKuaiInfo(dbConnection,tradingDays):
