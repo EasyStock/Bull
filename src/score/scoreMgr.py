@@ -11,7 +11,7 @@ def ConvertDataFrameToJPG(df,fullPath):
     import matplotlib.pyplot as plt
     plt.rcParams["font.sans-serif"] = [WorkSpaceFont]#显示中文字体
     high = int(0.174 * df.shape[0]+0.5)+1
-    fig = plt.figure(figsize=(3, high), dpi=800)#dpi表示清晰度
+    fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
     ax = fig.add_subplot(111, frame_on=False) 
     ax.xaxis.set_visible(False)  # hide the x axis
     ax.yaxis.set_visible(False)  # hide the y axis
@@ -129,7 +129,7 @@ class CWriteScoreToXlsx(object):
         self.mergeRow(sheet,self.rows+1,"A","J",32)
         cell = sheet.cell(self.rows+1,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  self.firtLineInfo
         cell.font = Font(name='宋体', size= self.contextFontSize, italic=False, color='FF0000', bold=True)
         cell.border = border
@@ -139,7 +139,7 @@ class CWriteScoreToXlsx(object):
         self.mergeRow(sheet,self.rows+1,"A","J",32)
         cell = sheet.cell(self.rows+1,1)
         cell.alignment = alignment_left
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''说明:红色字体部分说明数据没有达到平均值标准,平均值标准如下:{self.tailInfo}\n风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！'''
         cell.font = Font(name='宋体', size= 10, italic=False, color='FF0000', bold=True)
         cell.border = border
@@ -165,7 +165,7 @@ class CWriteScoreToXlsx(object):
                 for c in range(1,columns+1):
                     cell1 = sheet.cell(self.rows+index+1,c)
                     cell1.alignment = alignment_center
-                    cell1.fill = PatternFill('solid', fgColor="000000")
+                    cell1.fill = PatternFill('solid', fgColor="FFFFFF")
                     if index % 2 != 0:
                         cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)

@@ -163,7 +163,7 @@ class CWriteZhangTingTiDuiToXLSX(object):
                 cell.alignment = alignment
                 if column >=8 and index > 1:
                     cell.alignment = alignment_left
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if index % 2 != 0:
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)

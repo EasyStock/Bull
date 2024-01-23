@@ -110,7 +110,7 @@ class CFupanDetail(object):
         cell.border = border
         self.rows = self.rows + 1
 
-    def AddFenGeHang(self,sheet,fillColor = '000000'):
+    def AddFenGeHang(self,sheet,fillColor = 'FFFFFF'):
         self.mergeRow(sheet,self.rows+1,"A","K",32)
         cell = sheet.cell(self.rows+1,1)
         cell.fill = PatternFill('solid', fgColor= fillColor)
@@ -136,7 +136,7 @@ class CFupanDetail(object):
 
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  "交易原则"
         cell.font = Font(name='宋体', size=18, italic=False, color='FF0000', bold=True)
         cell.border = border
@@ -145,7 +145,7 @@ class CFupanDetail(object):
             cell1 = sheet.cell(self.rows+index+1,2)
             cell1.value = line
             cell1.alignment = alignment_left
-            cell1.fill = PatternFill('solid', fgColor="000000")
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
             cell1.font = Font(name='宋体', size=18, italic=False, color='FF0000', bold=True)
             cell1.border = border
 
@@ -166,7 +166,7 @@ class CFupanDetail(object):
 
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  "情绪判断\n标准"
         cell.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
         cell.border = border
@@ -175,8 +175,8 @@ class CFupanDetail(object):
             cell1 = sheet.cell(self.rows+index+1,2)
             cell1.value = line
             cell1.alignment = alignment_left
-            cell1.fill = PatternFill('solid', fgColor="000000")
             cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
             cell1.border = border
 
         self.rows = self.rows + count
@@ -194,7 +194,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value = f'''{self.index}.一字板数据'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -209,7 +209,7 @@ class CFupanDetail(object):
                 if c >= 5:
                     cell1.alignment = alignment_left
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
-                cell1.fill = PatternFill('solid', fgColor="000000")
+                cell1.fill = PatternFill('solid', fgColor="FFFFFF")
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 if index > size:
@@ -235,7 +235,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.市场总体\n数据'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -244,7 +244,7 @@ class CFupanDetail(object):
             for c in range(1,11):
                 cell1 = sheet.cell(self.rows+index+1,c+1)
                 cell1.alignment = alignment_center
-                cell1.fill = PatternFill('solid', fgColor="000000")
+                cell1.fill = PatternFill('solid', fgColor="FFFFFF")
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
@@ -255,7 +255,7 @@ class CFupanDetail(object):
         self.mergeRow(sheet,endRow,"B","K",24)
         cell1 = sheet.cell(endRow,2)
         cell1.alignment = alignment_left
-        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.fill = PatternFill('solid', fgColor="FFFFFF")
         cell1.value =  f'''结论:'''
         cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
         cell1.border = border  
@@ -276,7 +276,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.年级段分析'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -285,7 +285,7 @@ class CFupanDetail(object):
             cell1 = sheet.cell(self.rows+index+1,2)
             cell1.value = line
             cell1.alignment = alignment_left
-            cell1.fill = PatternFill('solid', fgColor="000000")
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
             if index % 2 != 0:
                 cell1.fill = PatternFill('solid', fgColor="CCEEFF")
             cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FF0000', bold=True)
@@ -302,7 +302,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.市场偏好'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -317,7 +317,7 @@ class CFupanDetail(object):
   
         cell1 = sheet.cell(startRow,2)
         cell1.alignment = alignment_left_top
-        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.fill = PatternFill('solid', fgColor="FFFFFF")
         cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='009DDE', bold=True)
         cell1.border = border
         cell1.value = '\U000025A1短线抱团       \U000025A1趋势      \U000025A1可转债        \U000025A1新股/次新股       \U000025A1老妖股        \U000025A1二波      \U000025A1高价股        \U000025A1小盘股        \U000025A1炒数字        \U000025A1炒地图\n \
@@ -325,7 +325,7 @@ class CFupanDetail(object):
         self.mergeRow(sheet,endRow,"B","K",24)
         cell1 = sheet.cell(endRow,2)
         cell1.alignment = alignment_left
-        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.fill = PatternFill('solid', fgColor="FFFFFF")
         cell1.value =  f'''结论:'''
         cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
         cell1.border = border 
@@ -349,7 +349,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value = f'''{self.index}.热点板块'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -358,8 +358,8 @@ class CFupanDetail(object):
 
         cell1 = sheet.cell(startRow,2)
         cell1.alignment = alignment_left
-        cell1.fill = PatternFill('solid', fgColor="000000")
         cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
+        cell1.fill = PatternFill('solid', fgColor="FFFFFF")
         msg = ""
         for i in range(-6,-1):
             msg = msg + f'''{result[i][1]}({result[i][0]})    '''
@@ -368,8 +368,8 @@ class CFupanDetail(object):
 
         cell2 = sheet.cell(startRow+1,2)
         cell2.alignment = alignment_left
-        cell2.fill = PatternFill('solid', fgColor="000000")
         cell2.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
+        cell2.fill = PatternFill('solid', fgColor="FFFFFF")
         rich_string2 = CellRichText([TextBlock(black, "今日热点: "), TextBlock(red, f'{result[-1][1]}')])
 
         rich_string2 = CellRichText([TextBlock(black, "今日热点: "), TextBlock(red, f'{result[-1][1]}({result[-1][0]})')])
@@ -393,7 +393,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.短线情绪\n指标1'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -402,7 +402,7 @@ class CFupanDetail(object):
             for c in range(1,11):
                 cell1 = sheet.cell(self.rows+index+1,c+1)
                 cell1.alignment = alignment_center
-                cell1.fill = PatternFill('solid', fgColor="000000")
+                cell1.fill = PatternFill('solid', fgColor="FFFFFF")
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
@@ -414,7 +414,7 @@ class CFupanDetail(object):
         self.mergeRow(sheet,endRow,"B","K",24)
         cell1 = sheet.cell(endRow,2)
         cell1.alignment = alignment_left
-        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.fill = PatternFill('solid', fgColor="FFFFFF")
         cell1.value =  f'''结论:'''
         cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
         cell1.border = border 
@@ -452,7 +452,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.短线情绪\n指标2'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -464,7 +464,7 @@ class CFupanDetail(object):
             for c in range(1,11):
                 cell1 = sheet.cell(self.rows+index+1,c+1)
                 cell1.alignment = alignment_center
-                cell1.fill = PatternFill('solid', fgColor="000000")
+                cell1.fill = PatternFill('solid', fgColor="FFFFFF")
                 if index % 2 != 0:
                     cell1.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
@@ -476,7 +476,7 @@ class CFupanDetail(object):
         self.mergeRow(sheet,endRow,"B","K",24)
         cell1 = sheet.cell(endRow,2)
         cell1.alignment = alignment_left
-        cell1.fill = PatternFill('solid', fgColor="000000")
+        cell1.fill = PatternFill('solid', fgColor="FFFFFF")
         cell1.value =  f'''结论:'''
         cell1.font = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
         cell1.border = border 
@@ -503,7 +503,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.明日情绪\n判断'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -512,7 +512,7 @@ class CFupanDetail(object):
             cell1 = sheet.cell(self.rows+index+1,2)
             cell1.value = line
             cell1.alignment = alignment_left
-            cell1.fill = PatternFill('solid', fgColor="000000")
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
             if index % 2 != 0:
                 cell1.fill = PatternFill('solid', fgColor="CCEEFF")
             cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='FF0000', bold=True)
@@ -544,7 +544,7 @@ class CFupanDetail(object):
         self.mergeColumn(sheet,"A",startRow,endRow)
         cell = sheet.cell(startRow,1)
         cell.alignment = alignment_center
-        cell.fill = PatternFill('solid', fgColor="000000")
+        cell.fill = PatternFill('solid', fgColor="FFFFFF")
         cell.value =  f'''{self.index}.{title}'''
         cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         cell.border = border
@@ -553,8 +553,8 @@ class CFupanDetail(object):
             cell1 = sheet.cell(self.rows+index+1,2)
             cell1.value = ""
             cell1.alignment = alignment_left
-            cell1.fill = PatternFill('solid', fgColor="000000")
             cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
             cell1.border = border
 
         self.index = self.index + 1

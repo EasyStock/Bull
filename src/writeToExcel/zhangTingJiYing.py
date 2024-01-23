@@ -116,7 +116,7 @@ class CWriteZhangTingJiYingToXLSX(object):
             cell1.alignment = alignment_left_top
             cell1.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
             cell1.value = value
-            cell1.fill = PatternFill('solid', fgColor="000000")
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
             if row % 2 != 0:
                 cell1.fill = PatternFill('solid', fgColor="CCEEFF")
 

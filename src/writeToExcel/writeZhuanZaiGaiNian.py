@@ -172,15 +172,15 @@ class CWriteZhuanZaiGaiNianToXLSX(object):
             cell1.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
             cell1.fill = PatternFill('solid', fgColor="CCEEFF")
         else:
-            cell.fill = PatternFill('solid', fgColor="000000")
             cell.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
+            cell.fill = PatternFill('solid', fgColor="FFFFFF")
 
-            cell1.fill = PatternFill('solid', fgColor="000000")
             cell1.font = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
+            cell1.fill = PatternFill('solid', fgColor="FFFFFF")
 
         self.rows = self.rows + rows
 
-    def AddFenGeHang(self,sheet,fillColor = '000000'):
+    def AddFenGeHang(self,sheet,fillColor = 'FFFFFF'):
         self.mergeRow(sheet,self.rows+1,"A","T",18)
         cell = sheet.cell(self.rows+1,1)
         cell.fill = PatternFill('solid', fgColor= fillColor)

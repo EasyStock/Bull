@@ -137,7 +137,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if r == self.rows+ rows + 1: 
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
@@ -151,7 +151,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
         self.rows = self.rows + t.shape[0] + 3
 
         scoreDf = pd.DataFrame(df,columns = [])
@@ -172,7 +172,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if r == self.rows+ rows + 4: 
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
@@ -196,7 +196,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if r == self.rows+ rows + 4: 
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
@@ -211,7 +211,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
         self.rows = self.rows + t.shape[0] + 3
 
         scoreDf = pd.DataFrame(df,columns = [])
@@ -232,7 +232,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if r == self.rows+ rows + 4: 
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
@@ -258,7 +258,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if r == self.rows+ rows + 4: 
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
@@ -273,7 +273,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 
         self.rows = self.rows + t.shape[0] + 4
 
@@ -294,7 +294,7 @@ class CFupanDetailEx(object):
                 cell.border = border
                 cell.alignment = alignment_center
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
-                cell.fill = PatternFill('solid', fgColor="000000")
+                cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 if r == self.rows+ rows + 4: 
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                     cell.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)

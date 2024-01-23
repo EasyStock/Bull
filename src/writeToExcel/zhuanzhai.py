@@ -158,7 +158,7 @@ class CZhuanZaiDetail(object):
                 if index % 2 != 0:
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                 else:
-                    cell.fill = PatternFill('solid', fgColor="000000")
+                    cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 
         self.rows = self.rows + newDf.shape[0]
 
