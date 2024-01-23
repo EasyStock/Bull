@@ -62,6 +62,9 @@ class CFetchNewHighDataFromTHS2(object):
             logger.info(fullPath)
 
     def ConvertDataFrameToJPG(self, df,fullPath):
+        if df.empty:
+            return
+    
         from pandas.plotting import table
         import matplotlib.pyplot as plt
         plt.rcParams["font.sans-serif"] = [WorkSpaceFont]#显示中文字体

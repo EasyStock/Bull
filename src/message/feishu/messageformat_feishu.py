@@ -250,3 +250,29 @@ def FormatCardOfKeZhuanZaiScore(date,df,titles,diDianDate,limit):
     elements.append(beizhu)
     title = f'''{date} 抗跌、反弹、成交量、剩余规模 综合评分 前{limit}个'''
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
+
+
+def FormatCardOfKeZhuanZaiPingJiChanged(date,df,titles):
+    ###可转债评级变动通知
+    elements = []
+    tag = {"tag":"hr"}
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[3],"text_align":"center"}]}]}
+    elements.append(tag)
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index, row in df.iterrows():
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = row["转债代码"]
+        stockName = row["转债名称"]
+        pingJi = row["评级"]
+        pingJiYestoday = row["昨日评级"]
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":pingJiYestoday,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":pingJi,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    elements.append(tag)
+    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    title = f'''{date} 评级变动通知'''
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}

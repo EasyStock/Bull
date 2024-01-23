@@ -14,7 +14,7 @@ from statistics_4 import categrateZhangTing,AnalysisZhangTingReason
 from fupanMain_7 import PrintSQLs,GetFuPanList,GetZhouqiGaoBiao
 from fupan.jiTianjiBan import GetAllJiTianJiBan
 from kaipanLaMain_11 import RequestKaiPanLaVolumnData,RequestKaiPanLaZhangDieTingJiashu,RequestKaiPanLaZhaBanData,CalcZhaBanRatio
-from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday
+from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday,SendZhuanZaiPingJiChanged
 from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_Stock
 from writeFuPanXLSX import WriteFuPanSummaryToXLSX
 from ValidateData import Validate_ALL
@@ -117,6 +117,8 @@ def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
         SendNewStocks(dbConnection,tradingDays,webhook,secret)
         # #今日热点
         # SendReDianOfToday(dbConnection,tradingDays,webhook,secret)
+        #可转债评级变动预警
+        SendZhuanZaiPingJiChanged(dbConnection,tradingDays,webhook,secret)
     logger.info(f'==============结束发送可转债分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 

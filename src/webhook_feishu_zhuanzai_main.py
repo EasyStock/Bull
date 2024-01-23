@@ -1,4 +1,4 @@
-from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday
+from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday,SendZhuanZaiPingJiChanged
 from mysql.connect2DB import ConnectToDB
 from DBOperating import GetTradingDateLastN
 from time import sleep
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     tradingDays = GetTradingDateLastN(dbConnection,5)
     # args.webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a"
     # args.secret = "brYyzPbSks4OKnMgdwKvIh"
-    # args.options = [1,2,3,4,5,6]
+    # args.options = [1,2,3,4,5,6,7]
     if args.webhook and args.secret:
         if 1 in args.options:
             SendKeZhuanZaiYuJing(dbConnection,tradingDays,args.webhook,args.secret)
@@ -36,5 +36,8 @@ if __name__ == "__main__":
         if 5 in args.options:
             SendNewStocks(dbConnection,tradingDays,args.webhook,args.secret)
 
-        # if 6 in args.options:
-        #     SendReDianOfToday(dbConnection,tradingDays,args.webhook,args.secret)
+        if 6 in args.options:
+            SendReDianOfToday(dbConnection,tradingDays,args.webhook,args.secret)
+        
+        if 7 in args.options:
+            SendZhuanZaiPingJiChanged(dbConnection,tradingDays,args.webhook,args.secret)

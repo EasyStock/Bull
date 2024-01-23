@@ -1,5 +1,5 @@
 from message.feishu.webhook_api import sendMessageByWebhook
-from message.feishu.messageformat_feishu import FormatCardOfZhuanZaiYuJing,FormatCardOfNewGaiNian, FormatCardOfNewGaiNian5Days,FormatCardOfQiangShu,FormatCardOfNewStock,FormatCardOfReDianToday,FormatCardOfKeZhuanZaiScore
+from message.feishu.messageformat_feishu import FormatCardOfZhuanZaiYuJing,FormatCardOfNewGaiNian, FormatCardOfNewGaiNian5Days,FormatCardOfQiangShu,FormatCardOfNewStock,FormatCardOfReDianToday,FormatCardOfKeZhuanZaiScore,FormatCardOfKeZhuanZaiPingJiChanged
 import pandas as pd
 import json
 import re
@@ -10,7 +10,7 @@ def SendKeZhuanZaiYuJing(dbConnection,tradingDays,webhook,secret):
     select `转债代码`,`转债名称`,`筛选结果`as `原因`  FROM stock.kezhuanzhai_all where `日期` = "{tradingDays[-1]}" and `转债代码` in
             (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-2]}" and  `转债代码` not in (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-1]}") 
             UNION
-            select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-2]}" and  `转债代码` in (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-1]}" and `正股名称`  like "%ST%") and `正股名称` not like "%ST%"
+            select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-2]}" and  `转债代码` in (select `转债代码` FROM stock.kezhuanzhai where `日期` = "{tradingDays[-1]}" and `正股名称`  like "%ST%") # and `正股名称` not like "%ST%"
             )   
          '''
     results, columns = dbConnection.Query(sql)
@@ -189,6 +189,21 @@ def SendkeZhuanZaiScore(dbConnection,date,diDianDate,webhook,secret,limit = 50):
     title = ["**序号**","**代码**","**名称**","**分数**"]
     msg = FormatCardOfKeZhuanZaiScore(date,df,title,diDianDate,limit)
     
+    content = json.dumps(msg,ensure_ascii=False)
+    #print(content)
+    msg_type = "interactive"
+    sendMessageByWebhook(webhook,secret,msg_type,content)
+
+
+def SendZhuanZaiPingJiChanged(dbConnection,tradingDays,webhook,secret):
+    sql = f'''SELECT A.`日期`, A.`转债代码`,A.`转债名称`, A.`评级`,B.`评级` As '昨日评级' FROM stock.kezhuanzhai_all As A, (SELECT * FROM stock.kezhuanzhai_all where `日期`= "{tradingDays[-2]}") AS B where A.`日期`= "{tradingDays[-1]}" and A.`转债代码` = B.`转债代码` and A.`评级` != B.`评级`;'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    if df.empty:
+        return
+    
+    title = ["**代码**","**名称**","**昨日评级**","**今日评级**"]
+    msg = FormatCardOfKeZhuanZaiPingJiChanged(tradingDays[-1],df,title)
     content = json.dumps(msg,ensure_ascii=False)
     #print(content)
     msg_type = "interactive"
