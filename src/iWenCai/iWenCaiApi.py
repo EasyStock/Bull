@@ -28,6 +28,7 @@ class CIWenCaiAPI(object):
     
     def RequestFirstData(self,payload,url = "http://www.iwencai.com/customized/chart/get-robot-data"):
         d = json.dumps(payload)
+        logger.warning(f'''准备下载的关键词是: {payload["question"]}''')
         contentLength = len(d)
         v = self.GetTHS_V()
         # v = "A5cWFl7svn8wWDrz0HMDQRfKIADk3GuPRbHvsunFsT3NBLn-8az7jlWAfx76"
