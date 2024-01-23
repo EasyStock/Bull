@@ -126,11 +126,11 @@ class CWriteScoreToXlsx(object):
         self.rows = self.rows + 1
 
     def AddFirstLine(self,sheet):
-        self.mergeRow(sheet,self.rows+1,"A","J",32)
+        self.mergeRow(sheet,self.rows+1,"A","J",100)
         cell = sheet.cell(self.rows+1,1)
-        cell.alignment = alignment_center
+        cell.alignment = alignment_left
         cell.fill = PatternFill('solid', fgColor="FFFFFF")
-        cell.value =  self.firtLineInfo
+        cell.value = f'''说明:\n1.红色字体部分说明数据没有达到平均值标准.\n2.平均值标准如下:{self.tailInfo}\n3.{self.firtLineInfo}'''
         cell.font = Font(name='宋体', size= self.contextFontSize, italic=False, color='FF0000', bold=True)
         cell.border = border
         self.rows = self.rows + 1
@@ -140,7 +140,7 @@ class CWriteScoreToXlsx(object):
         cell = sheet.cell(self.rows+1,1)
         cell.alignment = alignment_left
         cell.fill = PatternFill('solid', fgColor="FFFFFF")
-        cell.value =  f'''说明:红色字体部分说明数据没有达到平均值标准,平均值标准如下:{self.tailInfo}\n风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！'''
+        cell.value =  f'''风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！'''
         cell.font = Font(name='宋体', size= 10, italic=False, color='FF0000', bold=True)
         cell.border = border
         self.rows = self.rows + 1
