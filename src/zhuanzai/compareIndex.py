@@ -126,7 +126,7 @@ class CCompareWithIndex(object):
     def CompareWithIndex_ALL(self,tradingDays):
         size = len(tradingDays)
         for index,tradingDay, in enumerate(tradingDays):
-            if index >= size -1:
+            if index > size -2:
                 continue
             today = tradingDays[index+1]
             yesteday = tradingDay

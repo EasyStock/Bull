@@ -525,8 +525,8 @@ class CZhuanQianXiaoXing(object):
         if int(lastRow1['动能EX']) == -12 and int(lastRow1['势能EX']) <= -2:
             return "强势行情-冰点"
         
-        r = [row for row in (lastRow1,lastRow2,lastRow3,lastRow4) if self.__bingDian(row) == True]
-        if len(r) >= 2:
+        r = [row for row in (lastRow2,lastRow3,lastRow4) if self.__bingDian(row) == True]
+        if len(r) >= 1 and self.__bingDian(lastRow1) == True:
             return "强势行情-冰点"
         
         #冰点期判断 - 弱势行情: 如果动能综合值 <=-8 且 势能综合值 =-10 且首板赚钱效应和连板赚钱效应都出现过 <0.4 或者 连续两天动能综合值和势能综合值都<=-6

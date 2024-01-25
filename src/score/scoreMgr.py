@@ -89,7 +89,7 @@ class CWriteScoreToXlsx(object):
         sheet.column_dimensions['F'].width = 18
         sheet.column_dimensions['G'].width = 16
         sheet.column_dimensions['H'].width = 16
-        sheet.column_dimensions['I'].width = 16
+        sheet.column_dimensions['I'].width = 24
         sheet.column_dimensions['J'].width = 16
 
     
@@ -384,7 +384,7 @@ class CScoreMgr(object):
         DataFrameToJPG(df,["转债代码","转债名称","总分"],fodler,fileName1)
         DataFrameToJPG(newDF,["转债代码","转债名称"],fodler,fileName2)
 
-        xlsxFileName = os.path.join(fodler,"可转债评分.xlsx")
+        xlsxFileName = os.path.join(fodler,f"可转债评分_{self.date}.xlsx")
         xlsx = CWriteScoreToXlsx()
         xlsx.title = f'''可转债评分表 ({self.date})'''
         xlsx.firtLineInfo = self.QuJianStr
