@@ -338,9 +338,9 @@ class CScoreMgr(object):
             s = indexParam[key]["startDay"]
             e = indexParam[key]["endDay"]
             if key == "领涨分数":
-                self.QuJianStr = self.QuJianStr + f'''上涨区间: {s}  -  {e}      '''
+                self.QuJianStr = self.QuJianStr + f'''上涨区间: {s}  ~  {e}      '''
             elif key == "抗跌分数":
-                self.QuJianStr = self.QuJianStr + f'''下跌区间: {s}  -  {e}      '''
+                self.QuJianStr = self.QuJianStr + f'''下跌区间: {s}  ~  {e}      '''
 
     def _BothStockAndZhuanZaiToJPEG(self,df,folder,name):
         result = []
@@ -398,4 +398,35 @@ class CScoreMgr(object):
         SendkeZhuanZaiScore(self.dbConnection,self.date,self.diDianDate,webhook,secret,50)
 
 
-            
+    def UnionSelect(self,dates:tuple,limit = 50):
+        sql = f'''SELECT `日期`,`抗跌分数周期` FROM stock.kezhuanzai_score where `日期` in {str(dates)} group by `日期`,`抗跌分数周期`'''
+        results, _ = self.dbConnection.Query(sql)
+        dfs = []
+        for res in results:
+            date = res[0]
+            didian = res[1].split('"')[-2]
+            sql1 = f'''select A.`转债代码`,B.`转债名称`,B.`正股代码`,B.`正股名称`,A.`成交量分数` as `成交量分数({date})`,A.`抗跌分数` as `抗跌分数({date})`,A.`领涨分数` as `领涨分数({date})`,A.`剩余规模分数` as `剩余规模分数({date})`,A.`总分` as `总分({date})` from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{date}" and B.`日期` = "{didian}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC limit {50};'''
+            results1, columns1 = self.dbConnection.Query(sql1)
+            df = pd.DataFrame(results1,columns=columns1)
+            dfs.append(df)
+
+        resultDF = None
+        if len(dfs) == 0:
+            resultDF = None
+        elif len(dfs) ==1:
+            resultDF = dfs[0]
+        else:
+            first = dfs[0]
+            second  = dfs[1]
+            results = pd.merge(first,second, how='inner',left_on=("转债代码","转债名称"),right_on=("转债代码","转债名称"))
+            others = dfs[2:]
+            for d in others:
+                results = pd.merge(results, d, how='inner',left_on=("转债代码","转债名称"),right_on=("转债代码","转债名称"))
+
+            resultDF = results
+        
+        folderRoot= f'''{workSpaceRoot}/复盘/可转债评分/{dates[-1]}/'''
+        fullPath = os.path.join(folderRoot,f"合并结果_{dates[-1]}.xlsx")
+        DataFrameToJPG(resultDF,("转债代码","转债名称"),folderRoot,f"合并结果")
+        with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
+            resultDF.to_excel(excelWriter, sheet_name="合并结果",index=False)
