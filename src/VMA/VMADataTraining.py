@@ -11,6 +11,8 @@ class CVMADataTraining(object):
 
     def _CalcGaiLv(self,zhangDiefu,vma,vmaThreshold,NDays,gailvThreshold = 70):
         res = self.df[self.df[vma] >= vmaThreshold]
+        if res.empty:
+            return(False,())
         key = f'''{NDays}日后涨幅'''
         df = res[res[key] >0]
         df = df[df["涨跌幅"]>=zhangDiefu]

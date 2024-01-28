@@ -1,6 +1,38 @@
 from VMA.VMAData import CResetVMAData,CUpdateVMAData
 from VMA.VMADataTraining import CVMADataTraining
+from VMA.VMASelecter import CVMASelecter
 import logging
+from mysql.connect2DB import ConnectToDB
+import multiprocessing
+
+def MultiThreadUpdateVDAData(stockID,lastN = -1,isDailyData =False):
+    dbConnection = ConnectToDB()
+    update = CUpdateVMAData(dbConnection,stockID)
+    if isDailyData == True:
+        update.UpdateDailyDataVMA(lastN)
+    else:
+        update.UpdateTrainingDataVMA(lastN)
+    
+    msg = f"============================={stockID} Finished================================"
+    print(msg)
+    return msg
+
+
+def UpdateVMAData_Process(dbConnection,lastN = -1,isDailyData = False):
+    sql = "SELECT `股票代码` FROM stock.stockbasicinfo;"
+    results, _ = dbConnection.Query(sql)
+
+    ret = []
+    pool = multiprocessing.Pool(32)
+    for res in results:
+        stockID = res[0]
+        ret.append(pool.apply_async(MultiThreadUpdateVDAData, (stockID, lastN,isDailyData)))
+
+    pool.close()
+    pool.join()
+    for r in ret:
+        logging.warning(r)
+
 
 def ResetVMAData(dbConnection):
     reset = CResetVMAData(dbConnection)
@@ -30,4 +62,10 @@ def TrainAllData(dbConnection,VMAs = (30,60,),gailvThreshold = 70):
         for vma in VMAs:
             train = CVMADataTraining(dbConnection,stockID)
             train.Training(vma,gailvThreshold)
-        input()
+        #input()
+            
+
+def VAMSelector(dbConnection,tradingDays):
+    for date in tradingDays:
+        selector = CVMASelecter(dbConnection)
+        selector.Select(date)

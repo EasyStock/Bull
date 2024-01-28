@@ -38,6 +38,7 @@ class CUpdateVMAData(object):
     def __init__(self,dbConnection,stockID):
         self.dbConnection = dbConnection
         self.stockID = stockID
+        self.df = None
     
     def GetTraingData(self):
         sql = f'''SELECT * FROM stock.stockdailyinfo_traning where `股票代码` = "{self.stockID}";'''
@@ -102,7 +103,7 @@ class CUpdateVMAData(object):
             if date >="2023-01-01" and date <="2023-12-31":
                 tableName = "stockdailyinfo_2023"
 
-            sql = f'''UPDATE `stock`.`{tableName}` SET `V/MA10` = '{row["V/MA10"]}',`V/MA20` = '{row["V/MA20"]}',`V/MA30` = '{row["V/MA30"]}',`V/MA60` = '{row["V/MA60"]}',`V/MA90` = '{row["V/MA90"]}',`V/MA120` = '{row["V/MA120"]}',`V/MA250` = '{row["V/MA250"]}', `1日后涨幅` = '{row["1日后涨幅"]}', `3日后涨幅` = '{row["3日后涨幅"]}', `5日后涨幅` = '{row["5日后涨幅"]}', `7日后涨幅` = '{row["7日后涨幅"]}' WHERE (`日期` = '{date}') and (`股票代码` = '{self.stockID}');'''
+            sql = f'''UPDATE `stock`.`{tableName}` SET `V/MA60` = '{row["V/MA60"]}', `1日后涨幅` = '{row["1日后涨幅"]}', `3日后涨幅` = '{row["3日后涨幅"]}', `5日后涨幅` = '{row["5日后涨幅"]}', `7日后涨幅` = '{row["7日后涨幅"]}' WHERE (`日期` = '{date}') and (`股票代码` = '{self.stockID}');'''
             sqls.append(sql)
         
         for sql in sqls:
@@ -131,7 +132,6 @@ class CUpdateVMAData(object):
         self.df["5日后涨幅"] = self.df.apply(lambda row: '{:.2f}'.format((row['第7天开盘价'] - row["第2天开盘价"])/row["第2天开盘价"]*100), axis=1) 
         self.df["7日后涨幅"] = self.df.apply(lambda row: '{:.2f}'.format((row['第9天开盘价'] - row["第2天开盘价"])/row["第2天开盘价"]*100), axis=1) 
     
-    
     def UpdateTrainingDataVMA(self,lastN = -1):
         self.GetTraingData()
         self._UpdateVMA()
@@ -140,4 +140,4 @@ class CUpdateVMAData(object):
     def UpdateDailyDataVMA(self,lastN = -1):
         self.GetDailyData()
         self._UpdateVMA()
-        self._ToDailyDB()
+        self._ToDailyDB(lastN)
