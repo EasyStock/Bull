@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
 from VMA.VMAData import CResetVMAData,CUpdateVMAData
 from VMA.VMADataTraining import CVMADataTraining
 from VMA.VMASelecter import CVMASelecter
 import logging
 from mysql.connect2DB import ConnectToDB
 import multiprocessing
+import datetime
 
-def MultiThreadUpdateVDAData(index,stockID,lastN = -1,isDailyData =False):
+def MultiThreadUpdateVDAData(index,stockID,startTime,lastN = -1,isDailyData =False):
     dbConnection = ConnectToDB()
     update = CUpdateVMAData(dbConnection,stockID)
     if isDailyData == True:
@@ -13,7 +15,8 @@ def MultiThreadUpdateVDAData(index,stockID,lastN = -1,isDailyData =False):
     else:
         update.UpdateTrainingDataVMA(lastN)
     
-    msg = f"========={index}===================={stockID} Finished================================"
+    endTime = datetime.datetime.now()
+    msg = f"======={index}=========={stockID} Finished======从开始到现在花费时间:{str(endTime - startTime)}====================="
     print(msg)
     return msg
 
@@ -22,13 +25,14 @@ def UpdateVMAData_Process(dbConnection,lastN = -1,isDailyData = False):
     sql = "SELECT `股票代码` FROM stock.stockbasicinfo ;"
     results, _ = dbConnection.Query(sql)
 
+    startTime = datetime.datetime.now()
     ret = []
     pool = multiprocessing.Pool(64)
     size = len(results)
     for index,res in enumerate(results):
         stockID = res[0]
-        msg = f'''index: {index+1} / {size}'''
-        ret.append(pool.apply_async(MultiThreadUpdateVDAData, (msg,stockID, lastN,isDailyData)))
+        msg = f'''index: {index+1} / {size} = {100.0*(index+1)/size:.2f}% '''
+        ret.append(pool.apply_async(MultiThreadUpdateVDAData, (msg,stockID, startTime,lastN,isDailyData)))
 
     pool.close()
     pool.join()

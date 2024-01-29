@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 import pandas as pd
 
 class CResetVMAData(object):
@@ -77,10 +77,13 @@ class CUpdateVMAData(object):
         for _, row in resultDF.iterrows():
             date = row["日期"]
             tableName = "stockdailyinfo_traning"
-            sql = f'''UPDATE `stock`.`{tableName}` SET `V/MA10` = '{row["V/MA10"]}',`V/MA20` = '{row["V/MA20"]}',`V/MA30` = '{row["V/MA30"]}',`V/MA60` = '{row["V/MA60"]}',`V/MA90` = '{row["V/MA90"]}',`V/MA120` = '{row["V/MA120"]}',`V/MA250` = '{row["V/MA250"]}', `1日后涨幅` = '{row["1日后涨幅"]}', `3日后涨幅` = '{row["3日后涨幅"]}', `5日后涨幅` = '{row["5日后涨幅"]}', `7日后涨幅` = '{row["7日后涨幅"]}' WHERE (`日期` = '{date}') and (`股票代码` = '{self.stockID}');'''
+            sql = f'''UPDATE `{tableName}` SET `V/MA10` = '{row["V/MA10"]}',`V/MA20` = '{row["V/MA20"]}',`V/MA30` = '{row["V/MA30"]}',`V/MA60` = '{row["V/MA60"]}',`V/MA90` = '{row["V/MA90"]}',`V/MA120` = '{row["V/MA120"]}',`V/MA250` = '{row["V/MA250"]}', `1日后涨幅` = '{row["1日后涨幅"]}', `3日后涨幅` = '{row["3日后涨幅"]}', `5日后涨幅` = '{row["5日后涨幅"]}', `7日后涨幅` = '{row["7日后涨幅"]}' WHERE (`日期` = '{date}') and (`股票代码` = '{self.stockID}');'''
             sqls.append(sql)
         
-        for sql in sqls:
+
+        step = 300
+        groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in groupedSql:
             self.dbConnection.Execute(sql)
 
     def _ToDailyDB(self,lastN = -1):
@@ -103,10 +106,12 @@ class CUpdateVMAData(object):
             if date >="2023-01-01" and date <="2023-12-31":
                 tableName = "stockdailyinfo_2023"
 
-            sql = f'''UPDATE `stock`.`{tableName}` SET `V/MA60` = '{row["V/MA60"]}', `1日后涨幅` = '{row["1日后涨幅"]}', `3日后涨幅` = '{row["3日后涨幅"]}', `5日后涨幅` = '{row["5日后涨幅"]}', `7日后涨幅` = '{row["7日后涨幅"]}' WHERE (`日期` = '{date}') and (`股票代码` = '{self.stockID}');'''
+            sql = f'''UPDATE `{tableName}` SET `V/MA60` = '{row["V/MA60"]}', `1日后涨幅` = '{row["1日后涨幅"]}', `3日后涨幅` = '{row["3日后涨幅"]}', `5日后涨幅` = '{row["5日后涨幅"]}', `7日后涨幅` = '{row["7日后涨幅"]}' WHERE (`日期` = '{date}') and (`股票代码` = '{self.stockID}');'''
             sqls.append(sql)
-        
-        for sql in sqls:
+    
+        step = 10
+        groupedSql = ["\n".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in groupedSql:
             self.dbConnection.Execute(sql)
 
     def _UpdateVMA(self):

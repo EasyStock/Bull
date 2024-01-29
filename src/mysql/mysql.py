@@ -8,11 +8,12 @@
 '''
 
 import pymysql
+from pymysql.constants import CLIENT
 
 class CMySqlConnection(object):
     def __init__(self,host, port, user, password, dbName, charset = 'utf8'):
         print('connecting to mysql server...')
-        self.db = pymysql.connect(host= host,port=port,user=user,password=password,db=dbName,charset=charset)
+        self.db = pymysql.connect(host= host,port=port,user=user,password=password,db=dbName,charset=charset,client_flag = CLIENT.MULTI_STATEMENTS)
         print('conencted to mysql server successfully!') 
     
     def __del__(self):
@@ -53,7 +54,7 @@ class CMySqlConnection(object):
             self.db.commit()
             return True
             #print('execule sql:[%s] successfully!'%(sql_statement))
-        except:
-            print('execule sql:[%s] failed!'%(sql_statement))
+        except Exception as e:
+            print('execule sql:[%s] failed,Exception:[%s]'%(sql_statement,e))
             self.db.rollback()
             return False

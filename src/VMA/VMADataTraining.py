@@ -19,7 +19,7 @@ class CVMADataTraining(object):
         gailv = 100.0*df.shape[0]/res.shape[0]
         zhangfuAvg = float(df[key].mean())
         message = f'''{self.stockID}: {vma}>={vmaThreshold:.2f} 涨幅>={zhangDiefu:.2f}%: {key} 大于0的概率:{gailv:.2f}%, 平均涨跌幅:{zhangfuAvg:.2f}%\n'''
-        sql = f'''REPLACE INTO `stock`.`stockdailyinfo_traning_result` (`stockID`, `VMA`,`VMA值`, `涨幅`, `几日后涨幅`, `概率`, `平均涨幅`) VALUES ('{self.stockID}', '{vma}', '{vmaThreshold:.2f}','{zhangDiefu:.2f}', '{key}', '{gailv:.2f}', '{zhangfuAvg:.2f}');'''
+        sql = f'''REPLACE INTO `stockdailyinfo_traning_result` (`stockID`, `VMA`,`VMA值`, `涨幅`, `几日后涨幅`, `概率`, `平均涨幅`) VALUES ('{self.stockID}', '{vma}', '{vmaThreshold:.2f}','{zhangDiefu:.2f}', '{key}', '{gailv:.2f}', '{zhangfuAvg:.2f}');'''
         if gailv >=gailvThreshold:
             self.dbConnection.Execute(sql)
             logging.error(message)
