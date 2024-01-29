@@ -12,6 +12,7 @@ if __name__ == '__main__':
     #ResetVMAData(dbConnection) #重置训练数据集表
     #UpdateVMAData(dbConnection,3,True) #更新每日数据表
 
-    UpdateVMAData_Process(dbConnection,-1,False) #更新更新训练集表
+    #UpdateVMAData_Process(dbConnection,-1,False) #更新更新训练集表
+    UpdateVMAData_Process(dbConnection,-1,True) #更新每日数据表
     #TrainAllData(dbConnection,VMAs = (60,),gailvThreshold = 80)
     #VAMSelector(dbConnection,tradingDays)

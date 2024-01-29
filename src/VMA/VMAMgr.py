@@ -5,7 +5,7 @@ import logging
 from mysql.connect2DB import ConnectToDB
 import multiprocessing
 
-def MultiThreadUpdateVDAData(stockID,lastN = -1,isDailyData =False):
+def MultiThreadUpdateVDAData(index,stockID,lastN = -1,isDailyData =False):
     dbConnection = ConnectToDB()
     update = CUpdateVMAData(dbConnection,stockID)
     if isDailyData == True:
@@ -13,25 +13,27 @@ def MultiThreadUpdateVDAData(stockID,lastN = -1,isDailyData =False):
     else:
         update.UpdateTrainingDataVMA(lastN)
     
-    msg = f"============================={stockID} Finished================================"
+    msg = f"========={index}===================={stockID} Finished================================"
     print(msg)
     return msg
 
 
 def UpdateVMAData_Process(dbConnection,lastN = -1,isDailyData = False):
-    sql = "SELECT `股票代码` FROM stock.stockbasicinfo;"
+    sql = "SELECT `股票代码` FROM stock.stockbasicinfo ;"
     results, _ = dbConnection.Query(sql)
 
     ret = []
-    pool = multiprocessing.Pool(32)
-    for res in results:
+    pool = multiprocessing.Pool(64)
+    size = len(results)
+    for index,res in enumerate(results):
         stockID = res[0]
-        ret.append(pool.apply_async(MultiThreadUpdateVDAData, (stockID, lastN,isDailyData)))
+        msg = f'''index: {index+1} / {size}'''
+        ret.append(pool.apply_async(MultiThreadUpdateVDAData, (msg,stockID, lastN,isDailyData)))
 
     pool.close()
     pool.join()
     for r in ret:
-        logging.warning(r)
+        logging.warning(r._value)
 
 
 def ResetVMAData(dbConnection):
