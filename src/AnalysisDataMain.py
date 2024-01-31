@@ -175,6 +175,8 @@ def Main():
     if getDataStatus(dbConnection,tradingDays,logger) == False:
         return None
     
+    Validate_ALL(dbConnection,tradingDays)
+
     if 0 in args.options:
         ######################
         #分析可转债数据
@@ -190,7 +192,6 @@ def Main():
         SendReportOfStock(dbConnection,tradingDays,logger)
         ######################
 
-        Validate_ALL(dbConnection,tradingDays)
     else:
         if 1 in args.options:
             #分析可转债数据

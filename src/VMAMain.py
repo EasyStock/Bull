@@ -20,7 +20,7 @@ def Main():
     '''
     parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="")
     args = parser.parse_args()
-    args.options = [5,]
+    #args.options = [5,]
     
     if 0 in args.options:
         ResetVMAData(dbConnection) #重置训练数据集表
@@ -38,8 +38,8 @@ def Main():
         UpdateVMAData_Process(dbConnection,3,True) #更新每日数据表
 
     if 5 in args.options:
-        tradingDays = GetTradingDateLastN(dbConnection,2)
-        VAMSelector(dbConnection,tradingDays[:-1])
+        tradingDays = GetTradingDateLastN(dbConnection,1)
+        VAMSelector(dbConnection,tradingDays)
 
 if __name__ == '__main__':
     dbConnection = ConnectToDB()

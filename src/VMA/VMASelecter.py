@@ -156,11 +156,12 @@ class CVMASelecter(object):
         
         df.reset_index(drop=True,inplace=True)
         message = f'''股票代码:{stockID} 股票简称:{stockName} 日期:{date} VMA值:<= {VMAValue} 涨跌幅<={zhangDiefu}有:'''
-        return (True,(df,message))
+        return (True,(df,stockID,stockName,message))
 
     
     def Select(self,date):
         sql = f'''SELECT A.*,B.`股票简称` FROM `stockdailyinfo` As A,`stockbasicinfo` As B where A.`日期` = "{date}" and A.`股票代码` = B.`股票代码`and A.`V/MA60` >= 2;'''
+        #sql = f'''SELECT `日期`,`股票代码`,`股票简称`,`涨跌幅`, cast(`V/MA60` as float) as`V/MA60`  FROM stock.stockdaily_vma where `V/MA60` > 2 and `日期` = "{date}" order by `V/MA60` DESC;'''
         results, columns = self.dbConnection.Query(sql)
         self.df = pd.DataFrame(results,columns=columns)
         self.df['涨跌幅'] = self.df['涨跌幅'].astype(float)
@@ -178,8 +179,10 @@ class CVMASelecter(object):
         if os.path.exists(folderRoot) == False:
             os.makedirs(folderRoot)
 
+        datas = []
         fullPath = os.path.join(folderRoot,f"复盘摘要{date}.xlsx")
         with pd.ExcelWriter(fullPath,engine='openpyxl',mode='a',if_sheet_exists='overlay') as excelWriter:
+        #with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w') as excelWriter:
             f = CVolumnSelectorToXLSFormatter()
             df = pd.DataFrame()
             df.to_excel(excelWriter, sheet_name= f.sheetName,index=False)
@@ -188,7 +191,17 @@ class CVMASelecter(object):
             f.addTitle(sheet)     
             for result in results:
                 df = result[0]
-                header = result[1]
+                stockID = result[1]
+                stockName = result[2]
+                header = result[3]
                 f.AddHeader(sheet,header)
                 f.AddData(excelWriter,df)
+                datas.append( {"代码": stockID,"名称":stockName})
             f.formatColumnsWidth(sheet)
+        
+        folderRoot= f'''{workSpaceRoot}/复盘/股票/{date}/'''
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
+
+        jpgDataFrame = pd.DataFrame(datas, columns=("代码","名称"))
+        DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"股票放大量")
