@@ -4,7 +4,7 @@ from thsData2.fetchDataFromTHS2 import CFetchDataFromTHS_MultiPageMgr,CFetchData
 import datetime
 import logging
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 
 NEWHIGH_COLUMNS_MAP= {
     '股票代码' : '^股票代码',
@@ -52,10 +52,7 @@ class CFetchNewHighDataFromTHS2(object):
 
             self.ParserGaiNian()
 
-            rootFolder = f"{workSpaceRoot}/复盘/股票/{self.date}/"
-            if os.path.exists(rootFolder) == False:
-                os.makedirs(rootFolder)
-
+            rootFolder = GetStockFolder(self.date)
             fullPath = f"{rootFolder}新高_{self.date}.jpg"
             jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])
             self.ConvertDataFrameToJPG(jpgDataFrame,fullPath)

@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetStockFolder
 
 HTML_PART1 = '''
 
@@ -1154,9 +1154,10 @@ def Summary(dbConnection,tradingDays):
     newDf['流通市值'] = df['流通市值']
     
     #print(newDf)
-    newDf.to_csv("/tmp/AAA.CSV",index=False)
+    #newDf.to_csv("/tmp/AAA.CSV",index=False)
     htmlStr = FormatToHTML(newDf,tradingDays)
-    fileName = f'''{workSpaceRoot}/复盘/每日复盘笔记/复盘摘要_{lastDay}.htm'''
+    stockFolder = GetStockFolder(lastDay)
+    fileName = f'''{stockFolder}/复盘摘要_{lastDay}.htm'''
     with open(fileName,"w+") as f:
         f.write(htmlStr)
         print("写入摘要:" + fileName + "  成功！！")

@@ -6,7 +6,7 @@ import time
 import datetime
 import logging
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 logger = logging.getLogger()
 
 ZHANGTING_COLUMNS_MAP= {
@@ -48,10 +48,7 @@ class CFetchDaLiangFromTHS(object):
         # logger.info(self.date)
         # logger.info(f'{self.dataFrame.columns}')
         # logger.info(f'{self.dataFrame.shape}')
-        folder = f'{workSpaceRoot}/复盘/股票/{self.date}/'
-        if os.path.exists(folder) == False:
-            os.makedirs(folder)
-
+        folder = GetStockFolder(self.date)
         fileName = f'''大量_{self.date}'''
         self.DataFrameToJPG(self.dataFrame,["股票代码","股票简称"],folder,fileName)
         return self.dataFrame

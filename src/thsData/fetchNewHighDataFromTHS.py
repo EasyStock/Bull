@@ -11,7 +11,7 @@ import logging
 import datetime
 import json
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 logger = logging.getLogger()
 
 NEWHIGH_COLUMNS_MAP= {
@@ -44,7 +44,7 @@ class CNewHighDataFromTHS(object):
         
         self.ParserGaiNian()
         logger.info(f'{self.dataFrame}')
-        rootFolder = f"{workSpaceRoot}/复盘/股票/{self.date}/"
+        rootFolder = GetStockFolder(self.date)
         if os.path.exists(rootFolder) == False:
             os.makedirs(rootFolder)
 

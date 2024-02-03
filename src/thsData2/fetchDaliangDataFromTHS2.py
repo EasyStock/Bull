@@ -4,7 +4,7 @@ from thsData2.fetchDataFromTHS2 import CFetchDataFromTHS2,CFetchDataFromTHS_Mult
 import datetime
 import logging
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 
 logger = logging.getLogger()
 
@@ -61,7 +61,7 @@ class CFetchDaliangDataFromTHS2(object):
             for key in map:
                 self.dataFrame[key] = df[map[key]]
 
-            folder = f'{workSpaceRoot}/复盘/股票/{self.dates[-1]}/'
+            folder = GetStockFolder(self.dates[-1])
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 

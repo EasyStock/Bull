@@ -4,7 +4,7 @@ from thsData2.fetchDataFromTHS2 import CFetchDataFromTHS2,CFetchDataFromTHS_Mult
 import datetime
 import logging
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 
 logger = logging.getLogger()
 
@@ -46,7 +46,7 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
 
             self.dataFrame = tmpDataFrame
            
-            folder = f'{workSpaceRoot}/复盘/股票/{self.date}/'
+            folder = GetStockFolder(self.date)
             if os.path.exists(folder) == False:
                 os.makedirs(folder)
 

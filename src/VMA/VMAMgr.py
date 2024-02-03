@@ -107,6 +107,7 @@ def VAMSelector(dbConnection,tradingDays):
     VMAs = {
         "60":2,
         "90":2,
+        "120":2,
     }
     for date in tradingDays:
         for vma in VMAs:

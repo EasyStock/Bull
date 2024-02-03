@@ -9,7 +9,7 @@ import time
 import datetime
 import re
 import sys
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetStockFolder
 
 class CFuPan(object):
     def __init__(self,logger, dbConnection,lastN=-1) -> None:
@@ -24,7 +24,8 @@ class CFuPan(object):
         self.today = self.tradingDays[lastN]
         self.yestoday = self.tradingDays[lastN-1]
         self.logger = logger
-        self.fuPanFullPath = f'{workSpaceRoot}/复盘/股票/{self.today}/复盘记录表_{self.today}.xlsx'
+        self.fuPanFolder = GetStockFolder(self.today)
+        self.fuPanFullPath = f'{self.fuPanFolder}/复盘记录表_{self.today}.xlsx'
         self.shiNeng = 0
         self.dongNeng = 0
         self.countOfZhangTing = 0

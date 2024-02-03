@@ -1,7 +1,8 @@
 
 import pandas as pd
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
+
 def DataFrameToSqls_INSERT_OR_IGNORE(datas,tableName):
     sqls = []
     for _, row in datas.iterrows():
@@ -44,20 +45,16 @@ class CYizhiban(object):
             self.dbConnection.Execute(sql)
             #print(sql)
 
-    def WriteToLocalFile(self,path = f'''{workSpaceRoot}/复盘/股票/'''):
+    def WriteToLocalFile(self,path):
         if self.yiziban is None:
             return
-
-        subPath = f'''{path}/{self.date}/'''
-        if os.path.exists(subPath) == False:
-            os.makedirs(subPath)
-
+        
         fileName = f'''一字板_{self.date}.xlsx'''
-        full = os.path.join(subPath,fileName)
+        full = os.path.join(path,fileName)
         self.yiziban.to_excel(full)
 
         JPGfileName = f'''一字板_{self.date}.jpg'''
-        JPGfull = os.path.join(subPath,JPGfileName)
+        JPGfull = os.path.join(path,JPGfileName)
         df = pd.DataFrame(self.yiziban,columns=("股票代码","股票简称"))
         self.ConvertDataFrameToJPG(df,JPGfull)
 
@@ -81,5 +78,6 @@ class CYizhiban(object):
         print("CYizhiban.YiZhiBan begin.")
         self.GetYizhiban()
         self.WriteToDB()
-        self.WriteToLocalFile()
+        path = GetStockFolder(self.date)
+        self.WriteToLocalFile(path)
         print("CYizhiban.YiZhiBan end.")

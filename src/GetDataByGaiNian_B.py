@@ -2,7 +2,7 @@ from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 import pandas as pd
 import os
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 
 def ConvertDataFrameToJPG(df,fullPath):
     if df.empty:
@@ -30,10 +30,7 @@ def GetDataByGaiNian(dbConnection,gainian,date):
     sql2 = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{date}' and (B.`所属概念` like '%{gainian}%'  OR B.`所属概念` like '%{gainian}%' ) order by `PB` DESC;'''
     sql3 = f'''select * from stock.stockbasicinfo where `所属概念` like "%{gainian}%" ;'''
 
-    fodler = f'{workSpaceRoot}/复盘/股票/{date}/'
-    if os.path.exists(fodler) == False:
-        os.makedirs(fodler)
-    
+    fodler = GetStockFolder(date)
     fileName1 = f'''{gainian}_股票_涨停_{date}'''
     fileName2 = f'''{gainian}_可转债_{date}'''
     fileName3 = f'''{gainian}_股票_All_{date}'''

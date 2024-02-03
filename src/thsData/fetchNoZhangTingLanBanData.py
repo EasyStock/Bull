@@ -3,7 +3,7 @@ import pandas as pd
 from decimal import Decimal
 import re
 from Utility.convertDataFrameToJPG import DataFrameToJPG
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetStockFolder
 
 import os
 
@@ -62,9 +62,7 @@ class CFetchNoZhangTingData(object):
         print(df[df["足够高"] == "ignored"])
         print(df[df["足够高"] == "unKnown"])
 
-        
-
-        fodler = f'{workSpaceRoot}/复盘/股票/{self.date}/'
+        fodler = GetStockFolder(self.date)
         if os.path.exists(fodler) == False:
             os.makedirs(fodler)
         

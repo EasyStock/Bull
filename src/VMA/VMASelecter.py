@@ -6,7 +6,7 @@ from openpyxl.styles import Font,Border,Side,Alignment,Font,PatternFill
 import pandas as pd
 from openpyxl.utils import column_index_from_string
 from Utility.convertDataFrameToJPG import DataFrameToJPG
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetStockFolder
 import os
 
 # 边框
@@ -176,10 +176,7 @@ class CVMASelecter(object):
             res,data = self._Select(stockID,stockName,date,zhangDiefu,key,vma)
             if res == True:
                 results.append(data)
-        folderRoot= f'''{workSpaceRoot}/复盘/复盘摘要/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
-
+        folderRoot= GetStockFolder(date) 
         datas = []
         fullPath = os.path.join(folderRoot,f"复盘摘要{date}.xlsx")
         mode='w'
@@ -206,9 +203,6 @@ class CVMASelecter(object):
                 datas.append( {"代码": stockID,"名称":stockName})
             f.formatColumnsWidth(sheet)
             
-        folderRoot= f'''{workSpaceRoot}/复盘/股票/{date}/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
-
+        folderRoot= GetStockFolder(date) 
         jpgDataFrame = pd.DataFrame(datas, columns=("代码","名称"))
         DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"爆量_{VMA}_{vmaThreshold}")

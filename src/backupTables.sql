@@ -34,6 +34,28 @@ CREATE TABLE `caozuo` (
   PRIMARY KEY (`日期`,`股票名称`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
+CREATE TABLE `compareindex_stock` (
+  `date` varchar(45) NOT NULL,
+  `indexID` varchar(45) NOT NULL COMMENT '指数ID',
+  `stockID` varchar(45) NOT NULL,
+  `increase_rate` varchar(45) DEFAULT NULL,
+  `zhangdiefu` varchar(45) DEFAULT NULL,
+  `delta` float DEFAULT NULL,
+  `flag` tinyint DEFAULT NULL,
+  PRIMARY KEY (`date`,`indexID`,`stockID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `compareindex_zai` (
+  `date` varchar(45) NOT NULL,
+  `indexID` varchar(45) NOT NULL COMMENT '指数ID',
+  `stockID` varchar(45) NOT NULL,
+  `increase_rate` varchar(45) DEFAULT NULL,
+  `zhangdiefu` varchar(45) DEFAULT NULL,
+  `delta` float DEFAULT NULL,
+  `flag` tinyint DEFAULT NULL,
+  PRIMARY KEY (`date`,`indexID`,`stockID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
 CREATE TABLE `cookies` (
   `name` varchar(255) NOT NULL,
   `cookie` text,
@@ -238,6 +260,22 @@ CREATE TABLE `kezhuanzai_score` (
   PRIMARY KEY (`日期`,`转债代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
+CREATE TABLE `kezhuanzai_ths` (
+  `日期` varchar(45) NOT NULL,
+  `转债代码` varchar(45) NOT NULL,
+  `转债名称` varchar(45) DEFAULT NULL,
+  `正股代码` varchar(45) DEFAULT NULL,
+  `最高价` float DEFAULT NULL,
+  `最低价` float DEFAULT NULL,
+  `开盘价` float DEFAULT NULL,
+  `收盘价` float DEFAULT NULL,
+  `成交量` float DEFAULT NULL,
+  `成交额` float DEFAULT NULL,
+  `涨跌幅` float DEFAULT NULL,
+  `上市日期` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`日期`,`转债代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
 CREATE TABLE `kezhuanzhai` (
   `日期` varchar(45) NOT NULL,
   `转债代码` varchar(45) NOT NULL,
@@ -347,6 +385,7 @@ CREATE TABLE `stockbasicinfo` (
   `行业` text,
   `流通市值` text,
   `更新日期` varchar(45) DEFAULT NULL,
+  `istTained` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`股票代码`),
   UNIQUE KEY `股票代码_UNIQUE` (`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
@@ -365,15 +404,19 @@ CREATE TABLE `stockbasicinfo_test` (
   UNIQUE KEY `股票代码_UNIQUE` (`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
-CREATE TABLE `compareindex_zai` (
-  `date` varchar(45) NOT NULL,
-  `indexID` varchar(45) NOT NULL COMMENT '指数ID',
-  `stockID` varchar(45) NOT NULL,
-  `increase_rate` varchar(45) DEFAULT NULL,
-  `zhangdiefu` varchar(45) DEFAULT NULL,
-  `delta` float DEFAULT NULL,
-  `flag` tinyint DEFAULT NULL,
-  PRIMARY KEY (`date`,`indexID`,`stockID`)
+CREATE TABLE `stockdaily_vma` (
+  `日期` varchar(45) NOT NULL,
+  `股票代码` varchar(45) NOT NULL,
+  `股票简称` varchar(45) DEFAULT NULL,
+  `涨跌幅` varchar(45) DEFAULT NULL,
+  `V/MA10` varchar(45) DEFAULT NULL,
+  `V/MA20` varchar(45) DEFAULT NULL,
+  `V/MA30` varchar(45) DEFAULT NULL,
+  `V/MA60` varchar(45) DEFAULT NULL,
+  `V/MA90` varchar(45) DEFAULT NULL,
+  `V/MA120` varchar(45) DEFAULT NULL,
+  `V/MA250` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
 CREATE TABLE `stockdailyinfo` (
@@ -386,6 +429,11 @@ CREATE TABLE `stockdailyinfo` (
   `成交量` varchar(45) DEFAULT NULL,
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
+  `V/MA60` varchar(45) DEFAULT NULL,
+  `1日后涨幅` varchar(45) DEFAULT NULL COMMENT '(后天开盘价-明天开盘价)/明天开盘价 X100%',
+  `3日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第4天开盘价-第2开盘价)/第2开盘价 X100%',
+  `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
+  `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
@@ -399,6 +447,11 @@ CREATE TABLE `stockdailyinfo_2021` (
   `成交量` varchar(45) DEFAULT NULL,
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
+  `V/MA60` varchar(45) DEFAULT NULL,
+  `1日后涨幅` varchar(45) DEFAULT NULL COMMENT '(后天开盘价-明天开盘价)/明天开盘价 X100%',
+  `3日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第4天开盘价-第2开盘价)/第2开盘价 X100%',
+  `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
+  `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
@@ -412,6 +465,11 @@ CREATE TABLE `stockdailyinfo_2022` (
   `成交量` varchar(45) DEFAULT NULL,
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
+  `V/MA60` varchar(45) DEFAULT NULL,
+  `1日后涨幅` varchar(45) DEFAULT NULL COMMENT '(后天开盘价-明天开盘价)/明天开盘价 X100%',
+  `3日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第4天开盘价-第2开盘价)/第2开盘价 X100%',
+  `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
+  `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
@@ -425,6 +483,11 @@ CREATE TABLE `stockdailyinfo_2023` (
   `成交量` varchar(45) DEFAULT NULL,
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
+  `V/MA60` varchar(45) DEFAULT NULL,
+  `1日后涨幅` varchar(45) DEFAULT NULL COMMENT '(后天开盘价-明天开盘价)/明天开盘价 X100%',
+  `3日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第4天开盘价-第2开盘价)/第2开盘价 X100%',
+  `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
+  `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
@@ -439,6 +502,42 @@ CREATE TABLE `stockdailyinfo_test` (
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `stockdailyinfo_traning` (
+  `日期` varchar(45) NOT NULL,
+  `股票代码` varchar(45) NOT NULL,
+  `开盘价` varchar(45) DEFAULT NULL,
+  `收盘价` varchar(45) DEFAULT NULL,
+  `最高价` varchar(45) DEFAULT NULL,
+  `最低价` varchar(45) DEFAULT NULL,
+  `成交量` varchar(45) DEFAULT NULL,
+  `成交额` varchar(45) DEFAULT NULL,
+  `涨跌幅` varchar(45) DEFAULT NULL,
+  `V/MA10` varchar(45) DEFAULT NULL,
+  `V/MA20` varchar(45) DEFAULT NULL,
+  `V/MA30` varchar(45) DEFAULT NULL,
+  `V/MA60` varchar(45) DEFAULT NULL,
+  `V/MA90` varchar(45) DEFAULT NULL,
+  `V/MA120` varchar(45) DEFAULT NULL,
+  `V/MA250` varchar(45) DEFAULT NULL,
+  `1日后涨幅` varchar(45) DEFAULT NULL COMMENT '(后天开盘价-明天开盘价)/明天开盘价 X100%',
+  `3日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第4天开盘价-第2开盘价)/第2开盘价 X100%',
+  `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
+  `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
+  PRIMARY KEY (`日期`,`股票代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `stockdailyinfo_traning_result` (
+  `stockID` varchar(45) NOT NULL,
+  `VMA` varchar(45) NOT NULL,
+  `VMA值` varchar(45) NOT NULL,
+  `涨幅` varchar(45) NOT NULL,
+  `几日后涨幅` varchar(45) NOT NULL COMMENT '几日后的涨幅',
+  `概率` varchar(45) DEFAULT NULL COMMENT '概率\n',
+  `平均涨幅` varchar(45) DEFAULT NULL,
+  `仓位` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`stockID`,`VMA`,`涨幅`,`几日后涨幅`,`VMA值`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
 CREATE TABLE `stockdailyinfo_tushare` (

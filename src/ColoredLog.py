@@ -10,6 +10,7 @@
 import logging
 import datetime
 import os
+import pytz
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -76,7 +77,7 @@ def InitLogger(fileName):
 
 def StartToInitLogger(title=None):
     folder = '/tmp/'
-    now = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    now = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).strftime("%Y%m%d%H%M%S")
     fullPath = os.path.join(folder,f'{now}_{title}.txt')
     logger = InitLogger(fullPath)
     return logger

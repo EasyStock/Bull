@@ -4,7 +4,7 @@ from message.feishu.messageformat_feishu import FormatCardOfNewGaiNian,FormatCar
 from message.feishu.webhook_api import sendMessageByWebhook
 from Utility.convertDataFrameToJPG import DataFrameToJPG
 import os
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetStockFolder
 
 class CReDian(object):
     def __init__(self,dbConnection,today):
@@ -76,9 +76,7 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
 
         jpgDataFrame = pd.DataFrame(results1,columns=columns)
         if not jpgDataFrame.empty:
-            folderRoot= f'''{workSpaceRoot}/复盘/股票/{tradingDays[-1]}/'''
-            if os.path.exists(folderRoot) == False:
-                os.makedirs(folderRoot)
+            folderRoot= GetStockFolder(tradingDays[-1])
             fileName = f'''新增概念_{gainian}'''
             DataFrameToJPG(jpgDataFrame,columns,folderRoot,fileName)
 
