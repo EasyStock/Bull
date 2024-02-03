@@ -63,8 +63,6 @@ class CFetchNoZhangTingData(object):
         print(df[df["足够高"] == "unKnown"])
 
         fodler = GetStockFolder(self.date)
-        if os.path.exists(fodler) == False:
-            os.makedirs(fodler)
         
         fileName1 = f'''长上影_{self.date}'''
         fileName2 = f'''涨停或接近涨停_{self.date}'''

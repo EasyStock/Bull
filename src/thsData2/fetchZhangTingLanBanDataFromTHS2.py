@@ -47,8 +47,6 @@ class CFetchZhangTingLanBanDataFromTHS2(object):
             self.dataFrame = tmpDataFrame
            
             folder = GetStockFolder(self.date)
-            if os.path.exists(folder) == False:
-                os.makedirs(folder)
 
             fileName = f'''烂板_{self.date}'''
             self.DataFrameToJPG(self.dataFrame,["股票代码","股票简称"],folder,fileName)

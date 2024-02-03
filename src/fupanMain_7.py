@@ -92,8 +92,6 @@ def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
     data, columns = dbConnection.Query(sql)
     df = pd.DataFrame(data,columns=columns)
     fodler = GetStockFolder(today)
-    if os.path.exists(fodler) == False:
-        os.makedirs(fodler)
     fullPath = f'''{fodler}周期高标_{today}.xlsx'''
     df.to_excel(fullPath,index=False)
 

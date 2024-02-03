@@ -45,8 +45,6 @@ class CNewHighDataFromTHS(object):
         self.ParserGaiNian()
         logger.info(f'{self.dataFrame}')
         rootFolder = GetStockFolder(self.date)
-        if os.path.exists(rootFolder) == False:
-            os.makedirs(rootFolder)
 
         fullPath = f"{rootFolder}新高_{self.date}.jpg"
         jpgDataFrame = pd.DataFrame(self.dataFrame,columns=["股票代码","股票简称"])

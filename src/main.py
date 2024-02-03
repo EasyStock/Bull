@@ -12,7 +12,8 @@ from mysql.connect2DB import ConnectToDB
 from tushareMain import UpdateTradingDate,FetchAllInOne
 import schedule
 import time
-
+from CompareWithIndex.StockCompareWithIndex import CStockCompareWithIndex
+from DBOperating import GetTradingDateLastN
 
 # To Do list
 # 20CM 划分
@@ -23,4 +24,8 @@ import time
 
 
 if __name__ == "__main__":
-    pass
+    dbConnection = ConnectToDB()
+    logger = StartToInitLogger("AA")
+    comparer = CStockCompareWithIndex(dbConnection,logger)
+    tradingDays = GetTradingDateLastN(dbConnection,5)
+    comparer.CompareWithIndex_ALL(tradingDays)

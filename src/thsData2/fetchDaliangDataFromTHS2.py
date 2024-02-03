@@ -62,8 +62,6 @@ class CFetchDaliangDataFromTHS2(object):
                 self.dataFrame[key] = df[map[key]]
 
             folder = GetStockFolder(self.dates[-1])
-            if os.path.exists(folder) == False:
-                os.makedirs(folder)
 
             fileName = f'''大量_{self.dates[-1]}'''
             self.DataFrameToJPG(self.dataFrame,["股票代码","股票简称"],folder,fileName)

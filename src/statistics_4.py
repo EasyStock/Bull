@@ -126,8 +126,6 @@ def categrateZhangTing(dbConnection):
     remain = []
     remain1 = []
     rootFolder = GetStockFolder(date)
-    if os.path.exists(rootFolder) == False:
-        os.makedirs(rootFolder)
 
     for key in CATEGRAGTE:
         print(f"\n=========={key}=============")
