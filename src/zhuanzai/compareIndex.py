@@ -211,7 +211,7 @@ class CZhuanzaiSelect(object):
         jpgDataFrame = pd.DataFrame(outPut,columns=["转债代码","转债名称"])
         today = str(datetime.date.today())
         folderRoot= GetZhuanZaiFolder(today)
-z
+        
         DataFrameToJPG(jpgDataFrame,["转债代码","转债名称"],folderRoot,f"{today}_比大盘")
         for result in results:
             (stockID,flagSum,group) = result
