@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetZhuanZaiFolder
 from openpyxl.styles import Font,Border,Side,Alignment,Font,PatternFill
 from openpyxl.utils import column_index_from_string
 from message.feishu.webhook_zhuanzai import SendkeZhuanZaiScore
@@ -306,10 +306,7 @@ class CScoreMgr(object):
             result.append(dict2)
 
         jpgDataFrame = pd.DataFrame(result, columns=("代码","名称"))
-        folderRoot= f'''{workSpaceRoot}/复盘/可转债评分/{date}/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
-
+        folderRoot= GetZhuanZaiFolder(date)
         DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"可转债放量")
 
 
@@ -376,9 +373,7 @@ class CScoreMgr(object):
         newDF.reset_index(drop=True,inplace=True)
         newDF.index = newDF.index + 1
 
-        fodler = f'{workSpaceRoot}/复盘/可转债评分/{self.date}/'
-        if os.path.exists(fodler) == False:
-            os.makedirs(fodler)
+        fodler = GetZhuanZaiFolder(self.date)
         fileName1 = f'''可转债评分'''
         fileName2 = f'''可转债评分_完全符合条件'''
         DataFrameToJPG(df,["转债代码","转债名称","总分"],fodler,fileName1)
@@ -425,7 +420,7 @@ class CScoreMgr(object):
 
             resultDF = results
         
-        folderRoot= f'''{workSpaceRoot}/复盘/可转债评分/{dates[-1]}/'''
+        folderRoot= GetZhuanZaiFolder(dates[-1])
         fullPath = os.path.join(folderRoot,f"合并结果_{dates[-1]}.xlsx")
         DataFrameToJPG(resultDF,("转债代码","转债名称"),folderRoot,f"合并结果")
         with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:

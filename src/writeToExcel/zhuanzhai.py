@@ -4,7 +4,7 @@ from openpyxl.cell.text import InlineFont
 from openpyxl.cell.rich_text import TextBlock, CellRichText
 from openpyxl.utils import column_index_from_string
 from Utility.convertDataFrameToJPG import DataFrameToJPG
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetZhuanZaiFolder
 import os
 
 # 边框
@@ -109,10 +109,7 @@ class CZhuanZaiDetail(object):
             result.append(dict2)
 
         jpgDataFrame = pd.DataFrame(result, columns=("代码","名称"))
-        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{self.tradingDays[-1]}/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
-
+        folderRoot= GetZhuanZaiFolder(self.tradingDays[-1])
         DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"可转债放量")
         
 

@@ -6,7 +6,7 @@ from mysql.connect2DB import DataFrameToSqls_REPLACE
 from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
 import os
 import sys
-from workspace import workSpaceRoot,WorkSpaceFont
+from workspace import workSpaceRoot,WorkSpaceFont,GetZhuanZaiFolder
 import re
 import time
 import pytz
@@ -200,10 +200,8 @@ class CJiSiLu(object):
             df_all["筛选结果"] = df_all.apply(lambda row: self._formatResult(row), axis=1)
 
             df_all['日期'] = self.today
-            folder = f"{workSpaceRoot}/复盘/可转债/{self.today}/"
-            if os.path.exists(folder) == False:
-                os.makedirs(folder)
-            fName = f"{workSpaceRoot}/复盘/可转债/{self.today}/每日原始数据_{self.today}.xlsx"
+            folder = GetZhuanZaiFolder(self.today)
+            fName = f"{folder}/每日原始数据_{self.today}.xlsx"
             sqls = DataFrameToSqls_REPLACE(df_all,"kezhuanzhai_all")
             for sql in sqls:
                 if self.dbConnection.Execute(sql) == False:
@@ -259,9 +257,7 @@ class CJiSiLu(object):
         
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
 
-        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{self.today}/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
+        folderRoot= GetZhuanZaiFolder(self.today)
 
         self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_all.jpg")
         
@@ -304,9 +300,7 @@ class CJiSiLu(object):
         
         remain = []
 
-        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{self.today}/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
+        folderRoot= GetZhuanZaiFolder(self.today)
 
         for key in categrateMap:
             self.logger.info(f"\n=========={key}=============")

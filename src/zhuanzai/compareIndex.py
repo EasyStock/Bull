@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 from Utility.convertDataFrameToJPG import DataFrameToJPG
-from workspace import workSpaceRoot
+from workspace import workSpaceRoot,GetZhuanZaiFolder
 import os
 import datetime
 
@@ -210,10 +210,8 @@ class CZhuanzaiSelect(object):
                 outPut.append(message[1])
         jpgDataFrame = pd.DataFrame(outPut,columns=["转债代码","转债名称"])
         today = str(datetime.date.today())
-        folderRoot= f'''{workSpaceRoot}/复盘/可转债/{today}/'''
-        if os.path.exists(folderRoot) == False:
-            os.makedirs(folderRoot)
-       
+        folderRoot= GetZhuanZaiFolder(today)
+z
         DataFrameToJPG(jpgDataFrame,["转债代码","转债名称"],folderRoot,f"{today}_比大盘")
         for result in results:
             (stockID,flagSum,group) = result
