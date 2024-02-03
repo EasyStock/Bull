@@ -18,6 +18,13 @@ def GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays,logger):
         f = CFetchBanKuaiData(dbConnection,treadingDay)
         f.RequestAllPagesDataAndWriteToDB(100)
 
+def GetVMAData(dbConnection,tradingDays,logger):
+    #只能获取当天的数据
+    lastDay = tradingDays[-1]
+    logger.info(f"============================开始获取成交量/成交量均量（V/MA）数据{lastDay}====================================")
+    f = CFetchVMAData(dbConnection,lastDay)
+    f.RequestAllPagesDataAndWriteToDB(100)
+
 def TestGetDailyData(dbConnection):
     lastDay = tradingDays[-2]
     lastDay = "2023-12-10"

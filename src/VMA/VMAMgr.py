@@ -104,6 +104,16 @@ def TrainAllData(dbConnection,VMAs = (30,60,),gailvThreshold = 70):
             
 
 def VAMSelector(dbConnection,tradingDays):
+    VMAs = {
+        "60":2,
+        "90":2,
+    }
     for date in tradingDays:
-        selector = CVMASelecter(dbConnection)
-        selector.Select(date)
+        for vma in VMAs:
+            selector = CVMASelecter(dbConnection)
+            selector.Select(date,vma,VMAs[vma])
+
+
+def updateChangWei(dbConnection):
+    train = CVMADataTraining(dbConnection,None)
+    train.UpdateCangwei()

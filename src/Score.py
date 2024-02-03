@@ -36,20 +36,32 @@ if __name__ == "__main__":
     #     }
     # }
 
+    # indexParam = {
+    #     "抗跌分数":{
+    #         "startDay":"2024-01-02",
+    #         "endDay":"2024-01-23",
+    #     },
+    #     "领涨分数":{
+    #         "startDay":"2024-01-24",
+    #         "endDay":"2024-01-26",
+    #     }
+    # }
+    
     indexParam = {
         "抗跌分数":{
             "startDay":"2024-01-02",
-            "endDay":"2024-01-23",
+            "endDay":"2024-01-31",
         },
         "领涨分数":{
-            "startDay":"2024-01-24",
-            "endDay":"2024-01-25",
+            "startDay":"2024-02-01",
+            "endDay":"2024-02-01",
         }
     }
-    
     mgr = CScoreMgr(dbConnection)
     mgr.Score(indexParam)
     mgr.Select(indexParam)
+    # dates = ("2024-01-25","2024-01-26")
+    # mgr.UnionSelect(dates)
 
 
     

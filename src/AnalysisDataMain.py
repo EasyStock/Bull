@@ -18,6 +18,7 @@ from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiN
 from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_Stock
 from writeFuPanXLSX import WriteFuPanSummaryToXLSX
 from ValidateData import Validate_ALL
+from VMA.VMAMgr import VAMSelector
 
 import pytz
 import datetime
@@ -92,6 +93,8 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
 
     #写复盘摘要到Excel
     WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
+
+    VAMSelector(dbConnection,tradingDays[-1:])
     logger.info(f'==============结束分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):

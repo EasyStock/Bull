@@ -61,6 +61,7 @@ class CVolumnSelectorToXLSFormatter(object):
         sheet.column_dimensions['I'].width = 12
         sheet.column_dimensions['J'].width = 16
         sheet.column_dimensions['K'].width = 14
+        sheet.column_dimensions['L'].width = 14
 
     
     def formatRowHeight(self,sheet,rowIndex,height):
@@ -86,7 +87,7 @@ class CVolumnSelectorToXLSFormatter(object):
             cell.border = border
 
     def addTitle(self,sheet):
-        self.mergeRow(sheet,1,"A","K",70)
+        self.mergeRow(sheet,1,"A","L",70)
         cell = sheet.cell(1,1)
         cell.alignment = alignment_center
         cell.fill = PatternFill('solid', fgColor="009DDC")
@@ -96,7 +97,7 @@ class CVolumnSelectorToXLSFormatter(object):
         self.rows = self.rows + 2
 
     def AddHeader(self,sheet,header):
-        self.mergeRow(sheet,self.rows+1,"A","K",30)
+        self.mergeRow(sheet,self.rows+1,"A","L",30)
         cell = sheet.cell(self.rows+1,1)
         cell.alignment = alignment_left
         cell.fill = PatternFill('solid', fgColor="009DDC")
@@ -111,7 +112,7 @@ class CVolumnSelectorToXLSFormatter(object):
         startRow = self.rows  + 1
         endRow = startRow + df.shape[0] + 1
         for index in range(startRow,endRow):
-            for column in range(1,12):
+            for column in range(1,13):
                 cell = sheet.cell(row = index, column = column)
                 cell.border = border
                 cell.alignment = alignment_center
@@ -122,9 +123,6 @@ class CVolumnSelectorToXLSFormatter(object):
                     cell.fill = PatternFill('solid', fgColor="FFFFFF")
                 
         self.rows = self.rows + df.shape[0] + 3
-         
-
-   
 
 class CVMASelecter(object):
     def __init__(self,dbConnection):
@@ -137,6 +135,7 @@ class CVMASelecter(object):
         df["涨幅"] = df['涨幅'].astype(float)
         df["VMA值"] = df['VMA值'].astype(float)
         df["平均涨幅"] = df['平均涨幅'].astype(float)
+        df["仓位"] = df['仓位'].astype(float)
         df = df[df['VMA值']<=VMAValue]
         df = df[df['涨幅']<=zhangDiefu]
         df["股票简称"] = stockName
@@ -151,6 +150,7 @@ class CVMASelecter(object):
         flag3 = (df['几日后涨幅'] == "5日后涨幅") & (df['平均涨幅']>=1)
         flag4 = (df['几日后涨幅'] == "7日后涨幅") & (df['平均涨幅']>=1)
         df = df[flag1 | flag2 | flag3 | flag4]
+        df = df[df["仓位"] > 0]
         if df.empty:
             return (False,None)
         
@@ -159,20 +159,21 @@ class CVMASelecter(object):
         return (True,(df,stockID,stockName,message))
 
     
-    def Select(self,date):
-        sql = f'''SELECT A.*,B.`股票简称` FROM `stockdailyinfo` As A,`stockbasicinfo` As B where A.`日期` = "{date}" and A.`股票代码` = B.`股票代码`and A.`V/MA60` >= 2;'''
-        #sql = f'''SELECT `日期`,`股票代码`,`股票简称`,`涨跌幅`, cast(`V/MA60` as float) as`V/MA60`  FROM stock.stockdaily_vma where `V/MA60` > 2 and `日期` = "{date}" order by `V/MA60` DESC;'''
+    def Select(self,date,VMA = 60, vmaThreshold = 2):
+        #sql = f'''SELECT A.*,B.`股票简称` FROM `stockdailyinfo` As A,`stockbasicinfo` As B where A.`日期` = "{date}" and A.`股票代码` = B.`股票代码`and A.`V/MA60` >= 2;'''
+        key = f'''V/MA{VMA}'''
+        sql = f'''SELECT `日期`,`股票代码`,`股票简称`,`涨跌幅`, cast(`{key}` as float) as`{key}` FROM stock.stockdaily_vma where `{key}` > {vmaThreshold} and `日期` = "{date}" order by `{key}` DESC;'''
         results, columns = self.dbConnection.Query(sql)
         self.df = pd.DataFrame(results,columns=columns)
         self.df['涨跌幅'] = self.df['涨跌幅'].astype(float)
-        self.df['V/MA60'] = self.df['V/MA60'].astype(float)
+        self.df[key] = self.df[key].astype(float)
         results = []
         for _,row in self.df.iterrows():
             stockID = row["股票代码"]
             stockName = row["股票简称"]
             zhangDiefu = row["涨跌幅"]
-            vma60 = row["V/MA60"]
-            res,data = self._Select(stockID,stockName,date,zhangDiefu,"V/MA60",vma60)
+            vma = row[key]
+            res,data = self._Select(stockID,stockName,date,zhangDiefu,key,vma)
             if res == True:
                 results.append(data)
         folderRoot= f'''{workSpaceRoot}/复盘/复盘摘要/'''
@@ -181,9 +182,15 @@ class CVMASelecter(object):
 
         datas = []
         fullPath = os.path.join(folderRoot,f"复盘摘要{date}.xlsx")
-        with pd.ExcelWriter(fullPath,engine='openpyxl',mode='a',if_sheet_exists='overlay') as excelWriter:
-        #with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w') as excelWriter:
+        mode='w'
+        if_sheet_exists = None
+        if os.path.exists(fullPath) == True:
+            mode='a'
+            if_sheet_exists = 'overlay'
+
+        with pd.ExcelWriter(fullPath,engine='openpyxl',mode=mode,if_sheet_exists=if_sheet_exists) as excelWriter:
             f = CVolumnSelectorToXLSFormatter()
+            f.sheetName = f"爆量复盘_{VMA}_{vmaThreshold}"
             df = pd.DataFrame()
             df.to_excel(excelWriter, sheet_name= f.sheetName,index=False)
             f.title = f"爆量复盘: {date}"
@@ -198,10 +205,10 @@ class CVMASelecter(object):
                 f.AddData(excelWriter,df)
                 datas.append( {"代码": stockID,"名称":stockName})
             f.formatColumnsWidth(sheet)
-        
+            
         folderRoot= f'''{workSpaceRoot}/复盘/股票/{date}/'''
         if os.path.exists(folderRoot) == False:
             os.makedirs(folderRoot)
 
         jpgDataFrame = pd.DataFrame(datas, columns=("代码","名称"))
-        DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"股票放大量")
+        DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"爆量_{VMA}_{vmaThreshold}")

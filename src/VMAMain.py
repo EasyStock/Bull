@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from VMA.VMAMgr import ResetVMAData,UpdateVMAData,TrainAllData,TrainAllData_MultiProcess,VAMSelector,UpdateVMAData_Process
+from VMA.VMAMgr import ResetVMAData,UpdateVMAData,TrainAllData,TrainAllData_MultiProcess,VAMSelector,UpdateVMAData_Process,updateChangWei
 from mysql.connect2DB import ConnectToDB
 from ColoredLog import StartToInitLogger
 from DBOperating import GetTradingDateLastN
@@ -40,6 +40,11 @@ def Main():
     if 5 in args.options:
         tradingDays = GetTradingDateLastN(dbConnection,1)
         VAMSelector(dbConnection,tradingDays)
+
+    if 6 in args.options:
+        updateChangWei(dbConnection)
+    now1 = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
+    logger.error("总共用时:"+str(now1 - now))
 
 if __name__ == '__main__':
     dbConnection = ConnectToDB()

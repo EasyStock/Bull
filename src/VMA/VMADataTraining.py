@@ -9,6 +9,13 @@ class CVMADataTraining(object):
         self.dbConnection = dbConnection
         self.df = None
 
+    def _calcCangWei(self,gailv,yingkui):
+        #根据凯利公式计算仓位
+        gailv = float(gailv)/100.0
+        yingkui = float(yingkui)/100.0
+        caili = (gailv*yingkui - (1-gailv))/yingkui*100
+        return float(f'''{caili:.1f}''')
+    
     def _CalcGaiLv(self,zhangDiefu,vma,vmaThreshold,NDays,gailvThreshold = 70):
         res = self.df[self.df[vma] >= vmaThreshold]
         if res.empty:
@@ -18,9 +25,10 @@ class CVMADataTraining(object):
         df = df[df["涨跌幅"]>=zhangDiefu]
         gailv = 100.0*df.shape[0]/res.shape[0]
         zhangfuAvg = float(df[key].mean())
-        message = f'''{self.stockID}: {vma}>={vmaThreshold:.2f} 涨幅>={zhangDiefu:.2f}%: {key} 大于0的概率:{gailv:.2f}%, 平均涨跌幅:{zhangfuAvg:.2f}%\n'''
-        sql = f'''REPLACE INTO `stockdailyinfo_traning_result` (`stockID`, `VMA`,`VMA值`, `涨幅`, `几日后涨幅`, `概率`, `平均涨幅`) VALUES ('{self.stockID}', '{vma}', '{vmaThreshold:.2f}','{zhangDiefu:.2f}', '{key}', '{gailv:.2f}', '{zhangfuAvg:.2f}');'''
-        if gailv >=gailvThreshold:
+        cangwei = self._calcCangWei(gailv,zhangfuAvg)
+        message = f'''{self.stockID}: {vma}>={vmaThreshold:.2f} 涨幅>={zhangDiefu:.2f}%: {key} 大于0的概率:{gailv:.2f}%, 平均涨跌幅:{zhangfuAvg:.2f}%, 仓位:{cangwei}\n'''
+        sql = f'''REPLACE INTO `stockdailyinfo_traning_result` (`stockID`, `VMA`,`VMA值`, `涨幅`, `几日后涨幅`, `概率`, `平均涨幅`,`仓位`) VALUES ('{self.stockID}', '{vma}', '{vmaThreshold:.2f}','{zhangDiefu:.2f}', '{key}', '{gailv:.2f}', '{zhangfuAvg:.2f}',{cangwei});'''
+        if gailv >=gailvThreshold and cangwei > 0:
             self.dbConnection.Execute(sql)
             logging.error(message)
             return (True,(zhangDiefu,vma,vmaThreshold,key,gailv,sql,message))
@@ -58,3 +66,22 @@ class CVMADataTraining(object):
         ZhangDieFus= list(quantile["涨跌幅"])
         for zhangDiefu in ZhangDieFus:
             self._CalcVMAN(quantile,zhangDiefu,VMA,gailvThreshold)
+
+    
+    def UpdateCangwei(self):
+        sql = f'''SELECT * FROM stock.stockdailyinfo_traning_result where `仓位` is NULL limit 500000;'''
+        results, columns = self.dbConnection.Query(sql)
+        df = pd.DataFrame(results,columns=columns)
+        df['仓位'] = df.apply(lambda row: self._calcCangWei(row['概率'],row['平均涨幅']), axis=1)
+        df['仓位'] = df[df['仓位'] > 0]
+        sqls = []
+        #size = df.shape[0]
+        for _, row in df.iterrows():
+            sql = f'''UPDATE `stock`.`stockdailyinfo_traning_result` SET `仓位` = '{row["仓位"]}' WHERE (`stockID` = '{row["stockID"]}') and (`VMA` = '{row["VMA"]}') and (`涨幅` = '{row["涨幅"]}') and (`几日后涨幅` = '{row["几日后涨幅"]}') and (`VMA值` = '{row["VMA值"]}');'''
+            sqls.append(sql)
+        
+        step = 300
+        groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in groupedSql:
+            self.dbConnection.Execute(sql)
+
