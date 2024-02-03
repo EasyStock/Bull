@@ -10,7 +10,7 @@ def GetWorkSpaceRoot():
 
 def GetFuPanRoot(date):
     year, month, _ = date.split('-')
-    folder = f'''{year}年{month}月/复盘/'''
+    folder = f'''复盘/{year}年{month}月/{date}/'''
     root = GetWorkSpaceRoot()
     stockFolder = os.path.join(root,folder)
     if os.path.exists(stockFolder) == False:
@@ -18,17 +18,15 @@ def GetFuPanRoot(date):
     return stockFolder
 
 def GetStockFolder(date):
-    folder = f'''/股票/{date}'''
     root = GetFuPanRoot(date)
-    stockFolder = os.path.join(root,folder)
+    stockFolder = f'''{root}/股票/'''
     if os.path.exists(stockFolder) == False:
         os.makedirs(stockFolder)
     return stockFolder
 
 def GetZhuanZaiFolder(date):
-    folder = f'''/可转债/{date}'''
     root = GetFuPanRoot(date)
-    stockFolder = os.path.join(root,folder)
+    stockFolder = f'''{root}/可转债/'''
     if os.path.exists(stockFolder) == False:
         os.makedirs(stockFolder)
     return stockFolder

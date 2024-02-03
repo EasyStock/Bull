@@ -90,7 +90,9 @@ class CFetchVMAData(object):
 
         newDf = pd.DataFrame(self.dataFrame, columns=["日期","股票代码","股票简称","涨跌幅","V/MA10","V/MA20","V/MA30","V/MA60","V/MA90","V/MA120","V/MA250"])
         sqls = self._DataFrameToSqls_INSERT_OR_REPLACE(newDf,"stockdaily_vma")
-        for sql in sqls:
+        step = 300
+        grouped_sqls = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in grouped_sqls:
             self.dbConnection.Execute(sql)
         return self.dataFrame
 

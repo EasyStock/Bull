@@ -296,22 +296,20 @@ class CJiSiLu(object):
 
     def Categrate(self,categrateMap):
         result = GetTradingDateLastN(self.dbConnection,15)
-        date = result[-1]
-        
+        self.today = result[-1]
         remain = []
-
         folderRoot= GetZhuanZaiFolder(self.today)
 
         for key in categrateMap:
             self.logger.info(f"\n=========={key}=============")
-            df = GetKeZhuanzai(self.dbConnection,date,categrateMap[key])
+            df = GetKeZhuanzai(self.dbConnection,self.today,categrateMap[key])
             remain.extend(categrateMap[key])
             jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
             self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_{key}.jpg")
             #self.logger.info(str(df))
         
         self.logger.info(f"\n==========剩余=============")
-        df = GetKeZhuanzai_remain(self.dbConnection,date,remain)
+        df = GetKeZhuanzai_remain(self.dbConnection,self.today,remain)
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
         self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_剩余.jpg")
         #self.logger.info(str(df))

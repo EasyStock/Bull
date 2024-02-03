@@ -7,12 +7,12 @@ from writeToExcel.zhuanzhai import CZhuanZaiDetail
 from writeToExcel.writeZhuanZaiGaiNian import CWriteZhuanZaiGaiNianToXLSX
 from writeToExcel.fupanDetailEx import CFupanDetailEx
 from writeToExcel.zhangTingJiYing import CWriteZhangTingJiYingToXLSX
-from workspace import workSpaceRoot,GetStockFolder
+from workspace import workSpaceRoot,GetFuPanRoot
 import os
 
 
 def WriteFuPanSummaryToXLSX(dbConnection,tradingDays):
-    rootFolder = GetStockFolder(tradingDays[-1])
+    rootFolder = GetFuPanRoot(tradingDays[-1])
     fullPath = os.path.join(rootFolder,f'''复盘摘要{tradingDays[-1]}.xlsx''')
     detail = CFupanDetail(dbConnection,tradingDays)
     zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1])

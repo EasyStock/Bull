@@ -33,24 +33,27 @@ def _GetDailyDataEx(dbConnection,date,logger):
 
     stockBasicInfo_sqls = daily.FormateBacicInfoToSQL('stockBasicInfo')
     stockDailyInfo_sqls = daily.FormateDailyInfoToSQL('stockDailyInfo')
+    step = 300
+    groupedStockBasicInfo_sqls = [" ".join(stockBasicInfo_sqls[i:i+step]) for i in range(0,len(stockBasicInfo_sqls),step)]
+    groupedStockStockDailyInfo_sqls = [" ".join(stockDailyInfo_sqls[i:i+step]) for i in range(0,len(stockDailyInfo_sqls),step)]
     printcount = 1500
-    for index, sql in enumerate(stockBasicInfo_sqls):
-        msg = f'''BasicInfo index: [{index+1:^5d}],{sql}'''
-        if index %printcount == 0:
-            logger.info(msg)
+    for index, sql in enumerate(groupedStockBasicInfo_sqls):
+        # msg = f'''BasicInfo index: [{(index+1)*step:^5d}]'''
+        # if index*step %printcount == 0:
+        #     logger.info(msg)
         
-        if index %(len(stockBasicInfo_sqls)-1) == 0 and index != 0:
-            logger.warning(msg)
+        # if index %(len(stockBasicInfo_sqls)-1) == 0 and index != 0:
+        #     logger.warning(msg)
 
         dbConnection.Execute(sql)
 
-    for index, sql in enumerate(stockDailyInfo_sqls): 
-        msg = f'''DailyData index: [{index+1:^5d}],{sql}'''
-        if index %printcount == 0:
-            logger.info(msg) 
+    for index, sql in enumerate(groupedStockStockDailyInfo_sqls): 
+        # msg = f'''DailyData index: [{(index+1)*step:^5d}]'''
+        # if index*step %printcount == 0:
+        #     logger.info(msg) 
 
-        if index %(len(stockDailyInfo_sqls)-1) == 0 and index != 0:
-            logger.warning(msg)
+        # if index %(len(stockDailyInfo_sqls)-1) == 0 and index != 0:
+        #     logger.warning(msg)
 
         dbConnection.Execute(sql)
 

@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from workspace import workSpaceRoot,GetStockFolder
+from workspace import workSpaceRoot,GetFuPanRoot
 
 HTML_PART1 = '''
 
@@ -1156,7 +1156,7 @@ def Summary(dbConnection,tradingDays):
     #print(newDf)
     #newDf.to_csv("/tmp/AAA.CSV",index=False)
     htmlStr = FormatToHTML(newDf,tradingDays)
-    stockFolder = GetStockFolder(lastDay)
+    stockFolder = GetFuPanRoot(lastDay)
     fileName = f'''{stockFolder}/复盘摘要_{lastDay}.htm'''
     with open(fileName,"w+") as f:
         f.write(htmlStr)

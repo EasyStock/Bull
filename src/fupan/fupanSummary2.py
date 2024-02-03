@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from workspace import workSpaceRoot,GetStockFolder
+from workspace import workSpaceRoot,GetFuPanRoot
 
 
 
@@ -1130,7 +1130,7 @@ class CFupanSummary(object):
         tail = self.ForamtTail()
 
         Summary = f'''{head}{title}{warning}{summaryOfToday}{yizi}{marking}{chaoduan1}{chaoduan2}{qingxu1}{qingxu2}{redian1}{redian2}{lianban}{shouban}{tail}'''
-        stockFolder = GetStockFolder(self.today)   
+        stockFolder = GetFuPanRoot(self.today)   
         fileName = f'''{stockFolder}/复盘摘要_{self.today}.htm'''
         with open(fileName,"w+") as f:
             f.write(Summary)

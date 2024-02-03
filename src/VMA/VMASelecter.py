@@ -6,7 +6,7 @@ from openpyxl.styles import Font,Border,Side,Alignment,Font,PatternFill
 import pandas as pd
 from openpyxl.utils import column_index_from_string
 from Utility.convertDataFrameToJPG import DataFrameToJPG
-from workspace import workSpaceRoot,GetStockFolder
+from workspace import workSpaceRoot,GetFuPanRoot,GetStockFolder
 import os
 
 # 边框
@@ -176,7 +176,7 @@ class CVMASelecter(object):
             res,data = self._Select(stockID,stockName,date,zhangDiefu,key,vma)
             if res == True:
                 results.append(data)
-        folderRoot= GetStockFolder(date) 
+        folderRoot= GetFuPanRoot(date) 
         datas = []
         fullPath = os.path.join(folderRoot,f"复盘摘要{date}.xlsx")
         mode='w'
