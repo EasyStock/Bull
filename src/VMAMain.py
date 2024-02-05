@@ -20,7 +20,7 @@ def Main():
     '''
     parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="")
     args = parser.parse_args()
-    #args.options = [5,]
+    args.options = [5,]
     
     if 0 in args.options:
         ResetVMAData(dbConnection) #重置训练数据集表
