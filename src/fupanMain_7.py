@@ -7,6 +7,7 @@ import pandas as pd
 import logging
 from workspace import workSpaceRoot,WorkSpaceFont,GetStockFolder
 logger = logging.getLogger()
+from Utility.convertDataFrameToJPG import DataFrameToJPG
 
 def formatSql_1(operator1, operator2, net,descption):
     # 两个营业部同时净买入卖出
@@ -71,22 +72,6 @@ def PrintSQLs(tradingDays):
         for sql in sqls:
             f.write(sql+'\n')
 
-def ConvertDataFrameToJPG(df,fullPath):
-    if df.empty:
-        return
-    from pandas.plotting import table
-    import matplotlib.pyplot as plt
-    plt.rcParams["font.sans-serif"] = [WorkSpaceFont]#显示中文字体
-    high = int(0.174 * df.shape[0]+0.5)+1
-    fig = plt.figure(figsize=(3, high), dpi=200)#dpi表示清晰度
-    ax = fig.add_subplot(111, frame_on=False) 
-    ax.xaxis.set_visible(False)  # hide the x axis
-    ax.yaxis.set_visible(False)  # hide the y axis
-    table(ax, df, loc='center')  # 将df换成需要保存的dataframe即可
-    plt.savefig(fullPath)
-    plt.close()
-
-
 def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
     sql = f'''select A.`股票代码`,B.`股票简称`,A.`最大连板天数` from (SELECT `股票代码`,max(`连续涨停天数`) As `最大连板天数` FROM stock.stockzhangting where `日期`> "{tradingDay}" and `连续涨停天数`>=4 group by `股票代码` order by `最大连板天数` DESC) As A, `stockBasicInfo` as B where A.`股票代码`=B.`股票代码`'''
     data, columns = dbConnection.Query(sql)
@@ -96,10 +81,8 @@ def GetZhouqiGaoBiao(dbConnection,tradingDay,today):
     df.to_excel(fullPath,index=False)
 
     rootDir = GetStockFolder(today)
-    fullPath = f"{rootDir}周期高标_{today}.jpg"
-    jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
+    fileName = f"周期高标_{today}"
+    DataFrameToJPG(df,["股票代码","股票简称"],rootDir,fileName)
 
 
 def GetFuPanList(dbConnection,tradingDay):
@@ -112,46 +95,29 @@ def GetFuPanList(dbConnection,tradingDay):
     fullPath = f'''{rootDir}明日预期_{tradingDay}.xlsx'''
     df.to_excel(fullPath,index=False)
 
-    fullPath = f"{rootDir}高标_{tradingDay}.jpg"
-    jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称"])
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
+    fileName = f"高标_{tradingDay}"
+    DataFrameToJPG(df,["股票代码","股票简称"],rootDir,fileName)
 
     lianbanDf = df[df["连续涨停天数"]>=2]
-    fullPath = f"{rootDir}连板_{tradingDay}.jpg"
-    jpgDataFrame = pd.DataFrame(lianbanDf,columns=["股票代码","股票简称"])
-    jpgDataFrame.reset_index(drop=True,inplace=True)
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
+    fileName = f"连板_{tradingDay}"
+    DataFrameToJPG(lianbanDf,["股票代码","股票简称"],rootDir,fileName)
 
     shoubanDF =  df[df["连续涨停天数"]==1]
-    fullPath = f"{rootDir}板1_{tradingDay}.jpg"
-    jpgDataFrame = pd.DataFrame(shoubanDF,columns=["股票代码","股票简称"])
-    jpgDataFrame.reset_index(drop=True,inplace=True)
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
+    fileName = f"今日1板_{tradingDay}"
+    DataFrameToJPG(shoubanDF,["股票代码","股票简称"],rootDir,fileName)
 
     dF2 =  df[df["连续涨停天数"]==2]
-    fullPath = f"{rootDir}板2_{tradingDay}.jpg"
-    jpgDataFrame = pd.DataFrame(dF2,columns=["股票代码","股票简称"])
-    jpgDataFrame.reset_index(drop=True,inplace=True)
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
+    fileName = f"今日2板_{tradingDay}"
+    DataFrameToJPG(dF2,["股票代码","股票简称"],rootDir,fileName)
+
 
     dF3 =  df[df["连续涨停天数"]==3]
-    fullPath = f"{rootDir}板3_{tradingDay}.jpg"
-    jpgDataFrame = pd.DataFrame(dF3,columns=["股票代码","股票简称"])
-    jpgDataFrame.reset_index(drop=True,inplace=True)
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
+    fileName = f"今日3板_{tradingDay}"
+    DataFrameToJPG(dF3,["股票代码","股票简称"],rootDir,fileName)
 
     dF4 =  df[df["连续涨停天数"]>=4]
-    fullPath = f"{rootDir}板4_{tradingDay}.jpg"
-    jpgDataFrame = pd.DataFrame(dF4,columns=["股票代码","股票简称"])
-    jpgDataFrame.reset_index(drop=True,inplace=True)
-    ConvertDataFrameToJPG(jpgDataFrame,fullPath)
-    logger.info(fullPath)
-
+    fileName = f"今日4板及以上_{tradingDay}"
+    DataFrameToJPG(dF4,["股票代码","股票简称"],rootDir,fileName)
 
 def FupanDaily():
     dbConnection = ConnectToDB()

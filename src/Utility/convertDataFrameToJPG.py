@@ -1,7 +1,7 @@
 
 from workspace import workSpaceRoot,WorkSpaceFont
 import pandas as pd
-
+import logging
 
 def ConvertDataFrameToJPG(df,fullPath):
     if df.empty:
@@ -28,11 +28,11 @@ def DataFrameToJPG(df,columns,rootPath, fileName):
             if index + step <= size:
                 tmp = df.iloc[index:index+step,]
             fullPath = f"{rootPath}{fileName}_{int(index/step+1)}.jpg"
-            print(fullPath)
+            logging.info(fullPath)
             jpgDataFrame = pd.DataFrame(tmp,columns=columns)
             ConvertDataFrameToJPG(jpgDataFrame,fullPath)
     else:
         fullPath = f"{rootPath}{fileName}.jpg"
-        print(fullPath)
+        logging.info(fullPath)
         jpgDataFrame = pd.DataFrame(df,columns=columns)
         ConvertDataFrameToJPG(jpgDataFrame,fullPath)
