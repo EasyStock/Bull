@@ -50,11 +50,11 @@ if __name__ == "__main__":
     indexParam = {
         "抗跌分数":{
             "startDay":"2024-01-02",
-            "endDay":"2024-01-31",
+            "endDay":"2024-02-05",
         },
         "领涨分数":{
-            "startDay":"2024-02-01",
-            "endDay":"2024-02-01",
+            "startDay":"2024-02-06",
+            "endDay":"2024-02-06",
         }
     }
     mgr = CScoreMgr(dbConnection)
