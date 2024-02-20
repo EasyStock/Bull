@@ -87,11 +87,10 @@ def NewStock(dbConnection,tradingDays):
             ban = "科创板"
         elif re.match('^8.*',stockID) is not None:
             ban = "北交所"
-            
+            data.append((stockName,date,ban))
         else:
             ban = "未知"
 
-        data.append((stockName,date,ban))
     daxin = ForamtKeZhuanZaiSummary_NewStock(data)
     return daxin
     #打新

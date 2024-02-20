@@ -54,14 +54,14 @@ if __name__ == "__main__":
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-02-06",
+            "endDay":"2024-02-19",
         }
     }
     mgr = CScoreMgr(dbConnection)
     mgr.Score(indexParam)
-    mgr.Select(indexParam)
-    # dates = ("2024-01-25","2024-01-26")
-    # mgr.UnionSelect(dates)
+    # mgr.Select(indexParam)
+    dates = ("2024-02-06","2024-02-08","2024-02-19")
+    mgr.UnionSelect(dates)
 
 
     
