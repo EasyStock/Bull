@@ -167,6 +167,10 @@ class CVMASelecter(object):
         self.df = pd.DataFrame(results,columns=columns)
         self.df['涨跌幅'] = self.df['涨跌幅'].astype(float)
         self.df[key] = self.df[key].astype(float)
+        folderRoot= GetStockFolder(date) 
+
+        top50 = self.df.head(50)
+        DataFrameToJPG(top50,("股票代码","股票简称"),folderRoot,f"爆量_{VMA}_{vmaThreshold}_top50")
         results = []
         for _,row in self.df.iterrows():
             stockID = row["股票代码"]
@@ -203,6 +207,6 @@ class CVMASelecter(object):
                 datas.append( {"代码": stockID,"名称":stockName})
             f.formatColumnsWidth(sheet)
             
-        folderRoot= GetStockFolder(date) 
+        
         jpgDataFrame = pd.DataFrame(datas, columns=("代码","名称"))
         DataFrameToJPG(jpgDataFrame,("代码","名称"),folderRoot,f"爆量_{VMA}_{vmaThreshold}")

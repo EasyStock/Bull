@@ -1,4 +1,5 @@
 from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday,SendZhuanZaiPingJiChanged
+from message.feishu.webhook_zhuanzaiSummary import ZhuanZaiSummary
 from mysql.connect2DB import ConnectToDB
 from DBOperating import GetTradingDateLastN
 from time import sleep
@@ -41,3 +42,6 @@ if __name__ == "__main__":
         
         if 7 in args.options:
             SendZhuanZaiPingJiChanged(dbConnection,tradingDays,args.webhook,args.secret)
+
+        if 8 in args.options:
+            ZhuanZaiSummary(dbConnection,tradingDays,args.webhook,args.secret)

@@ -276,3 +276,221 @@ def FormatCardOfKeZhuanZaiPingJiChanged(date,df,titles):
     elements.append(beizhu)
     title = f'''{date} 评级变动通知'''
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
+
+
+def ForamtKeZhuanZaiSummary(datas:list,date):
+    bigIndex = ["一. ","二. ","三. ","四. ","五. ","六. ","七. ","八. ","九. ","十. ",]
+    elements = []
+    tag = {"tag":"hr"}
+    for index, element in enumerate(datas):
+        if len(element) == 0:
+            continue
+        firstLine = f'''**{bigIndex[index]}** {element[0]}\n'''
+        elements.append(_markdown(firstLine))
+        if len(element) > 1:
+            elements.extend(element[1:])
+
+        elements.append(tag)
+
+    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    title = f'''可转债复盘 {date} '''
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
+
+
+def ForamtKeZhuanZaiSummary_PingJi(df,titles):
+    ###可转债评级变动通知
+    if df.empty: 
+        return []
+    
+    title = _markdownFontColor("今日可转债评级变动","green")
+    elements = [title,]
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[3],"text_align":"center"}]}]}
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index, row in df.iterrows():
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = row["转债代码"]
+        stockName = row["转债名称"]
+        pingJi = _markdownFontColor(row["评级"])
+        pingJiYestoday = _markdownFontColor(row["昨日评级"],"green")
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":pingJiYestoday,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":pingJi,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+def ForamtKeZhuanZaiSummary_PingJiBuFu(df,titles):
+    ###可转债评级不符合
+    if df.empty: 
+        return []
+    
+    title = _markdownFontColor("近5日可转债评级不符合","green")
+    elements = [title,]
+
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},]}
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index, row in df.iterrows():
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = row["转债代码"]
+        stockName = row["转债名称"]
+        pingJi = _markdownFontColor(row["评级"])
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":pingJi,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+def ForamtKeZhuanZaiSummary_YouXiFuZhai(df,titles):
+    ###有息负债率大于70
+    if df.empty: 
+        return []
+    
+    title = _markdownFontColor("近5日可转债有息负债率大于70","green")
+    elements = [title,]
+
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},]}
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index, row in df.iterrows():
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = row["转债代码"]
+        stockName = row["转债名称"]
+        fuzhailv = _markdownFontColor(row["有息负债率"])
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":fuzhailv,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+def ForamtKeZhuanZaiSummary_shengyuGuiMo(df,titles):
+    ###剩余规模小于3.5
+    if df.empty: 
+        return []
+    
+    title = _markdownFontColor("近5日可转债剩余规模小于3.5","green")
+    elements = [title,]
+
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},]}
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index, row in df.iterrows():
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = row["转债代码"]
+        stockName = row["转债名称"]
+        fuzhailv = _markdownFontColor(row["剩余规模"])
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":fuzhailv,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+def ForamtKeZhuanZaiSummary_ST(df,titles):
+    ###正股被ST了
+    if df.empty: 
+        return []
+    
+    title = _markdownFontColor("近5日可转债正股被ST","green")
+    elements = [title,]
+
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[0],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[1],"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":titles[2],"text_align":"center"}]},]}
+    elements.append(stockHead)
+
+    background_style = "default"
+    for index, row in df.iterrows():
+        if index % 2 == 1:
+            background_style = "grey"
+        stockID = row["转债代码"]
+        stockName = _markdownFontColor(row["转债名称"])
+        fuzhailv = _markdownFontColor(row["正股名称"])
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":fuzhailv,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+def ForamtKeZhuanZaiSummary_NewStock(datas):
+    ###新股申购
+    if len(datas) == 0:
+        return []
+    
+    title = _markdownFontColor("新股申购","green")
+    elements = [title,]
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**名称**","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**日期**","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**类别**","text_align":"center"}]}]}
+    elements.append(stockHead)
+
+    for index,stock in enumerate(datas):
+        stockName = stock[0]
+        date = stock[1]
+        type = stock[2]
+        background_style = "default"
+        if index % 2 == 1:
+            background_style = "grey"
+
+        if  type.find("北交所") != -1:
+            stockName = _markdownFontColor(stockName)
+            date = _markdownFontColor(date)
+            type = _markdownFontColor(type)
+
+        line = {"tag":"column_set","flex_mode":"none","background_style":background_style,"columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":date,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":type,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+def ForamtKeZhuanZaiSummary_qiangsu(datas):
+    #强赎公告
+    if len(datas) == 0:
+        return []
+    
+    title = _markdownFontColor("近5日临近到期或强赎提醒","green")
+    elements = [title,]
+    stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**转债名称**","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"**公告内容**","text_align":"center"}]}]}
+    elements.append(stockHead)
+
+    for stockID in datas:
+        stockName = f'''{datas[stockID]["转债名称"]}'''
+        tips = "\n".join(datas[stockID]["公告"])
+        price = datas[stockID]["现价"]
+        if price <=140:
+            stockName = _markdownFontColor(stockName)
+            tips = _markdownFontColor(tips)
+
+        line = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":tips,"text_align":"center"}]}],"horizontal_spacing":"small"}
+        elements.append(line)
+
+    return elements
+
+
+def ForamtKeZhuanZaiSummary_NewGaiNian5Days(datas):
+    if len(datas) == 0:
+        return []
+    
+    title = _markdownFontColor("近5日新增概念","green")
+    elements = [title,]
+    for index,d in enumerate(datas):
+        date = d[0]
+        gaiNian = d[1]
+        stocks = d[2]
+        if len(stocks) == 0:
+            s = f'''**{_markdownFontColor(date)}**  新增概念:**{_markdownFontColor(gaiNian)}** **(无此概念相关的可转债)**'''
+            line1 = {"content":s,"tag":"markdown"}
+            elements.append(line1)
+        else:
+            s = f'''{index+1}. {date}  新增概念:**{_markdownFontColor(gaiNian)}**,**此概念相关的可转债如下:**'''
+            line1 = {"content":s,"tag":"markdown"}
+            stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债代码","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债名称","text_align":"center"}]}]}
+            elements.append(line1)
+            elements.append(stockHead)
+            for s in stocks:
+                stockID = s[0]
+                stockName = s[1]
+                line2 = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockID,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":stockName,"text_align":"center"}]}],"horizontal_spacing":"small"}
+                elements.append(line2)
+                
+        elements.append({"content":"\n","tag":"markdown"})
+
+    return elements
