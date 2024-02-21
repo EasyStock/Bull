@@ -17,10 +17,10 @@ if __name__ == "__main__":
     parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="1. 可转债预警, 2. 当日新概念提示 3. 5日新概念提示")
     args = parser.parse_args()
     dbConnection = ConnectToDB()
-    tradingDays = GetTradingDateLastN(dbConnection,5)
     # args.webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a"
     # args.secret = "brYyzPbSks4OKnMgdwKvIh"
     # args.options = [1,2,3,4,5,6,7]
+    tradingDays = GetTradingDateLastN(dbConnection,15)
     if args.webhook and args.secret:
         if 1 in args.options:
             SendKeZhuanZaiYuJing(dbConnection,tradingDays,args.webhook,args.secret)

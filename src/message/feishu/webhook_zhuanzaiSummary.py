@@ -47,8 +47,9 @@ def ShengYuGuiMo(dbConnection,tradingDays):
     sql = f'''SELECT distinct(`转债代码`),`转债名称`,`剩余规模` FROM stock.kezhuanzhai_all where `日期` >= "{last5Days}" and  `剩余规模` <3.5 and `转债代码` not in (SELECT `转债代码` FROM stock.kezhuanzhai_all where `日期` = "{last6Days}" and `剩余规模` <3.5 );'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
+    df_unique = df.drop_duplicates(subset=['转债代码', ],keep='first')
     title = ["**代码**","**名称**","**剩余规模**"]
-    pingJi = ForamtKeZhuanZaiSummary_shengyuGuiMo(df,title)
+    pingJi = ForamtKeZhuanZaiSummary_shengyuGuiMo(df_unique,title)
     return pingJi
     # 近5日剩余规模小于3.5
 

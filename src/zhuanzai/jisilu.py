@@ -171,6 +171,7 @@ class CJiSiLu(object):
         "if-modified-since":"Fri, 27 Oct 2023 12:57:15 GMT",
         }
         url='https://www.jisilu.cn/webapi/cb/list/'
+        requests.adapters.DEFAULT_RETRIES = 5
         response = requests.request("GET",url,headers=sse_head,verify = False)
         #print(response, response.text)
         if len(response.text)!=0:
@@ -349,6 +350,7 @@ class CJiSiLu(object):
         url=f'''https://www.jisilu.cn/data/new_stock/apply/?___jsl=LST___t={t}'''
 
         payload = "market%5B%5D=shmb&market%5B%5D=shkc&market%5B%5D=szmb&market%5B%5D=szcy&market%5B%5D=bj&rp=22&page=1&pageSize=1000"
+        requests.adapters.DEFAULT_RETRIES = 5
         response = requests.request("GET",url,headers=sse_head, data= payload)
         #print(response, response.text)
         if len(response.text)!=0:

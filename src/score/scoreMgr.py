@@ -400,7 +400,7 @@ class CScoreMgr(object):
         for res in results:
             date = res[0]
             didian = res[1].split('"')[-2]
-            sql1 = f'''select A.`转债代码`,B.`转债名称`,B.`正股代码`,B.`正股名称`,A.`成交量分数` as `成交量分数({date})`,A.`抗跌分数` as `抗跌分数({date})`,A.`领涨分数` as `领涨分数({date})`,A.`剩余规模分数` as `剩余规模分数({date})`,A.`总分` as `总分({date})` from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{date}" and B.`日期` = "{didian}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC limit {50};'''
+            sql1 = f'''select A.`转债代码`,B.`转债名称`,A.`成交量分数` as `成交量分数({date})`,A.`抗跌分数` as `抗跌分数({date})`,A.`领涨分数` as `领涨分数({date})`,A.`剩余规模分数` as `剩余规模分数({date})`,A.`总分` as `总分({date})` from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{date}" and B.`日期` = "{didian}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC limit {50};'''
             results1, columns1 = self.dbConnection.Query(sql1)
             df = pd.DataFrame(results1,columns=columns1)
             dfs.append(df)
