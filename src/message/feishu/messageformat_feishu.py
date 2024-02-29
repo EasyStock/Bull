@@ -480,7 +480,7 @@ def ForamtKeZhuanZaiSummary_NewGaiNian5Days(datas):
             line1 = {"content":s,"tag":"markdown"}
             elements.append(line1)
         else:
-            s = f'''{index+1}. {date}  新增概念:**{_markdownFontColor(gaiNian)}**,**此概念相关的可转债如下:**'''
+            s = f'''{date}  新增概念:**{_markdownFontColor(gaiNian)}**,**此概念相关的可转债如下:**'''
             line1 = {"content":s,"tag":"markdown"}
             stockHead = {"tag":"column_set","flex_mode":"none","background_style":"grey","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债代码","text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"top","elements":[{"tag":"markdown","content":"转债名称","text_align":"center"}]}]}
             elements.append(line1)
@@ -494,3 +494,20 @@ def ForamtKeZhuanZaiSummary_NewGaiNian5Days(datas):
         elements.append({"content":"\n","tag":"markdown"})
 
     return elements
+
+
+def ForamtKeZhuanZaiSummary_ReDianToday(datas):
+    if len(datas) == 0:
+        return []
+    
+    title = _markdownFontColor("今日热点概念Top2","green")
+    elements = [title,]
+    for gainian in datas:
+        df = datas[gainian]
+        stockNames = "       ".join(list(df['转债名称']))
+        s = f'''{_markdownFontColor(gainian)} **概念:**\n {stockNames}'''
+        line1 = {"content":s,"tag":"markdown"}
+        elements.append(line1)
+
+    return elements
+

@@ -20,6 +20,7 @@ from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_St
 from writeFuPanXLSX import WriteFuPanSummaryToXLSX
 from ValidateData import Validate_ALL
 from VMA.VMAMgr import VAMSelector
+from Score import ScoreZaiEveryDay
 
 import pytz
 import datetime
@@ -47,6 +48,7 @@ def AnalysisDataOfKeZhuanZhai(dbConnection,tradingDays,logger):
     if len(tradingDays) > 5:
         tradingDays = tradingDays[-5:]
     comparer.CompareWithIndex_ALL(tradingDays)
+    ScoreZaiEveryDay(dbConnection,tradingDays)
     logger.info(f'==============结束分析可转债:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 def AnalysisDataOfStock(dbConnection,tradingDays,logger):
@@ -176,10 +178,10 @@ def Main():
     '''
     parser.add_argument('-o','--options', action="store",default=True,nargs="+",type=int, help="0.分析并发布分析结果 1. 分析可转债数据, 2. 分析股票数据 3. 发送可转债分析结果, 发送股票分析结果")
     args = parser.parse_args()
-    #args.options = [0,1,2,3,4]
+    args.options = [0,1,2,3,4]
 
-    if getDataStatus(dbConnection,tradingDays,logger) == False:
-        return None
+    # if getDataStatus(dbConnection,tradingDays,logger) == False:
+    #     return None
     
     if 0 in args.options:
         ######################

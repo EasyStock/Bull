@@ -15,6 +15,7 @@ import time
 from CompareWithIndex.StockCompareWithIndex import CStockCompareWithIndex
 from DBOperating import GetTradingDateLastN
 
+
 # To Do list
 # 20CM 划分
 # 10CM/20CM 首板奖励率
@@ -27,5 +28,5 @@ if __name__ == "__main__":
     dbConnection = ConnectToDB()
     logger = StartToInitLogger("AA")
     comparer = CStockCompareWithIndex(dbConnection,logger)
-    tradingDays = GetTradingDateLastN(dbConnection,5)
+    tradingDays = GetTradingDateLastN(dbConnection,2)
     comparer.CompareWithIndex_ALL(tradingDays)

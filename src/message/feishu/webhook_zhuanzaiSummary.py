@@ -1,7 +1,8 @@
 from message.feishu.webhook_api import sendMessageByWebhook
 from message.feishu.messageformat_feishu import ForamtKeZhuanZaiSummary,ForamtKeZhuanZaiSummary_PingJi,ForamtKeZhuanZaiSummary_NewStock, \
                                                 ForamtKeZhuanZaiSummary_qiangsu,ForamtKeZhuanZaiSummary_NewGaiNian5Days,ForamtKeZhuanZaiSummary_PingJiBuFu, \
-                                                ForamtKeZhuanZaiSummary_YouXiFuZhai,ForamtKeZhuanZaiSummary_shengyuGuiMo,ForamtKeZhuanZaiSummary_ST
+                                                ForamtKeZhuanZaiSummary_YouXiFuZhai,ForamtKeZhuanZaiSummary_shengyuGuiMo,ForamtKeZhuanZaiSummary_ST, \
+                                                ForamtKeZhuanZaiSummary_ReDianToday
 import pandas as pd
 import json
 import re
@@ -70,7 +71,7 @@ def NewStock(dbConnection,tradingDays):
     sql = f'''SELECT `股票代码`,`股票名称`,`申购日` FROM stock.newstocks where `申购日期` >="{tradingDays[-1]}" order by `申购日期` ASC;'''
     results, _ = dbConnection.Query(sql)
     if len(results) == 0:
-        return
+        return []
     
     data = []
     for result in results:
@@ -96,13 +97,29 @@ def NewStock(dbConnection,tradingDays):
     return daxin
     #打新
 
+def GetNewGaiNians(dbConnection,tradingDays):
+    sql = f'''SELECT * FROM stock.gainian where `概念名称` not in (SELECT `概念名称` FROM stock.gainian where `更新日期`="{tradingDays[-2]}") and `更新日期`="{tradingDays[-1]}";'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    if df.empty:
+        return []
+    
+    ret = []
+    for result in results:
+        gainian = result[0]
+        ret.append(gainian)
+        sql1 = f'''INSERT IGNORE INTO `stock`.`stockgainiannew` (`日期`, `新概念`) VALUES ('{tradingDays[-1]}', '{gainian}');'''
+        dbConnection.Execute(sql1)
+    return ret
+
 def NewGaiNian5Days(dbConnection,tradingDays):
     #近5日新概念
+    GetNewGaiNians(dbConnection,tradingDays)
     last5Days = tradingDays[-5]
     sql = f'''SELECT `日期`,`新概念`  FROM stock.stockgainiannew where `日期` >= "{last5Days}";'''
     results, _ = dbConnection.Query(sql)
     if len(results) == 0:
-        return
+        return []
     
     data = []
     for result in results:
@@ -158,8 +175,34 @@ def QiangShu(dbConnection,tradingDays):
     return qiangshu
 
 
+def ReDianOfToday(dbConnection,tradingDays):
+    # 今日热点概念相关可转债
+    today = tradingDays[-2]
+    sql = f'''SELECT * FROM stock.rediandaily where `日期` = "{today}";'''
+    results, _ = dbConnection.Query(sql)
+    if len(results) == 0:
+        return
+    
+    data = {}
+    for result in results:
+        redians = result[1].split(';')
+        for redian in redians:
+            sql2 = f'''SELECT distinct(A.`转债代码`),A.`转债名称`, A.`现价` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`日期` = "{today}" and B.`所属概念` like '%{redian}%';'''
+            results2, columns = dbConnection.Query(sql2)
+            data[redian] = pd.DataFrame(results2,columns = columns)
+
+    redian = ForamtKeZhuanZaiSummary_ReDianToday(data)
+    return redian
+
+
+
+
 def ZhuanZaiSummary(dbConnection,tradingDays,webhook,secret):
     datas = []
+    redian = ReDianOfToday(dbConnection,tradingDays)
+    if len(redian) > 0:
+        datas.append(redian)
+
     daxin = NewStock(dbConnection,tradingDays)
     if len(daxin) > 0:
         datas.append(daxin)
