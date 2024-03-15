@@ -158,12 +158,27 @@ class CSelectZai(object):
         resDf["平均分"] = resDf.apply(lambda row: self.formatVolumn(row['平均分']), axis=1)
         resDf["方差"] = resDf.apply(lambda row: self.formatVolumn(row['方差']), axis=1)
         resDf = pd.merge(resDf,self.allBasicInfo, how='inner',left_on=("转债代码",),right_on=("转债代码",))
-        #matchedDf = res[res["符合条件"]]
+        
         resDf.sort_values(['平均分',"溢价率"],axis=0,ascending=False,inplace=True)
         columns = self.basicInfoColumns + ["平均分","符合条件"]
         result = pd.DataFrame(resDf,columns = columns)
-        result.to_excel("/tmp/aa.xlsx",index=False)
-        print(result)
+        
+
+        fodler = GetZhuanZaiFolder(self.tradingDays[-1])
+        fileName1 = f'''可转债评分EX_符合条件_带分数'''
+        fileName2 = f'''可转债评分EX_符合条件_THS'''
+
+        xlsxFileName = os.path.join(fodler,f"可转债评分EX_全_{self.tradingDays[-1]}.xlsx")
+        xlsxFileName_Matched = os.path.join(fodler,f"可转债评分EX_符合条件的_{self.tradingDays[-1]}.xlsx")
+        result.to_excel(xlsxFileName,index=False)
+
+        matchedDf = result[result["符合条件"]]
+        matchedDf.reset_index(inplace=True)
+        matchedDf.to_excel(xlsxFileName_Matched,index=False)
+        DataFrameToJPG(matchedDf,["转债代码","转债名称","平均分"],fodler,fileName1)
+        DataFrameToJPG(matchedDf,["转债代码","转债名称"],fodler,fileName2)
+
+
 
 
     

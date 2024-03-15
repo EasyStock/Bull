@@ -54,7 +54,7 @@ def Score1():
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-02-28",
+            "endDay":"2024-03-14",
         }
     }
     mgr = CScoreMgr(dbConnection)
@@ -84,7 +84,7 @@ def Select2():
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-02-28",
+            "endDay":"2024-03-14",
         }
     }
     tradingDays = GetTradingDateLastN(dbConnection,15)
@@ -93,7 +93,7 @@ def Select2():
 
 
 if __name__ == "__main__":
-    #Score1()
+    Score1()
     #Score2()
     Select2()
 

@@ -193,11 +193,12 @@ def Main():
 
         Validate_ALL(dbConnection,tradingDays)
 
-        #发送可转债分析结果
-        SendReportOfKeZhuanZai(dbConnection,tradingDays,logger)
-
         #发送股票分析结果
         SendReportOfStock(dbConnection,tradingDays,logger)
+
+        #发送可转债分析结果
+        SendReportOfKeZhuanZai(dbConnection,tradingDays,logger)
+        
         ######################
 
     else:

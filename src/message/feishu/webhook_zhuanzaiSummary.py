@@ -177,7 +177,7 @@ def QiangShu(dbConnection,tradingDays):
 
 def ReDianOfToday(dbConnection,tradingDays):
     # 今日热点概念相关可转债
-    today = tradingDays[-2]
+    today = tradingDays[-1]
     sql = f'''SELECT * FROM stock.rediandaily where `日期` = "{today}";'''
     results, _ = dbConnection.Query(sql)
     if len(results) == 0:

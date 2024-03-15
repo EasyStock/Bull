@@ -221,7 +221,7 @@ class CJiSiLu(object):
             newDf = newDf[newDf['回售触发价']>0]
             newDf = newDf[newDf['剩余年限']>1]
             newDf = newDf[newDf['剩余规模']>0.5]
-            newDf = newDf[newDf['提示'].str.contains('[\s\S]*(公告要强赎|临近到期|最后交易日|最后转股日)+?[\s\S]*') == False]
+            newDf = newDf[newDf['提示'].str.match('[\s\S]*(公告要强赎|临近到期|最后交易日|最后转股日)+?[\s\S]*') == False]
             newDf.sort_values('PB',axis=0,ascending=False,inplace=True)
             self.logger.info(f'{newDf}')
             self.logger.info(f'{newDf.shape}')
