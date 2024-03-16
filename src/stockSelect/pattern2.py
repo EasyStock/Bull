@@ -55,7 +55,7 @@ class CStockPattern2(object):
         tradingDays = self.GetTradingDates()
         res = self.GetStockData(tradingDays[0],days=10,threshold=9)
         df = pd.DataFrame(res,columns = ["股票代码","股票简称","结果"])
-        df = df[df['股票简称'].str.match('[\s\S]*(ST)+?[\s\S]*') == False]
+        df = df[df['股票简称'].str.match('[\s\S]*(ST|退)+?[\s\S]*') == False]
         df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688)+?[\s\S]*') == False]
         df.to_excel('/tmp/九连阳.xlsx',index=False)
         DataFrameToJPG(df,("股票代码","股票简称"),"/tmp/","九连阳")
