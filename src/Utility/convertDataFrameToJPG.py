@@ -20,6 +20,8 @@ def ConvertDataFrameToJPG(df,fullPath):
     plt.close()
 
 def DataFrameToJPG(df,columns,rootPath, fileName):
+    if df.empty:
+        return
     size = df.shape[0]
     step = 80
     if size > step:

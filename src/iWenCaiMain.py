@@ -7,6 +7,9 @@ from ColoredLog import StartToInitLogger
 from iWenCai.FetchKeZhuanZaiDailyData import CFetchKeZhuanZaiDailyData
 from iWenCai.FetchVMAData import CFetchVMAData
 from iWenCai.FetchIndex import CFetchIndexDataMgr
+from iWenCai.FetchBanKuaiStockMatch import CFetchBanKuaiStockMatchData
+from bankuai.bankuaiMgr import GetAllBasicBanKuaiData
+import time
 
 def GetBanKuaiZhishuData(dbConnection,tradingDays):
     lastDay = tradingDays[-1]
@@ -70,6 +73,15 @@ def GetIndexDataLastNDays(dbConnection,tradingDays,logger):
         f = CFetchIndexDataMgr(dbConnection,treadingDay)
         f.RequestAllPagesDataAndWriteToDB()
 
+def GetBanKuaiStockMatchData(dbConnection,tradingDays):
+    lastDay = tradingDays[-1]
+    bankuai = GetAllBasicBanKuaiData(dbConnection)
+    for _,row in bankuai.iterrows():
+        f = CFetchBanKuaiStockMatchData(dbConnection,lastDay,row["板块代码"],row["板块名称"])
+        f.RequestAllPagesDataAndWriteToDB(100)
+        time.sleep
+
+
 if __name__ == '__main__':
     logger = StartToInitLogger("爱问财获取数据")
     dbConnection = ConnectToDB()
@@ -81,4 +93,6 @@ if __name__ == '__main__':
     #TestGetDailyData(dbConnection)
     #GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays,logger)
     #TestFechVMAData(dbConnection,tradingDays)
-    GetIndexDataLastNDays(dbConnection,tradingDays,logger)
+    #GetIndexDataLastNDays(dbConnection,tradingDays,logger)
+
+    GetBanKuaiStockMatchData(dbConnection,tradingDays)

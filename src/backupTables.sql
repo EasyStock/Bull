@@ -19,7 +19,15 @@ CREATE TABLE `bankuai_index_dailyinfo` (
   `下跌家数(家)` varchar(45) DEFAULT NULL,
   `流通市值(元)` varchar(45) DEFAULT NULL,
   `总市值(元)` varchar(45) DEFAULT NULL,
+  `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`板块代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `bankuai_stock_match` (
+  `板块代码` varchar(45) NOT NULL,
+  `股票代码` varchar(45) NOT NULL,
+  `更新日期` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`板块代码`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
 CREATE TABLE `caozuo` (
@@ -154,6 +162,27 @@ CREATE TABLE `gainian` (
   PRIMARY KEY (`概念名称`,`更新日期`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
+CREATE TABLE `index_dailyinfo` (
+  `日期` varchar(45) NOT NULL,
+  `指数代码` varchar(45) NOT NULL,
+  `指数名称` varchar(45) NOT NULL,
+  `开盘价(点)` varchar(45) DEFAULT NULL,
+  `收盘价(点)` varchar(45) DEFAULT NULL,
+  `最高价(点)` varchar(45) DEFAULT NULL,
+  `最低价(点)` varchar(45) DEFAULT NULL,
+  `成交量(股)` varchar(45) DEFAULT NULL,
+  `成交额(元)` varchar(45) DEFAULT NULL,
+  `涨跌幅(%)` varchar(45) DEFAULT NULL,
+  `量比` varchar(45) DEFAULT NULL,
+  `换手率(%)` varchar(45) DEFAULT NULL,
+  `上涨家数(家)` varchar(45) DEFAULT NULL,
+  `下跌家数(家)` varchar(45) DEFAULT NULL,
+  `流通市值(元)` varchar(45) DEFAULT NULL,
+  `总市值(元)` varchar(45) DEFAULT NULL,
+  `顶底分型` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`日期`,`指数代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
 CREATE TABLE `jenkins_status` (
   `date` varchar(45) NOT NULL,
   `data` tinyint(1) DEFAULT NULL,
@@ -255,6 +284,16 @@ CREATE TABLE `kezhuanzai_score` (
   `领涨分数周期` varchar(255) DEFAULT NULL,
   `领涨分数` float DEFAULT NULL,
   `市值分数` float DEFAULT NULL,
+  `剩余规模分数` float DEFAULT NULL,
+  `总分` float DEFAULT NULL,
+  PRIMARY KEY (`日期`,`转债代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `kezhuanzai_score_everyday` (
+  `日期` varchar(45) NOT NULL,
+  `转债代码` varchar(45) NOT NULL,
+  `成交量分数` float DEFAULT NULL,
+  `比指数分数` float DEFAULT NULL,
   `剩余规模分数` float DEFAULT NULL,
   `总分` float DEFAULT NULL,
   PRIMARY KEY (`日期`,`转债代码`)
@@ -369,6 +408,26 @@ CREATE TABLE `newstocks` (
   PRIMARY KEY (`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
+CREATE TABLE `percentile_bankuai` (
+  `板块代码` varchar(45) NOT NULL,
+  `百分位数` varchar(45) NOT NULL,
+  `板块名称` varchar(45) DEFAULT NULL,
+  `开盘价(点)` varchar(45) DEFAULT NULL,
+  `收盘价(点)` varchar(45) DEFAULT NULL,
+  `最高价(点)` varchar(45) DEFAULT NULL,
+  `最低价(点)` varchar(45) DEFAULT NULL,
+  `成交量(股)` varchar(45) DEFAULT NULL,
+  `成交额(元)` varchar(45) DEFAULT NULL,
+  `涨跌幅(%)` varchar(45) DEFAULT NULL,
+  `量比` varchar(45) DEFAULT NULL,
+  `换手率(%)` varchar(45) DEFAULT NULL,
+  `上涨家数(家)` varchar(45) DEFAULT NULL,
+  `下跌家数(家)` varchar(45) DEFAULT NULL,
+  `流通市值(元)` varchar(45) DEFAULT NULL,
+  `总市值(元)` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`板块代码`,`百分位数`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
 CREATE TABLE `rediandaily` (
   `日期` varchar(45) NOT NULL,
   `热点` varchar(255) DEFAULT NULL,
@@ -434,6 +493,7 @@ CREATE TABLE `stockdailyinfo` (
   `3日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第4天开盘价-第2开盘价)/第2开盘价 X100%',
   `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
   `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
+  `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 

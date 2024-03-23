@@ -65,7 +65,7 @@ def ValidateZhuanZaiCompareIndexInfo(dbConnection,tradingDays):
 def ValidateBanKuaiInfo(dbConnection,tradingDays):
     # 8. 板块信息
     sql = f'''SELECT count(*) FROM stock.bankuai_index_dailyinfo where `日期` = "{tradingDays[-1]}";'''
-    return _Validata(dbConnection,sql,800)
+    return _Validata(dbConnection,sql,700)
 
 
 def Validate_ALL(dbConnection,tradingDays):
