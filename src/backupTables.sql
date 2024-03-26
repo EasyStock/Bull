@@ -23,6 +23,27 @@ CREATE TABLE `bankuai_index_dailyinfo` (
   PRIMARY KEY (`日期`,`板块代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
+CREATE TABLE `bankuai_index_score_daily` (
+  `日期` varchar(45) NOT NULL,
+  `板块代码` varchar(45) NOT NULL,
+  `板块名称` varchar(45) NOT NULL,
+  `开盘价分数` float DEFAULT NULL,
+  `收盘价分数` float DEFAULT NULL,
+  `最高价分数` float DEFAULT NULL,
+  `最低价分数` float DEFAULT NULL,
+  `成交量分数` float DEFAULT NULL,
+  `成交额分数` float DEFAULT NULL,
+  `涨跌幅分数` float DEFAULT NULL,
+  `涨跌幅相对分数` float DEFAULT NULL,
+  `量比分数` float DEFAULT NULL,
+  `换手率分数` float DEFAULT NULL,
+  `上涨家数分数` float DEFAULT NULL,
+  `下跌家数分数` float DEFAULT NULL,
+  `流通市值分数` float DEFAULT NULL,
+  `总市值分数` float DEFAULT NULL,
+  PRIMARY KEY (`日期`,`板块代码`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
 CREATE TABLE `bankuai_stock_match` (
   `板块代码` varchar(45) NOT NULL,
   `股票代码` varchar(45) NOT NULL,
@@ -432,6 +453,16 @@ CREATE TABLE `rediandaily` (
   `日期` varchar(45) NOT NULL,
   `热点` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`日期`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `stock_score_daily` (
+  `日期` varchar(45) NOT NULL,
+  `股票代码` varchar(45) NOT NULL,
+  `板块分数` float DEFAULT NULL,
+  `成交量分数` float DEFAULT NULL,
+  `流通市值分数` float DEFAULT NULL,
+  `比大盘分数` float DEFAULT NULL,
+  PRIMARY KEY (`日期`,`股票代码`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
 
 CREATE TABLE `stockbasicinfo` (

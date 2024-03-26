@@ -54,14 +54,14 @@ def Score1():
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-03-22",
+            "endDay":"2024-03-25",
         }
     }
     mgr = CScoreMgr(dbConnection)
     mgr.Score(indexParam)
     mgr.Select(indexParam)
-    dates = ("2024-02-06","2024-02-08","2024-02-19","2024-02-20","2024-02-21","2024-02-22","2024-02-23","2024-02-26","2024-02-27","2024-02-28")
-    mgr.UnionSelect(dates)
+    # dates = ("2024-02-06","2024-02-08","2024-02-19","2024-02-20","2024-02-21","2024-02-22","2024-02-23","2024-02-26","2024-02-27","2024-02-28")
+    # mgr.UnionSelect(dates)
 
 def ScoreZaiEveryDay(dbConnection,tradingDays):
     mgr = CScoreZaiMgr(dbConnection,tradingDays[-1])
@@ -84,7 +84,7 @@ def Select2():
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-03-22",
+            "endDay":"2024-03-25",
         }
     }
     tradingDays = GetTradingDateLastN(dbConnection,15)
