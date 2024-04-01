@@ -17,7 +17,7 @@ class CStockCompareWithIndex(object):
     def GetStockInfo(self, date):
         sql1 = f'''
         SELECT * FROM stock.stockdailyinfo_2023 where `日期` = "{date}"
-        UNION
+        UNION ALL
         SELECT * FROM stock.stockdailyinfo where `日期` = "{date}"
         '''
         result1,columns1 = self.dbConnection.Query(sql1)
@@ -51,17 +51,28 @@ class CStockCompareWithIndex(object):
             return (None,None,None,ratio)
     
     def ProcessData(self,indexInfo,df,date):
+        sqls = []
         for _, row in df.iterrows():
             stockID = row["股票代码"]
             zhangDiefu = float(row["涨跌幅"])
             (IndexID,increase_rate,name,ratio) = self.GetIndexInfoBySotckID(indexInfo,stockID)
             if IndexID is None or increase_rate is None or name is None:
                 continue
+            
+            if  pd.isna(zhangDiefu) == True:
+                continue
+            
             delta = (zhangDiefu - increase_rate) * ratio
             #print(f'''{name}  {zhangDiefu - increase_rate} {delta}''')
+           
             sql = f'''REPLACE INTO `stock`.`compareindex_stock` (`date`, `indexID`, `stockID`, `increase_rate`, `zhangdiefu`, `delta`) VALUES ('{date}', '{IndexID}', '{stockID}', '{increase_rate:.2f}', '{zhangDiefu:.2f}', '{delta:.2f}');'''
+            sqls.append(sql)
+
+        step = 300
+        groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in groupedSql:
             self.dbConnection.Execute(sql)
-        
+
     def _score(self,volumn,percentail,reversed = False):
         result = 1
         for index, value in percentail.items():
@@ -93,13 +104,19 @@ class CStockCompareWithIndex(object):
         newDf = df[pd.isna(df['flag'])]
         newDf.drop('flag', axis='columns',inplace=True)
         self.score(newDf,'delta','flag',t,False)
+        sqls = []
         for index, row in newDf.iterrows():
             score = row['flag']
             date = index[0]
             indexID = index[1]
             stockID = index[2]
             sql = f'''UPDATE `stock`.`compareindex_stock` SET `flag` = '{score}' WHERE (`date` = '{date}') and (`indexID` = '{indexID}') and (`stockID` = '{stockID}');'''
+            sqls.append(sql)
             #print(sql)
+
+        step = 300
+        groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in groupedSql:
             self.dbConnection.Execute(sql)
         
 

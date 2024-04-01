@@ -2,6 +2,7 @@ from mysql.connect2DB import ConnectToDB
 from score.scoreMgr import CScoreMgr
 from DBOperating import GetTradingDateLastN
 from score.scoreZai import CScoreZaiMgr,CSelectZai
+from score.scoreStock import CScoreStock
 
 def Score1():
     dbConnection = ConnectToDB()
@@ -47,14 +48,25 @@ def Score1():
     #     }
     # }
     
+    # indexParam = {
+    #     "抗跌分数":{
+    #         "startDay":"2024-01-02",
+    #         "endDay":"2024-02-05",
+    #     },
+    #     "领涨分数":{
+    #         "startDay":"2024-02-06",
+    #         "endDay":"2024-03-29",
+    #     }
+    # }
+
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-01-02",
-            "endDay":"2024-02-05",
+            "startDay":"2024-03-21",
+            "endDay":"2024-03-27",
         },
         "领涨分数":{
-            "startDay":"2024-02-06",
-            "endDay":"2024-03-25",
+            "startDay":"2024-03-28",
+            "endDay":"2024-04-01",
         }
     }
     mgr = CScoreMgr(dbConnection)
@@ -84,7 +96,7 @@ def Select2():
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-03-25",
+            "endDay":"2024-03-29",
         }
     }
     tradingDays = GetTradingDateLastN(dbConnection,15)
@@ -92,10 +104,18 @@ def Select2():
     select.Select(indexParam)
 
 
+def ScoreStock():
+    dbConnection = ConnectToDB()
+    stock = CScoreStock(dbConnection)
+    tradingDays = GetTradingDateLastN(dbConnection,15)
+    stock.Score(tradingDays[-1])
+
+
 if __name__ == "__main__":
     Score1()
-    #Score2()
+    # # #Score2()
     Select2()
+    ScoreStock()
 
 
     

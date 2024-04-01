@@ -21,6 +21,8 @@ from writeFuPanXLSX import WriteFuPanSummaryToXLSX
 from ValidateData import Validate_ALL
 from VMA.VMAMgr import VAMSelector
 from Score import ScoreZaiEveryDay
+from bankuai.bankuaiMgr import CPercentileBanKuai
+from CompareWithIndex.StockCompareWithIndex import CStockCompareWithIndex
 
 import pytz
 import datetime
@@ -59,6 +61,14 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     FuPan.FuPan()
     FuPan.FormatFuPanSqlAndToDB()
     logger.info(str(FuPan))
+
+    #分析板块
+    p = CPercentileBanKuai(dbConnection)
+    p.PercentileBankuai_LastNDays(tradingDays[-3:])
+
+    #比较指数
+    comparer = CStockCompareWithIndex(dbConnection,logger)
+    comparer.CompareWithIndex_ALL(tradingDays[-3:])
 
     #分析新增概念
     NewGaiNian(dbConnection)

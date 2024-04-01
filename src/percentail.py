@@ -79,7 +79,7 @@ def CalcPercentail3():
     pd.set_option('display.width',360)
     dbConnection = ConnectToDB()
     startDay = "2024-02-05"
-    endDay = "2024-03-12"
+    endDay = "2024-03-18"
     key1 = f'''收盘价{startDay}'''
     key2 = f'''收盘价{endDay}'''
     #sql = f'''select  A.`股票代码`, C.`股票简称` ,A.`收盘价`, B.`收盘价` as `收盘价2` from stock.stockdailyinfo As A, (SELECT * FROM stock.stockdailyinfo where `日期` = "{startDay}") As B ,(SELECT * FROM stock.stockbasicinfo) As C where A.`股票代码` = B.`股票代码` and A.`股票代码` = C.`股票代码` and A.`日期` = "{endDay}";'''

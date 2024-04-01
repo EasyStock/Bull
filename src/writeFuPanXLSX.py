@@ -8,6 +8,7 @@ from writeToExcel.writeZhuanZaiGaiNian import CWriteZhuanZaiGaiNianToXLSX
 from writeToExcel.fupanDetailEx import CFupanDetailEx
 from writeToExcel.zhangTingJiYing import CWriteZhangTingJiYingToXLSX
 from workspace import workSpaceRoot,GetFuPanRoot
+from bankuai.bankuaiMgr import CBanKuaiSelect
 import os
 
 
@@ -20,14 +21,17 @@ def WriteFuPanSummaryToXLSX(dbConnection,tradingDays):
     zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
     detailEx = CFupanDetailEx(dbConnection,tradingDays)
     zhangTingJiYing = CWriteZhangTingJiYingToXLSX(dbConnection,tradingDays[-1])
+    banKuaiSelect = CBanKuaiSelect(dbConnection)
     with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
         detail.WriteFuPanSummaryToXLSX(excelWriter)
+        banKuaiSelect.BanKuaiSelect(excelWriter,tradingDays[-5:],50)
         zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
         zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
         zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
         gainian.WriteZhuanZaiGainToToXLS(excelWriter)
         detailEx.WriteFuPanDetailExToToXLS(excelWriter)
         zhangTingJiYing.WriteZhangTingJiYingToXLS(excelWriter)
+        
 
 def Test1():
     fullPath = "/tmp/aa.xlsx"
@@ -39,14 +43,16 @@ def Test1():
     gainian = CWriteZhuanZaiGaiNianToXLSX(dbConnection,tradingDays[-1])
     detailEx = CFupanDetailEx(dbConnection,tradingDays)
     zhangTingJiYing = CWriteZhangTingJiYingToXLSX(dbConnection,tradingDays[-1])
+    banKuaiSelect = CBanKuaiSelect(dbConnection)
     with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
         #detail.WriteFuPanSummaryToXLSX(excelWriter)
         # zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
         # zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
         # zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
         #gainian.WriteZhuanZaiGainToToXLS(excelWriter)
-        detailEx.WriteFuPanDetailExToToXLS(excelWriter)
+        #detailEx.WriteFuPanDetailExToToXLS(excelWriter)
         #zhangTingJiYing.WriteZhangTingJiYingToXLS(excelWriter)
+        banKuaiSelect.BanKuaiSelect(excelWriter,tradingDays[-5:],50)
 
 
 if __name__ == '__main__':
