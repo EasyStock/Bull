@@ -125,7 +125,7 @@ def GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger):
     _GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     _GetNoZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
     GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays[-3:],logger)
-    GetBanKuaiStockMatchData(dbConnection,tradingDays)
+    #GetBanKuaiStockMatchData(dbConnection,tradingDays)
     GetIndexDataLastNDays(dbConnection,tradingDays[-3:],logger)
     GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays[-3:],logger)
     GetVMAData(dbConnection,tradingDays,logger)
@@ -189,7 +189,6 @@ if __name__ == "__main__":
 
         updateFinishedStatus(dbConnection,tradingDays)
     else:
-
         if 1 in args.options:
             #从同花顺上获取数据
             GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
@@ -205,5 +204,9 @@ if __name__ == "__main__":
         if 4 in args.options:
             #从东方财富网上获取数据
             GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
+
+        if 5 in args.options:
+            #获取板块数据，获取速度比较慢
+            GetBanKuaiStockMatchData(dbConnection,tradingDays)
 
         updateFinishedStatus(dbConnection,tradingDays)

@@ -66,7 +66,7 @@ def Score1():
         },
         "领涨分数":{
             "startDay":"2024-03-28",
-            "endDay":"2024-04-01",
+            "endDay":"2024-04-12",
         }
     }
     mgr = CScoreMgr(dbConnection)
@@ -96,7 +96,7 @@ def Select2():
         },
         "领涨分数":{
             "startDay":"2024-02-06",
-            "endDay":"2024-03-29",
+            "endDay":"2024-04-12",
         }
     }
     tradingDays = GetTradingDateLastN(dbConnection,15)
@@ -108,14 +108,62 @@ def ScoreStock():
     dbConnection = ConnectToDB()
     stock = CScoreStock(dbConnection)
     tradingDays = GetTradingDateLastN(dbConnection,15)
-    stock.Score(tradingDays[-1])
+    stock.Score(tradingDays[-7])
+
+def ScoreStockAll():
+    dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,100)
+
+    for i in range(1,3):
+        stock = CScoreStock(dbConnection)
+        stock.Score(tradingDays[-i])
 
 
+
+def ToDays(tradingDays,params:list):
+    result = []
+    for param in params:
+        start = param.get("startDay",None)
+        end = param.get("endDay",None)
+        if start is None:
+            start = tradingDays[0]
+        
+        if end is None:
+            end = tradingDays[-1]
+        
+        for tradingDay in tradingDays:
+            if tradingDay >= start and tradingDay <= end:
+                result.append(tradingDay)
+
+
+    return result
+
+
+def ScoreStock():
+    dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,100)
+    indexParam = [
+        # {
+        #     "startDay":"2024-01-02",
+        #     "endDay":"2024-02-05",
+        # },
+        {
+            "startDay":"2024-04-09",
+            #"endDay":"2024-04-10",
+            
+        }
+    ]
+
+    days = ToDays(tradingDays,indexParam)
+    stock = CScoreStock(dbConnection)
+    stock.SelectTop80ByDates(days)
+    
 if __name__ == "__main__":
     Score1()
     # # #Score2()
-    Select2()
-    ScoreStock()
+    #Select2()
+    # ScoreStockAll()
+    # ScoreStock()
 
 
     

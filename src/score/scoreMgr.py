@@ -82,15 +82,25 @@ class CWriteScoreToXlsx(object):
 
     def formatColumnsWidth(self,sheet):
         sheet.column_dimensions['A'].width = 8
-        sheet.column_dimensions['B'].width = 16
+        sheet.column_dimensions['B'].width = 14
         sheet.column_dimensions['C'].width = 16
-        sheet.column_dimensions['D'].width = 16
-        sheet.column_dimensions['E'].width = 16
-        sheet.column_dimensions['F'].width = 18
-        sheet.column_dimensions['G'].width = 16
-        sheet.column_dimensions['H'].width = 16
-        sheet.column_dimensions['I'].width = 24
+        sheet.column_dimensions['D'].width = 14
+        sheet.column_dimensions['E'].width = 14
+        sheet.column_dimensions['F'].width = 14
+        sheet.column_dimensions['G'].width = 14
+        sheet.column_dimensions['H'].width = 14
+        sheet.column_dimensions['I'].width = 16
         sheet.column_dimensions['J'].width = 16
+        sheet.column_dimensions['K'].width = 20
+        sheet.column_dimensions['L'].width = 16
+        sheet.column_dimensions['M'].width = 16
+        sheet.column_dimensions['N'].width = 16
+        sheet.column_dimensions['O'].width = 16
+        sheet.column_dimensions['P'].width = 32
+        sheet.column_dimensions['Q'].width = 17
+        sheet.column_dimensions['R'].width = 24
+        sheet.column_dimensions['S'].width = 16
+        sheet.column_dimensions['T'].width = 16
 
     
     def formatRowHeight(self,sheet,rowIndex,height):
@@ -116,7 +126,7 @@ class CWriteScoreToXlsx(object):
             cell.border = border
 
     def addTitle(self,sheet):
-        self.mergeRow(sheet,1,"A","J",140)
+        self.mergeRow(sheet,1,"A","T",140)
         cell = sheet.cell(1,1)
         cell.alignment = alignment_center
         cell.fill = PatternFill('solid', fgColor="009DDC")
@@ -126,7 +136,7 @@ class CWriteScoreToXlsx(object):
         self.rows = self.rows + 1
 
     def AddFirstLine(self,sheet):
-        self.mergeRow(sheet,self.rows+1,"A","J",100)
+        self.mergeRow(sheet,self.rows+1,"A","T",100)
         cell = sheet.cell(self.rows+1,1)
         cell.alignment = alignment_left
         cell.fill = PatternFill('solid', fgColor="FFFFFF")
@@ -136,7 +146,7 @@ class CWriteScoreToXlsx(object):
         self.rows = self.rows + 1
 
     def AddTail(self,sheet):
-        self.mergeRow(sheet,self.rows+1,"A","J",32)
+        self.mergeRow(sheet,self.rows+1,"A","T",32)
         cell = sheet.cell(self.rows+1,1)
         cell.alignment = alignment_left
         cell.fill = PatternFill('solid', fgColor="FFFFFF")
@@ -161,6 +171,8 @@ class CWriteScoreToXlsx(object):
             self.AddFirstLine(sheet)
             scoreDF.index = scoreDF.index +1
             scoreDF.to_excel(excelWriter, sheet_name= self.sheetName,index=True,index_label = "序号",startrow=self.rows,header=True)
+            sheet2Name = f'''{self.sheetName}_1'''
+            scoreDF.to_excel(excelWriter, sheet_name= sheet2Name,index=True,index_label = "序号",startrow=0,header=True)
             for index in range(0,rows):
                 for c in range(1,columns+1):
                     cell1 = sheet.cell(self.rows+index+1,c)
@@ -171,19 +183,19 @@ class CWriteScoreToXlsx(object):
                     cell1.font = Font(name='宋体', size=self.contextFontSize, italic=False, color='000000', bold=True)
                     cell1.border = border
                     redFont = False
-                    if c == 6 and index >=1:
+                    if c == 4 and index >=1:
                         data = scoreDF.iloc[index -1]["成交量分数"]
                         if data < avg1:
                             redFont = True
-                    if c == 7 and index >=1:
+                    if c == 5 and index >=1:
                         data = scoreDF.iloc[index -1]["抗跌分数"]
                         if data < avg2:
                             redFont = True
-                    if c == 8 and index >=1:
+                    if c == 6 and index >=1:
                         data = scoreDF.iloc[index -1]["领涨分数"]
                         if data < avg3:
                             redFont = True
-                    if c == 9 and index >=1:
+                    if c == 7 and index >=1:
                         data = scoreDF.iloc[index -1]["剩余规模分数"]
                         if data < avg4:
                             redFont = True
@@ -193,6 +205,8 @@ class CWriteScoreToXlsx(object):
             self.rows = self.rows + rows
             self.AddTail(sheet)
             self.formatColumnsWidth(sheet)
+            sheet2 = excelWriter.sheets[sheet2Name]
+            self.formatColumnsWidth(sheet2)
 
 
 class CScoreMgr(object):
@@ -356,7 +370,8 @@ class CScoreMgr(object):
 
     def Select(self,indexParams:map):
         self._preprocessing(indexParams)
-        sql = f'''select A.`转债代码`,B.`转债名称`,B.`正股代码`,B.`正股名称`,A.`成交量分数`,A.`抗跌分数`,A.`领涨分数`,A.`剩余规模分数`,A.`总分`from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{self.date}" and B.`日期` = "{self.diDianDate}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC;'''
+        #sql = f'''select A.`转债代码`,B.`转债名称`,B.`正股代码`,B.`正股名称`,A.`成交量分数`,A.`抗跌分数`,A.`领涨分数`,A.`剩余规模分数`,A.`总分`,B.`现价`,B.`涨跌幅`,B.`成交额(万元)`,B.`溢价率`,B.`剩余规模`, B.`到期税前收益率`,B.`行业` from kezhuanzai_score As A,kezhuanzhai AS B where A.`日期` = "{self.date}" and B.`日期` = "{self.diDianDate}"  and A.`转债代码` = B.`转债代码` order by A.`总分` DESC;'''
+        sql = f'''select A.`转债代码`,B.`转债名称`,A.`成交量分数`,A.`抗跌分数`,A.`领涨分数`,A.`剩余规模分数`,A.`总分`,C.`现价` as `现价\n{self.date}`,C.`涨跌幅` as `涨跌幅\n{self.date}`,C.`成交额(万元)` as `成交额(万元)\n{self.date}`,C.`溢价率` as `溢价率\n{self.date}`,C.`PB`,C.`剩余规模` as `剩余规模\n{self.date}`,C.`流通市值（亿元)`,C.`行业`,B.`现价` as `价格\n({self.diDianDate})`, C.`到期税前收益率` as `到期税前收益率\n{self.date}`,B.`正股代码`,B.`正股名称` from kezhuanzai_score As A,kezhuanzhai AS B, (select * from kezhuanzhai_all where `日期` = "{self.date}") AS C where (A.`日期` = "{self.date}") and (B.`日期` = "{self.diDianDate}")  and (A.`转债代码` = B.`转债代码`) and (A.`转债代码` = C.`转债代码`) order by A.`总分` DESC;'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         avg1 = df["成交量分数"].mean()

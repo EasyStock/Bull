@@ -3,6 +3,7 @@ import numpy as np
 import datetime
 from workspace import GetFuPanRoot
 from Utility.convertDataFrameToJPG import DataFrameToJPG
+import re
 
 class  CScoreStock(object):
     def __init__(self,dbConnection):
@@ -112,7 +113,7 @@ class  CScoreStock(object):
     
     def getBanKuaiScore(self,date):
         sql = f'''
-            SELECT A.`板块代码`,B.`板块名称`,A.`股票代码`,B.`涨跌幅相对分数` FROM bankuai_stock_match AS A, (SELECT `板块代码`,`板块名称`,`涨跌幅相对分数` FROM stock.bankuai_index_score_daily where `日期` = "{date}") AS B where A.`板块代码` = B.`板块代码`
+            SELECT A.`板块代码`,B.`板块名称`,A.`股票代码`,B.`涨跌幅相对分数` FROM bankuai_stock_match AS A, (SELECT `板块代码`,`板块名称`,`涨跌幅相对分数` FROM stock.bankuai_index_score_daily where `日期` = "{date}") AS B, (SELECT `板块代码`,count(*) AS `个数`  FROM stock.bankuai_stock_match group by `板块代码` having `个数` >= 15 ) AS C where A.`板块代码` = B.`板块代码` and A.`板块代码` = C.`板块代码` 
         '''
         result1,columns1 = self.dbConnection.Query(sql)
         newDf1=pd.DataFrame(result1,columns=columns1)
@@ -151,10 +152,12 @@ class  CScoreStock(object):
         for index,row in newDf1.iterrows():
             stockID = row["股票代码"]
             volumn = row["成交量"]
-            percentile = percentileDF.get_group(stockID)
-            
-            percentile.set_index("百分位数",drop=True,inplace=True)
-            newDf1.loc[index, '成交量分数'] = self._score(volumn,percentile["成交量"],False)
+            try:
+                percentile = percentileDF.get_group(stockID)
+                percentile.set_index("百分位数",drop=True,inplace=True)
+                newDf1.loc[index, '成交量分数'] = self._score(volumn,percentile["成交量"],False)
+            except:
+                continue
         newDf1.set_index("股票代码",inplace=True,drop=True)
         return newDf1
 
@@ -163,11 +166,11 @@ class  CScoreStock(object):
         result1,columns1 = self.dbConnection.Query(sql1)
         newDf1=pd.DataFrame(result1,columns=columns1)
 
-        sql2 = f'''SELECT * FROM stock.stock_score_daily where `日期` = "{date}" order by `总分1` DESC limit 80;'''
+        sql2 = f'''SELECT * FROM stock.stock_score_daily where `日期` = "{date}" order by `总分2` DESC limit 80;'''
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
 
-        sql3 = f'''SELECT * FROM stock.stock_score_daily where `日期` = "{date}" order by `总分1` DESC limit 80;'''
+        sql3 = f'''SELECT * FROM stock.stock_score_daily where `日期` = "{date}" order by `总分3` DESC limit 80;'''
         result3,columns3 = self.dbConnection.Query(sql3)
         newDf3=pd.DataFrame(result3,columns=columns3)
 
@@ -177,21 +180,24 @@ class  CScoreStock(object):
         DataFrameToJPG(newDf3,["股票代码","股票简称"],root,"自动选股3")
 
         df1 = pd.DataFrame(newDf1,columns = ["日期","股票代码","股票简称"])
+        df1["买入排名"] = df1.index+1
         df1["名称"] = "自动选股_25_25_25_25"
         sqls = self._DataFrameToSqls_REPLACE_INTO(df1,"simulate_trading")
 
         df2 = pd.DataFrame(newDf2,columns = ["日期","股票代码","股票简称"])
         df2["名称"] = "自动选股_40_10_10_40"
+        df2["买入排名"] = df2.index+1
         sqls2 = self._DataFrameToSqls_REPLACE_INTO(df2,"simulate_trading")   
 
         df3 = pd.DataFrame(newDf3,columns = ["日期","股票代码","股票简称"])
         df3["名称"] = "自动选股_30_10_20_40"
+        df3["买入排名"] = df3.index+1
         sqls3 = self._DataFrameToSqls_REPLACE_INTO(df3,"simulate_trading")
 
         all = sqls+ sqls2 + sqls3
         sql = " ".join(all)
         self.dbConnection.Execute(sql)
-
+        
     def FillShouYi(self):
         sql1 = f'''SELECT * FROM stock.simulate_trading where `买入日期` is NULL or `买入价格` = "nan" or `1日后卖出收益` = "nan" or `3日后卖出收益` = "nan" or `5日后卖出收益` = "nan";'''
         result,columns = self.dbConnection.Query(sql1)
@@ -210,8 +216,14 @@ class  CScoreStock(object):
 
             df = newDf1[(newDf1["股票代码"] == stockId) & (newDf1["日期"] >= date)].copy()
             df['开盘价'] = df['开盘价'].astype(float)
+            df['收盘价'] = df['收盘价'].astype(float)
+            df['最高价'] = df['最高价'].astype(float)
+            df['最低价'] = df['最低价'].astype(float)
+
             df["买入日期"] = df['日期'].shift(-1)
             df["买入价格"] = df['开盘价'].shift(-1)
+            df["买入价格最高价"] = df['最高价'].shift(-1)
+            df["买入价格最低价"] = df['最低价'].shift(-1)
 
             df["第3天开盘价"] = df['开盘价'].shift(-2)
             df["第5天开盘价"] = df['开盘价'].shift(-4)
@@ -220,13 +232,21 @@ class  CScoreStock(object):
             df["1日后卖出收益"] = (df["第3天开盘价"] - df['买入价格']) / df['买入价格'] * 100
             df["3日后卖出收益"] = (df["第5天开盘价"] - df['买入价格']) / df['买入价格'] * 100
             df["5日后卖出收益"] = (df["第7天开盘价"] - df['买入价格']) / df['买入价格'] * 100
+            df["买入价格涨跌幅"] = (df["买入价格"] - df['收盘价']) / df['收盘价'] * 100
 
             df["1日后卖出收益"] = df.apply(lambda row: '{:.02f}'.format(row["1日后卖出收益"]), axis=1)
             df["3日后卖出收益"] = df.apply(lambda row: '{:.02f}'.format(row["3日后卖出收益"]), axis=1)
             df["5日后卖出收益"] = df.apply(lambda row: '{:.02f}'.format(row["5日后卖出收益"]), axis=1)
+            df["买入价格涨跌幅"] = df.apply(lambda row: '{:.02f}'.format(row["买入价格涨跌幅"]), axis=1)
+            
             df["名称"] = name
+            yiziban = df[df["买入价格最高价"] == df["买入价格最低价"]].copy()
+            for _, row1 in yiziban.iterrows():
+                sql = f'''DELETE FROM `stock`.`simulate_trading` WHERE (`日期` = '{row1["日期"]}') and (`名称` = '{row1["名称"]}') and (`股票代码` = '{row1["股票代码"]}');'''
+                sqls.append(sql)
 
-            resultDf = pd.DataFrame(df,columns = ["日期","名称","股票代码","买入日期","买入价格","1日后卖出收益","3日后卖出收益","5日后卖出收益"])
+            df = df[df["买入价格最高价"] != df["买入价格最低价"]] # 一字板的除外
+            resultDf = pd.DataFrame(df,columns = ["日期","名称","股票代码","买入日期","买入价格","买入价格涨跌幅","1日后卖出收益","3日后卖出收益","5日后卖出收益"])
             resultDf.set_index(["日期","名称","股票代码"],drop=True,inplace=True)
             resultDf = resultDf[resultDf["买入日期"].notnull()]
             sqls1 = self._DataFrameToSqls_UPDATE(resultDf,"simulate_trading",["日期","名称","股票代码"])
@@ -238,6 +258,7 @@ class  CScoreStock(object):
             self.dbConnection.Execute(sql)
 
     def Score(self,date):
+        print("开始:",date)
         basickInfo = self.getBasicInfo()
         biDaPan = self.getCompareByIndex(date)
         volumnPercentile = self.getVolumnScore(date)
@@ -246,27 +267,99 @@ class  CScoreStock(object):
         df2 = pd.merge(df1,volumnPercentile,on = "股票代码")
         df3 = pd.merge(df2,banKuaiScoreDF,on = "股票代码")
         df3.dropna()
+        if df3.empty:
+            return
+        
         df3["总分1"] = 0.25*df3["板块分数"] + 0.25*df3["成交量分数"] + 0.25*df3["流通市值分数"] + 0.25*df3["比大盘分数"]  #
-        df3["总分2"] = 0.4*df3["板块分数"] + 0.1*df3["成交量分数"] + 0.1*df3["流通市值分数"] + 0.4*df3["比大盘分数"]
+        df3["总分2"] = 0.3*df3["板块分数"] + 0.1*df3["成交量分数"] + 0.05*df3["流通市值分数"] + 0.55*df3["比大盘分数"]  # 比大盘和板块分数占比比较大, 成交量和市值分数占比较小
         df3["总分3"] = 0.3*df3["板块分数"] + 0.1*df3["成交量分数"] + 0.2*df3["流通市值分数"] + 0.4*df3["比大盘分数"]
         df3.reset_index(inplace=True)
         resultDf = pd.DataFrame(df3,columns=["日期","股票代码","股票简称","板块代码","板块名称","板块分数","成交量分数","流通市值分数","比大盘分数","总分1","总分2","总分3"])
         resultDf["总分1"] = resultDf.apply(lambda row: '{:.02f}'.format(row["总分1"]), axis=1)
         resultDf["总分2"] = resultDf.apply(lambda row: '{:.02f}'.format(row["总分2"]), axis=1)
         resultDf["总分3"] = resultDf.apply(lambda row: '{:.02f}'.format(row["总分3"]), axis=1)
+        resultDf = resultDf[resultDf["成交量分数"].notnull()]
         
         sqls = self._DataFrameToSqls_REPLACE_INTO(resultDf,"stock_score_daily")
-        step = 400
+        step = 200
         groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
         for sql in groupedSql:
             self.dbConnection.Execute(sql)
         
         self.SelectTop80(date)
         self.FillShouYi()
+    
+
+    def SelectTop80ByDates(self,dates,limits = 80):
+        datesStr = '" , "'.join(dates)
+        sql1 = f'''SELECT * FROM stock.stock_score_daily where `日期` in ("{datesStr}")'''
+        result1,columns1 = self.dbConnection.Query(sql1)
+        newDf1=pd.DataFrame(result1,columns=columns1)
+        groups = newDf1.groupby("股票代码")
+        result = []
+        for stockID, group in groups:
+            group.reset_index(drop=True,inplace=True)
+            group['总分1'] = group['总分1'].astype(float)
+            group['总分2'] = group['总分2'].astype(float)
+            group['总分3'] = group['总分3'].astype(float)
+            count = group.shape[0]
+            if count == 1:
+                continue
+
+            stockName = group["股票简称"][0]
+            score1 = group["总分1"].mean()
+            score2 = group["总分2"].mean()
+            score3 = group["总分3"].mean()
+            banKuaiID = ";".join(set(list(group["板块代码"])))
+            banKuaiName = ";".join(set(list(group["板块名称"])))
+            res = {}
+            res["股票代码"] = stockID
+            res["股票简称"] = stockName
+            res["统计次数"] = count
+            res["总分1平均分"] = score1
+            res["总分2平均分"] = score2
+            res["总分3平均分"] = score3
+            res["板块代码"] = banKuaiID
+            res["板块名称"] = banKuaiName
+            result.append(res)
         
+        df = pd.DataFrame(result)
+        df.sort_values(by="总分2平均分",ascending=False,inplace=True)
+        df["总分1平均分"] = df.apply(lambda row: '{:.02f}'.format(row["总分1平均分"]), axis=1)
+        df["总分2平均分"] = df.apply(lambda row: '{:.02f}'.format(row["总分2平均分"]), axis=1)
+        df["总分3平均分"] = df.apply(lambda row: '{:.02f}'.format(row["总分3平均分"]), axis=1)
 
+        print(df)
+        root = GetFuPanRoot(dates[-1])
+        df.to_excel("/tmp/aa.xlsx")
+        DataFrameToJPG(df[:300],["股票代码","股票简称"],root,"多日自动选股1")
 
+        # result2,columns2 = self.dbConnection.Query(sql2)
+        # newDf2=pd.DataFrame(result2,columns=columns2)
 
+        # result3,columns3 = self.dbConnection.Query(sql3)
+        # newDf3=pd.DataFrame(result3,columns=columns3)
 
+        # root = GetFuPanRoot(date)
+        # DataFrameToJPG(newDf1,["股票代码","股票简称"],root,"多日自动选股1")
+        # DataFrameToJPG(newDf2,["股票代码","股票简称"],root,"多日自动选股2")
+        # DataFrameToJPG(newDf3,["股票代码","股票简称"],root,"自动选股3")
 
+        # df1 = pd.DataFrame(newDf1,columns = ["日期","股票代码","股票简称"])
+        # df1["买入排名"] = df1.index+1
+        # df1["名称"] = "自动选股_25_25_25_25"
+        # sqls = self._DataFrameToSqls_REPLACE_INTO(df1,"simulate_trading")
 
+        # df2 = pd.DataFrame(newDf2,columns = ["日期","股票代码","股票简称"])
+        # df2["名称"] = "自动选股_40_10_10_40"
+        # df2["买入排名"] = df2.index+1
+        # sqls2 = self._DataFrameToSqls_REPLACE_INTO(df2,"simulate_trading")   
+
+        # df3 = pd.DataFrame(newDf3,columns = ["日期","股票代码","股票简称"])
+        # df3["名称"] = "自动选股_30_10_20_40"
+        # df3["买入排名"] = df3.index+1
+        # sqls3 = self._DataFrameToSqls_REPLACE_INTO(df3,"simulate_trading")
+
+        # all = sqls+ sqls2 + sqls3
+        # sql = " ".join(all)
+        # self.dbConnection.Execute(sql)
