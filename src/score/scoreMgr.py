@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from workspace import workSpaceRoot,WorkSpaceFont,GetZhuanZaiFolder
+from workspace import workSpaceRoot,WorkSpaceFont,GetZhuanZaiFolder,GetFuPanRoot
 from openpyxl.styles import Font,Border,Side,Alignment,Font,PatternFill
 from openpyxl.utils import column_index_from_string
 from message.feishu.webhook_zhuanzai import SendkeZhuanZaiScore
@@ -394,7 +394,7 @@ class CScoreMgr(object):
         DataFrameToJPG(df,["转债代码","转债名称","总分"],fodler,fileName1)
         DataFrameToJPG(newDF,["转债代码","转债名称"],fodler,fileName2)
 
-        xlsxFileName = os.path.join(fodler,f"可转债评分_{self.date}.xlsx")
+        xlsxFileName = os.path.join(GetFuPanRoot(self.date),f"可转债评分_{self.date}.xlsx")
         xlsx = CWriteScoreToXlsx()
         xlsx.title = f'''可转债评分表 ({self.date})'''
         xlsx.firtLineInfo = self.QuJianStr
