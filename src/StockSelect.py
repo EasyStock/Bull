@@ -8,6 +8,8 @@ from stockSelect.pattern1 import CStockPattern1
 from stockSelect.pattern2 import CStockPattern2
 from stockSelect.pattern3 import CStockPattern3
 from stockSelect.pattern4 import CStockPattern4
+from stockSelect.pattern5 import CStockPattern5  # N形战法
+
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
     # p = CStockPattern1(dbConnection)
@@ -17,5 +19,5 @@ if __name__ == "__main__":
     # p = CStockPattern3(dbConnection,12)
     # p.Select()
 
-    p = CStockPattern4(dbConnection)
+    p = CStockPattern5(dbConnection)
     p.Select()
