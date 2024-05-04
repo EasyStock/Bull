@@ -1,7 +1,10 @@
 from mysql.connect2DB import ConnectToDB
 import pandas as pd
 from thsData.fetchZhangTingFromTHS import CFetchZhangTingDataFromTHS
-
+import numpy as np
+from MA.MA import CMA
+from MA.MAMgr import CMAMgr
+from MA.MACross import CMACross
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))
@@ -148,10 +151,96 @@ def WriteXLS():
         # ws.column_dimensions['H'].width = 15
 
 
+def _AnalysisIndex(df,percentage = 0.5):
+    lastRow = df.iloc[-1]
+    newRow = lastRow.copy()
+    #newRow["date"] = f'''{lastRow["date"]}_{percentage}'''
+    
+    newRow["last_px"] = lastRow["last_px"] * (1+percentage/100.0)
+    newRow["increase_amount"] = lastRow["last_px"] * (percentage/100.0)
+    newRow["increase_rate"] = f'''{percentage}%'''
+    newDf = df.copy()
+    newDf = newDf._append(newRow, ignore_index=False)
+    return newDf
+
+def _isAlarm(df):
+    lastRow1 = df.iloc[-1]
+    lastRow2 = df.iloc[-2]
+    # if lastRow1["MA5_Delta"] < 0 and lastRow2["MA5_Delta"]>0:
+    #     message = f'''今天是:{lastRow2.name} 明天指数涨幅小于{lastRow1["increase_rate"]},5日线将拐头向下'''
+    #     print(message)
+    # elif lastRow1["MA5_Delta"] > 0 and lastRow2["MA5_Delta"]<0:
+    #     message = f'''今天是:{lastRow2.name} 明天指数涨幅大于{lastRow1["increase_rate"]},5日线将拐头向上'''
+    #     print(message)
+
+    if lastRow1["MA10_Delta"] < 0 and lastRow2["MA10_Delta"]>0:
+        message = f'''今天是:{lastRow2.name} 明天指数涨幅小于{lastRow1["increase_rate"]},10日线将拐头向下'''
+        print(message)
+    elif lastRow1["MA10_Delta"] > 0 and lastRow2["MA10_Delta"]<0:
+        message = f'''今天是:{lastRow2.name} 明天指数涨幅大于{lastRow1["increase_rate"]},10日线将拐头向上'''
+        print(message)
+
+    
+    if lastRow1["MA5-10"] < 0 and lastRow2["MA5-10"]>0:
+        message = f'''今天是:{lastRow2.name} 明天指数涨幅小于{lastRow1["increase_rate"]},5日线将 下穿 10 日线'''
+        print(message)
+    elif lastRow1["MA5-10"] > 0 and lastRow2["MA5-10"]<0:
+        message = f'''今天是:{lastRow2.name} 明天指数涨幅大于{lastRow1["increase_rate"]},5日线将 上穿 10 日线'''
+        print(message)
+
+
+def AnalysisIndex():
+    dbConnection = ConnectToDB()
+    sql = f'''SELECT * FROM stock.kaipanla_index;'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    chuangyeBan = df[df["StockID"] == "SZ399006"].copy()
+    #chuangyeBan.reset_index(drop=True,inplace=True)
+    chuangyeBan.set_index("date",drop=True,inplace=True)
+
+    #chuangyeBan = chuangyeBan[:-50]
+    mgr = CMAMgr()
+    mgr.predict(chuangyeBan,"last_px",(5,10,20,30,60))
+    #mgr.Cross(chuangyeBan,"last_px",5,10)
+
+    cross = CMACross(chuangyeBan,"last_px",5,10)
+    res = cross.FindAllCrossUp()
+    res.to_excel("/tmp/穿.xlsx")
+    # print(cross.isCrossUp(-2.46))
+    # print(cross.isCrossDown(-2.46))
+    # r = cross.predict()
+    # print(cross.Verify(r[1]))
+    #print(r)
+        
+    # step = list(np.linspace(-10, 10, 41))
+    # for delta in step:
+    #     newDf = _AnalysisIndex(chuangyeBan,delta)
+    #     newDf["MA5"] = newDf["last_px"].rolling(window=5).mean()
+    #     newDf["MA10"] = newDf["last_px"].rolling(window=10).mean()
+    #     newDf["MA20"] = newDf["last_px"].rolling(window=20).mean()
+    #     newDf["MA5_昨日"] = newDf["MA5"].shift()
+    #     newDf["MA5_Delta"] = newDf["MA5"] - newDf["MA5_昨日"]
+
+    #     newDf["MA10_昨日"] = newDf["MA10"].shift()
+    #     newDf["MA10_Delta"] = newDf["MA10"] - newDf["MA10_昨日"]
+    #     newDf["MA5-10"] = newDf["MA5"] - newDf["MA10"]
+    #     _isAlarm(newDf)
+
+    # # chuangyeBan["MA5_昨日"] = chuangyeBan["MA5"].shift()
+    # # chuangyeBan["MA5_Delta"] = chuangyeBan["MA5"] - chuangyeBan["MA5_昨日"]
+
+    #chuangyeBan.to_excel("/tmp/chuangyeban.xlsx")
+    # results = chuangyeBan[]
+    # print(chuangyeBan)
+    # groups = df.groupby(["StockID",])
+    # for stockID, group in groups:
+    #     print(group)
+
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
     # Test1_BuyTogether(dbConnection,10028451,10656871)
     # Test1_SellTogether(dbConnection,10028451,10656871)
     #UpdateData(dbConnection)
     #WriteXLS()
-    WriteXLS()
+    # WriteXLS()
+    AnalysisIndex()
