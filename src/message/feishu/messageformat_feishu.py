@@ -163,6 +163,22 @@ def FormatCardOfMeiRiFuPan(date,df,redian,redianDfs):
     title = f" 每日复盘 - {date}"
     return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
 
+
+
+def FormatCardOfAlarm(date,alarm:list):
+    elements = []
+    tag = {"tag":"hr"}
+
+    line1 = "\n".join(alarm)
+    elements.append(_markdown(line1))
+    elements.append(tag)
+
+    beizhu = {"elements":[{"content":"风险提示: 本内容仅信息分享,不构成投资建议,若以此作为买卖依据,后果自负。市场有风险,投资需谨慎！","tag":"plain_text"}],"tag":"note"}
+    elements.append(beizhu)
+    title = f" 每日指数预警 - {date}"
+    return {"config":{"wide_screen_mode":True},"elements":elements,"header":{"template":"red","title":{"content":title,"tag":"plain_text"}}}
+
+
 def FormatCardOfQiangShu(datas,title):
     #强制赎回公告
     if len(datas) == 0:

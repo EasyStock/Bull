@@ -29,12 +29,12 @@ class CMAMgr(object):
         percentage = (keyMa - lastRow[column])/lastRow[column]*100
         result = []
         if len(up) >0:
-            message = f'''今天是:{lastRow.name},明天点位高于【{keyMa},>={percentage:.2f}%】,{N}日线将 【拐头向上】'''
+            message = f'''**今天是:** **<font color='yellow'> {lastRow.name} </font>**,明天点位**<font color='red'> 高于【{keyMa},(>={percentage:.2f}%)】</font>**,**<font color='red'> {N}日线将 【拐头向上】</font>**'''
             print(message)
             result.append(message)
 
         if len(down) >0:
-            message = f'''今天是:{lastRow.name},明天点位低于【{keyMa},<={percentage:.2f}%】,{N}日线将 【拐头向下】'''
+            message = f'''**今天是:** **<font color='yellow'>  {lastRow.name}</font>** ,明天点位 **<font color='red'> 低于【{keyMa},(<={percentage:.2f}%)】,{N}日线将 【拐头向下】</font>**'''
             print(message)
             result.append(message)
         return result

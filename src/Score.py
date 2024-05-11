@@ -61,12 +61,12 @@ def Score1():
 
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-03-21",
-            "endDay":"2024-03-27",
+            "startDay":"2024-04-02",
+            "endDay":"2024-04-22",
         },
         "领涨分数":{
-            "startDay":"2024-03-28",
-            "endDay":"2024-04-24",
+            "startDay":"2024-04-23",
+            "endDay":"2024-05-10",
         }
     }
     mgr = CScoreMgr(dbConnection)
@@ -91,12 +91,12 @@ def Select2():
     dbConnection = ConnectToDB()
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-03-21",
-            "endDay":"2024-03-27",
+            "startDay":"2024-04-02",
+            "endDay":"2024-04-22",
         },
         "领涨分数":{
-            "startDay":"2024-03-28",
-            "endDay":"2024-04-24",
+            "startDay":"2024-04-23",
+            "endDay":"2024-05-10",
         }
     }
     tradingDays = GetTradingDateLastN(dbConnection,15)

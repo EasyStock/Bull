@@ -236,46 +236,50 @@ def AnalysisIndex():
     # for stockID, group in groups:
     #     print(group)
 
-    def _filterZhangFu(stockID,stockName, df,threshold,days):
-        result = []
-        for day in range(1,days):
-            key1 = f'''{day}日涨幅'''
-            key2 = f'''起涨日期'''
-            df[key1] = df["收盘价"].pct_change(day)
-            df[key2] = df["日期"].shift(day)
-            newDF = df[df[key1]>threshold]
-            for _,row in newDF.iterrows():
-                res = {}
-                res["股票代码"] = stockID
-                res["股票名称"] = stockName
-                res[key1] = row[key1]
-                res[key2] = row[key2]
-                result.append(res)
+def _filterZhangFu(stockID, df,threshold,days):
+    result = []
+    for day in range(1,days):
+        key1 = f'''{day}日涨幅'''
+        key2 = f'''起涨日期'''
+        df[key1] = df["收盘价"].pct_change(day)
+        df[key2] = df["日期"].shift(day)
+        newDF = df[df[key1]>threshold]
+        for _,row in newDF.iterrows():
+            res = {}
+            res["股票代码"] = stockID
+            #res["股票名称"] = stockName
+            res["天数"] = day
+            res[key1] = row[key1]
+            res["日期"] = row["日期"]
+            res[key2] = row[key2]
+            result.append(res)
+    return result
 
-
-
-
-
-    def FilterZhangFu():
-        sql = f'''SELECT * FROM stock.kaipanla_index;'''
-        results, columns = dbConnection.Query(sql)
-        df = pd.DataFrame(results,columns=columns)
-        groups = df.groupby(["股票代码","股票简称"])
-        sqls = []
-        threshold = 30
-        days = 30
-        results = []
-        for (stockID,stockName),group in groups:
-            df = group.reset_index()
-            df.dropna()
-            df["开盘价"] = df["开盘价"].astype("float")
-            df["收盘价"] = df["收盘价"].astype("float")
-            df["最高价"] = df["最高价"].astype("float")
-            df["最低价"] = df["最低价"].astype("float")
-            res = _filterZhangFu(df,threshold,days)
-            results.extend(res)
-        df = pd.DataFrame(results)
-        df.to_excel("/tmp/区间涨幅.xlsx")
+def FilterZhangFu():
+    dbConnection = ConnectToDB()
+    sql = f'''
+    SELECT * FROM stock.stockdailyinfo_2023
+    UNION ALL
+    SELECT * FROM stock.stockdailyinfo
+    '''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    groups = df.groupby(["股票代码",])
+    sqls = []
+    threshold = 0.3
+    days = 30
+    results = []
+    for stockID,group in groups:
+        df = group.reset_index()
+        df.dropna()
+        df["开盘价"] = df["开盘价"].astype("float")
+        df["收盘价"] = df["收盘价"].astype("float")
+        df["最高价"] = df["最高价"].astype("float")
+        df["最低价"] = df["最低价"].astype("float")
+        res = _filterZhangFu(stockID,df,threshold,days)
+        results.extend(res)
+    df = pd.DataFrame(results)
+    df.to_excel("/tmp/区间涨幅.xlsx")
 
 
 if __name__ == "__main__":
@@ -285,4 +289,5 @@ if __name__ == "__main__":
     #UpdateData(dbConnection)
     #WriteXLS()
     # WriteXLS()
-    AnalysisIndex()
+    #AnalysisIndex()
+    FilterZhangFu()

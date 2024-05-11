@@ -220,16 +220,16 @@ class CStockPattern6(object):
         root = GetStockFolder(tradingDays[-1])
         df.to_excel(f'''{root}/吸筹跌破反包战法.xlsx''',index=False)
 
-        # newDF = pd.DataFrame(df, columns = ["日期","股票代码","股票名称","战法名称","买入日期","买入价格"])
-        # sqls = DataFrameToSqls_REPLACE(newDF,"zhanfa")
-        # sql = " ".join(sqls)
-        # self.dbConnection.Execute(sql)
+        newDF = pd.DataFrame(df, columns = ["日期","股票代码","股票名称","战法名称","买入日期","买入价格"])
+        sqls = DataFrameToSqls_REPLACE(newDF,"zhanfa")
+        sql = " ".join(sqls)
+        self.dbConnection.Execute(sql)
 
-        # sql1 = f'''SELECT `日期`,`股票代码`,`股票名称` FROM stock.zhanfa where `日期` = "{today}" and   `战法名称` = "N形战法" and `股票代码` not in (SELECT `股票代码` FROM stock.zhanfa where `日期` = "{yesterday}")'''
-        # result1,columns1 = self.dbConnection.Query(sql1)
-        # newDf1=pd.DataFrame(result1,columns=columns1)
+        sql1 = f'''SELECT `日期`,`股票代码`,`股票名称` FROM stock.zhanfa where `日期` = "{today}" and   `战法名称` = "N形战法" and `股票代码` not in (SELECT `股票代码` FROM stock.zhanfa where `日期` = "{yesterday}")'''
+        result1,columns1 = self.dbConnection.Query(sql1)
+        newDf1=pd.DataFrame(result1,columns=columns1)
 
-        #DataFrameToJPG(newDf1,("股票代码","股票名称"),root,"N形战法_增量")
+        DataFrameToJPG(newDf1,("股票代码","股票名称"),root,"N形战法_增量")
         DataFrameToJPG(df,("股票代码","股票名称"),root,"吸筹跌破反包战法")
         print(df)
 
