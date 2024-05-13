@@ -5,6 +5,7 @@ import numpy as np
 from MA.MA import CMA
 from MA.MAMgr import CMAMgr
 from MA.MACross import CMACross
+from Utility.convertDataFrameToJPG import DataFrameToJPG
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))
@@ -236,7 +237,7 @@ def AnalysisIndex():
     # for stockID, group in groups:
     #     print(group)
 
-def _filterZhangFu(stockID, df,threshold,days):
+def _filterZhangFu(stockID, stockName,df,threshold,days):
     result = []
     for day in range(1,days):
         key1 = f'''{day}日涨幅'''
@@ -247,7 +248,7 @@ def _filterZhangFu(stockID, df,threshold,days):
         for _,row in newDF.iterrows():
             res = {}
             res["股票代码"] = stockID
-            #res["股票名称"] = stockName
+            res["股票名称"] = stockName
             res["天数"] = day
             res[key1] = row[key1]
             res["日期"] = row["日期"]
@@ -258,28 +259,36 @@ def _filterZhangFu(stockID, df,threshold,days):
 def FilterZhangFu():
     dbConnection = ConnectToDB()
     sql = f'''
-    SELECT * FROM stock.stockdailyinfo_2023
+    SELECT A.*,B.`股票简称` FROM (SELECT * FROM stock.stockdailyinfo_2023
     UNION ALL
-    SELECT * FROM stock.stockdailyinfo
+    SELECT * FROM stock.stockdailyinfo) AS A, (SELECT * FROM stock.stockbasicinfo) AS B where A.`股票代码` = B.`股票代码`
     '''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
-    groups = df.groupby(["股票代码",])
-    sqls = []
+    groups = df.groupby(["股票代码","股票简称"])
     threshold = 0.3
-    days = 30
+    days = 3
     results = []
-    for stockID,group in groups:
+    for (stockID,stockName),group in groups:
         df = group.reset_index()
         df.dropna()
         df["开盘价"] = df["开盘价"].astype("float")
         df["收盘价"] = df["收盘价"].astype("float")
         df["最高价"] = df["最高价"].astype("float")
         df["最低价"] = df["最低价"].astype("float")
-        res = _filterZhangFu(stockID,df,threshold,days)
+        res = _filterZhangFu(stockID,stockName,df,threshold,days)
         results.extend(res)
     df = pd.DataFrame(results)
+
+    df = df[df['股票名称'].str.match('[\s\S]*(ST|退|C)+?[\s\S]*') == False]
+    df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688)+?[\s\S]*') == False]
     df.to_excel("/tmp/区间涨幅.xlsx")
+
+
+    root = "/tmp/"
+    newdf = df.drop_duplicates(subset=["股票代码",],keep="first")
+    DataFrameToJPG(newdf,("股票代码","股票名称"),root,f'''区间涨幅''')
+    
 
 
 if __name__ == "__main__":

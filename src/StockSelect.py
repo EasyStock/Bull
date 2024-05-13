@@ -12,6 +12,7 @@ from stockSelect.pattern5 import CStockPattern5  # N形战法
 from stockSelect.pattern6 import CStockPattern6  # 吸筹跌破反包战法
 from stockSelect.pattern8 import CStockPattern8  # 吸筹跌破反包战法
 from stockSelect.pattern9 import CStockPattern9  # 吸筹跌破反包战法
+from stockSelect.pattern10 import CStockPattern10  # 倍量
 
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
@@ -22,8 +23,8 @@ if __name__ == "__main__":
     # p = CStockPattern3(dbConnection,12)
     # p.Select()
 
-    p = CStockPattern5(dbConnection)
-    p.Select()
+    p = CStockPattern10(dbConnection)
+    p.SelectLast()
     # p = CStockPattern6(dbConnection)
     # p.Select()
 
