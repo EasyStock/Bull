@@ -47,3 +47,4 @@ class CMA(object):
     def keyMA(self):
         return self.data.iloc[-self.N-1][self.column]
 
+
