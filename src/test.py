@@ -293,6 +293,32 @@ def FilterZhangFu():
     
 
 
+
+def IndexGuaiLi():
+    dbConnection = ConnectToDB()
+    sql = f'''SELECT * FROM stock.kaipanla_index;'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    chuangyeBan = df[df["StockID"] == "SZ399006"].copy()
+    chuangyeBan.set_index("date",drop=True,inplace=True)
+    chuangyeBan["MA5"] = chuangyeBan["last_px"].rolling(window=5).mean()
+    chuangyeBan["乖离_MA5"] = (chuangyeBan["last_px"] - chuangyeBan["MA5"]) / chuangyeBan["MA5"] * 100
+    chuangyeBan.to_excel("/tmp/创业板乖离.xlsx")
+    t = chuangyeBan["乖离_MA5"].quantile([0.02, 0.05, 0.1, 0.5,0.9, 0.95, 0.98])
+    
+    print(t)
+ 
+    # # 创建直方图
+    plt.hist(chuangyeBan["乖离_MA5"], bins=100, color='green', edgecolor='black')
+    
+    # 设置标题和轴标签
+    plt.title('Histogram of Data')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
+    
+    # 显示图形
+    plt.show()
+
 def TestIndex():
     file = "/Users/mac/Desktop/上证指数.csv"
     df = pd.read_csv(file)
@@ -326,4 +352,4 @@ if __name__ == "__main__":
     # WriteXLS()
     #AnalysisIndex()
     #FilterZhangFu()
-    TestIndex()
+    IndexGuaiLi()
