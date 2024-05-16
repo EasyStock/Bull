@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-class CMAPredict(object):
+class CMAGuaiLi(object):
     def __init__(self,N,data) -> None:
         self.N = N
         self.data = data
@@ -51,7 +51,6 @@ class CMAPredict(object):
         return self._buildPredictData(self.data,steps)
 
 
-
 if __name__ == "__main__":
     file = "/Users/mac/Desktop/正丹股份.csv"
     df = pd.read_csv(file)
@@ -59,8 +58,9 @@ if __name__ == "__main__":
     result = []
     for i in range(6,size):
         newDF = df[:i]
-        ma = CMAPredict(5,newDF["收盘价"])
+        ma = CMAGuaiLi(5,newDF["收盘价"])
         f = ma.Predict()
+        print(f)
         newRow = df.iloc[i]
         open = newRow["开盘价"]
         a = f[f["预测值"] <= open]
@@ -74,7 +74,7 @@ if __name__ == "__main__":
             resultRow["今日开盘价乖离率"] = f'''< {a.iloc[0]["预测乖离率"]}'''
         
         result.append(resultRow)
-        print(resultRow)
+        #print(resultRow)
 
     df = pd.DataFrame(result)
     print(df)

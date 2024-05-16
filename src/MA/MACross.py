@@ -56,7 +56,7 @@ class CMACross(object):
         x = (self.N2 * n1 - self.N1*n2 + self.N1*self.N2*ma2 - self.N1*self.N2*ma1)/(self.N2 - self.N1)
         last = newDF.iloc[-1][self.column]
         delta = (x- last)/last*100
-        return (x,delta)
+        return (x,delta,(x-n1+5*ma1)/5) #(目标点，目标涨跌幅，目标交汇点)
 
     def Verify(self,delta):
         newDF = self._PreProcess(delta = delta)

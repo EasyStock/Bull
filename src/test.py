@@ -6,6 +6,8 @@ from MA.MA import CMA
 from MA.MAMgr import CMAMgr
 from MA.MACross import CMACross
 from Utility.convertDataFrameToJPG import DataFrameToJPG
+import matplotlib.pyplot as plt
+import numpy as np
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))
@@ -291,6 +293,30 @@ def FilterZhangFu():
     
 
 
+def TestIndex():
+    file = "/Users/mac/Desktop/上证指数.csv"
+    df = pd.read_csv(file)
+    df["MA5"] = df["last_px"].rolling(window=5).mean()
+    df["MA10"] = df["last_px"].rolling(window=10).mean()
+    df.to_excel("/tmp/上证指数.xlsx")
+    # df["乖离"] = (df["last_px"] - df["MA5"]) / df["MA5"] * 100
+    # print(df)
+    # t = df["乖离"].quantile([0.005,0.01,0.025, 0.05, 0.1, 0.5,0.9, 0.95, 0.975,0.99,0.995])
+    # print(t)
+    # # 创建直方图
+    # plt.hist(df["乖离"], bins=50, color='green', edgecolor='black')
+    
+    # # 设置标题和轴标签
+    # plt.title('Histogram of Data')
+    # plt.xlabel('Value')
+    # plt.ylabel('Frequency')
+    
+    # # 显示图形
+    # plt.show()
+    cross = CMACross(df,"last_px",5,10)
+    res = cross.predict()
+    print(res)
+
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
     # Test1_BuyTogether(dbConnection,10028451,10656871)
@@ -299,4 +325,5 @@ if __name__ == "__main__":
     #WriteXLS()
     # WriteXLS()
     #AnalysisIndex()
-    FilterZhangFu()
+    #FilterZhangFu()
+    TestIndex()
