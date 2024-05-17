@@ -14,8 +14,13 @@ def ConnectToDB():
     return ConnectToDB_AliYun()
 
 def ConnectToDB_AliYun():
-    pass
-
+    host = "rm-bp18ns23ag12j4f29xo.mysql.rds.aliyuncs.com"
+    port = 3306
+    user = 'user_stock'
+    password = '123456789@'
+    dbName = 'stock'
+    connect = CMySqlConnection(host,port,user, password, dbName)
+    return connect
 
 def DataFrameToSqls_INSERT_OR_IGNORE(datas,tableName):
     sqls = []

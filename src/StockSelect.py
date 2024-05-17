@@ -20,8 +20,8 @@ if __name__ == "__main__":
     # p.Select()
     # p = CStockPattern2(dbConnection)
     # p.Select()
-    # p = CStockPattern3(dbConnection,12)
-    # p.Select()
+    p = CStockPattern5(dbConnection)
+    p.Select()
 
     p = CStockPattern10(dbConnection)
     p.SelectLast()
