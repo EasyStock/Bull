@@ -54,7 +54,9 @@ class CMANormal(object):
         return newNumber
     
     def _events(self,dataFrame):
-        enent = []
+        enent_1 = []
+        enent_2 = []
+        enent_3 = []
         if dataFrame.shape[0] >= 2:
             lastRow2 = dataFrame.iloc[-2]
             lastRow1 = dataFrame.iloc[-1]
@@ -70,14 +72,15 @@ class CMANormal(object):
 
             if data_2 < ma_2 and data >=ma1:
                 res = [lastRow1.name,data,"站上",self.key1,man_1_2]
-                enent.append(res)
+                enent_1.append(res)
 
             if data_2 > ma_2 and data < ma1:
                 res = [lastRow1.name,data,"跌破",self.key1,man_1_2]
-                enent.append(res) 
+                enent_1.append(res) 
 
-            enent.append([lastRow1.name,data,"明日均衡点",self.key1,man_1]) 
-            enent.append([lastRow1.name,data,"乖离",guali,gualilv]) 
+            enent_2.append([lastRow1.name,data,"明日均衡点",self.key1,man_1]) 
+            enent_3.append([lastRow1.name,data,"乖离",guali,gualilv]) 
+        enent = [enent_1,enent_2,enent_3]
         return enent
 
     def EventLast(self):
@@ -85,22 +88,32 @@ class CMANormal(object):
         print(dataFrame)
         self.events = self._events(dataFrame)
         print(self.events)
+        return self.events
     
     def EventEveryDay(self):
         dataFrame = self._buildData(self.data,self.data.index)
         size = dataFrame.shape[0]
+        events_1 = []
+        events_2 = []
+        events_3 = []
         events = []
         for index in range(6,size+1):
             if index == size:
                 newDf = dataFrame
             else:
                 newDf = dataFrame[:index]
-            evts = self._events(newDf)
+            evts1,evts2,evts3 = self._events(newDf)
             #lastRow = newDf.iloc[-1]
-            events.extend(evts)
+            events_1.extend(evts1)
+            events_2.extend(evts2)
+            events_3.extend(evts3)
         #print(events)
+        events.extend(events_1)
+        events.extend(events_2)
+        events.extend(events_3)
         df = pd.DataFrame(events)
         print(df)
+        df.to_excel("/tmp/124.xlsx")
 
 
 if __name__ == "__main__":
@@ -108,4 +121,5 @@ if __name__ == "__main__":
     df = pd.read_csv(file)
     df.set_index("date",drop=True,inplace=True)
     normal = CMANormal(df["last_px"],5)
-    normal.EventLast()
+    newDf = normal.EventEveryDay()
+
