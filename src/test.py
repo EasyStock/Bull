@@ -8,6 +8,7 @@ from MA.MACross import CMACross
 from Utility.convertDataFrameToJPG import DataFrameToJPG
 import matplotlib.pyplot as plt
 import numpy as np
+from MA.IndexMAMgr import CIndexMAMgr
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))
@@ -343,6 +344,12 @@ def TestIndex():
     res = cross.predict()
     print(res)
 
+
+def TestIndexMgr():
+    #dbConnection = ConnectToDB()
+    mgr = CIndexMAMgr(None)
+    mgr.IndexInfo()
+    
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
     # Test1_BuyTogether(dbConnection,10028451,10656871)
@@ -352,4 +359,4 @@ if __name__ == "__main__":
     # WriteXLS()
     #AnalysisIndex()
     #FilterZhangFu()
-    IndexGuaiLi()
+    TestIndexMgr()
