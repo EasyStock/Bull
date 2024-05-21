@@ -52,7 +52,7 @@ class CMA2(object):
         else:
             message = f'''预测: 数据大于等于{data} [{zhangfu:.2f}%], MA{self.N} 将拐头向上'''
 
-        return (data,message)
+        return (data,zhangfu,message)
 
     def EventLast(self):
         dataFrame = self._buildData(self.data,self.data.index)

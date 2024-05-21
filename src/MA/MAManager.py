@@ -64,7 +64,7 @@ class CMAManager(object):
                 r = cross.predict()
                 if r[1] >=-4 and r[1] <=4: #指数涨跌幅在【-4， 4 】之间
                     message = f'''预测: 数据为 {r[0]:.2f} 涨跌幅为:{r[1]:.2f}%时, MA{N1} 与 MA{N2}将在{r[2]:.2f}点 相交！'''
-                    self.messageTomorrow.append((r[0],message))
+                    self.messageTomorrow.append((r[0],r[1],message))
 
     def _indexInfo(self,df,stockID,stockName):
         self._indexInfo_(df,stockID)
@@ -73,14 +73,22 @@ class CMAManager(object):
         sortedMessage = sorted(self.messageTomorrow,key = lambda x:x[0],reverse = True)
         messageTomorrow = ""
         for msg in sortedMessage:
-            newMsg = f'''  {msg[0]:.2f}   {msg[1]}\n'''
+            color = 'blue'
+            if msg[1] > 0:
+                color = 'red'
+            else:
+                color = 'green'
+            newMsg = f'''**<font color='{color}'>{msg[0]:.2f}</font>** **<font color='blue'>{msg[2]}</font>**\n\n'''
+            # data1 = f'''  {msg[0]:.2f}'''
+            # data2 = msg[1]
+            # newMsg = {"tag":"column_set","flex_mode":"none","background_style":"default","columns":[{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":data1,"text_align":"center"}]},{"tag":"column","width":"weighted","weight":1,"vertical_align":"center","elements":[{"tag":"markdown","content":data2,"text_align":"center"}]}],"horizontal_spacing":"small"}
             messageTomorrow = messageTomorrow + newMsg
 
         message = f'''
-{stockName}【{stockID}】今日信息:
+**<font color='red'>{stockName}【{stockID}】</font>** **今日信息:**
   {msg1}
 
-{stockName}【{stockID}】明日信息:
+**<font color='red'>{stockName}【{stockID}】</font>** **明日信息:**
 {messageTomorrow} 
         '''
         #print(message)
@@ -90,7 +98,7 @@ class CMAManager(object):
 
     def IndexInfo(self,):
         messages = []
-        df = self._getIndexInfo2()
+        df = self._getIndexInfo()
         indexInfo = {
             "SH000001":"上证指数",
             "SZ399001":"深证成指",

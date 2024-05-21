@@ -23,6 +23,7 @@ from VMA.VMAMgr import VAMSelector
 from Score import ScoreZaiEveryDay
 from bankuai.bankuaiMgr import CPercentileBanKuai
 from CompareWithIndex.StockCompareWithIndex import CStockCompareWithIndex
+from IndexAlalarm import IndexAlarm
 
 import pytz
 import datetime
@@ -168,6 +169,8 @@ def SendReportOfStock(dbConnection,tradingDays,logger):
         SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret)
         time.sleep(3)
         SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret)
+        time.sleep(3)
+        IndexAlarm(dbConnection,tradingDays,webhook,secret) #指数预测信息
     logger.info(f'==============结束发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 

@@ -46,8 +46,9 @@ class CMA1(object):
         dataFrame = self._buildData(self.data,self.data.index)
         lastRow1 = dataFrame.iloc[-1]
         ma = self._formatNumber(lastRow1[self.key2])
-        message = f'''预测: {ma} 是 MA{self.N} 等于价格的点'''
-        return (ma,message)
+        percentage = (lastRow1[self.key2] - lastRow1[self.key0]) / lastRow1[self.key0] * 100
+        message = f'''预测: {ma} 【{percentage:.2f}%】是 MA{self.N} 等于价格的点'''
+        return (ma,percentage,message)
 
     def EventLast(self):
         dataFrame = self._buildData(self.data,self.data.index)
