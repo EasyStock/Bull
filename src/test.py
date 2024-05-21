@@ -346,8 +346,8 @@ def TestIndex():
 
 
 def TestIndexMgr():
-    #dbConnection = ConnectToDB()
-    mgr = CIndexMAMgr(None)
+    dbConnection = ConnectToDB()
+    mgr = CIndexMAMgr(dbConnection)
     mgr.IndexInfo()
     
 if __name__ == "__main__":

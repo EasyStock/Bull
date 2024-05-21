@@ -167,7 +167,7 @@ def SendNewStocks(dbConnection,tradingDays,webhook,secret):
             ban = "主板"
         elif re.match('^68.*',stockID) is not None:
             ban = "科创板"
-        elif re.match('^8.*',stockID) is not None:
+        elif re.match('^8.*|^920.*',stockID) is not None:
             ban = "北交所"
             data.append((stockName,date,ban))  
         else:
