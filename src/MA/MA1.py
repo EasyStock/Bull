@@ -46,7 +46,7 @@ class CMA1(object):
         dataFrame = self._buildData(self.data,self.data.index)
         lastRow1 = dataFrame.iloc[-1]
         ma = self._formatNumber(lastRow1[self.key2])
-        message = f'''{ma} 是 MA{self.N} 等于价格的点'''
+        message = f'''预测: {ma} 是 MA{self.N} 等于价格的点'''
         return (ma,message)
 
     def EventLast(self):

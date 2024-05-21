@@ -27,6 +27,17 @@ class CMAGuaiLi(object):
         dataFrame[self.key2] = (dataFrame[self.key0] - dataFrame[self.key]) / dataFrame[self.key]*100
         return dataFrame
 
+
+    def DistanceLast(self):
+        dataFrame = self._buildDataFrame(self.data)
+        lastRow = dataFrame.iloc[-1]
+        return (lastRow[self.key0],lastRow[self.key1],lastRow[self.key2])
+
+    def DistanceAll(self):
+        dataFrame = self._buildDataFrame(self.data)
+        newDf = pd.DataFrame(dataFrame,columns=(self.key0,self.key1,self.key2))
+        return newDf
+    
     def _buildPredictData(self,data,steps):
         # X*(1+percentage) + MA5 + MA4 + MA3 + MA2 = 5X
         dataFrame = pd.DataFrame(list(data),columns=(self.key0,))
@@ -54,28 +65,31 @@ class CMAGuaiLi(object):
 if __name__ == "__main__":
     file = "/Users/mac/Desktop/正丹股份.csv"
     df = pd.read_csv(file)
-    size = df.shape[0]
-    result = []
-    for i in range(6,size):
-        newDF = df[:i]
-        ma = CMAGuaiLi(5,newDF["收盘价"])
-        f = ma.Predict()
-        print(f)
-        newRow = df.iloc[i]
-        open = newRow["开盘价"]
-        a = f[f["预测值"] <= open]
-        resultRow = newRow.copy()
-        if not a.empty:
-            resultRow["今日开盘价乖离率"] = a.iloc[-1]["预测乖离率"]
-            if a.shape[0] == f.shape[0]:
-                resultRow["今日开盘价乖离率"] = f'''>{a.iloc[-1]["预测乖离率"]}''' 
-        else:
-            a = f[f["预测值"] > open]
-            resultRow["今日开盘价乖离率"] = f'''< {a.iloc[0]["预测乖离率"]}'''
-        
-        result.append(resultRow)
-        #print(resultRow)
+    ma = CMAGuaiLi(200,df["收盘价"])
+    print(ma.DistanceLast())
 
-    df = pd.DataFrame(result)
-    print(df)
-    df.to_excel("/tmp/aaaaaa.xlsx")
+    # size = df.shape[0]
+    # result = []
+    # for i in range(6,size):
+    #     newDF = df[:i]
+    #     ma = CMAGuaiLi(5,newDF["收盘价"])
+    #     f = ma.Predict()
+    #     print(f)
+    #     newRow = df.iloc[i]
+    #     open = newRow["开盘价"]
+    #     a = f[f["预测值"] <= open]
+    #     resultRow = newRow.copy()
+    #     if not a.empty:
+    #         resultRow["今日开盘价乖离率"] = a.iloc[-1]["预测乖离率"]
+    #         if a.shape[0] == f.shape[0]:
+    #             resultRow["今日开盘价乖离率"] = f'''>{a.iloc[-1]["预测乖离率"]}''' 
+    #     else:
+    #         a = f[f["预测值"] > open]
+    #         resultRow["今日开盘价乖离率"] = f'''< {a.iloc[0]["预测乖离率"]}'''
+        
+    #     result.append(resultRow)
+    #     #print(resultRow)
+
+    # df = pd.DataFrame(result)
+    # print(df)
+    # df.to_excel("/tmp/aaaaaa.xlsx")

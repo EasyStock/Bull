@@ -48,9 +48,9 @@ class CMA2(object):
         data = self._formatNumber(keyRow[self.key0])
         zhangfu = (keyRow[self.key0] - lastRow1[self.key0]) / lastRow1[self.key0] * 100
         if lastRow1[self.key3] > 0:
-            message = f'''明日数据小于等于{data} [{zhangfu:.2f}%], MA{self.N} 将拐头向下'''
+            message = f'''预测: 数据小于等于{data} [{zhangfu:.2f}%], MA{self.N} 将拐头向下'''
         else:
-            message = f'''明日数据大于等于{data} [{zhangfu:.2f}%], MA{self.N} 将拐头向上'''
+            message = f'''预测: 数据大于等于{data} [{zhangfu:.2f}%], MA{self.N} 将拐头向上'''
 
         return (data,message)
 
