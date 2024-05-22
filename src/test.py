@@ -346,9 +346,49 @@ def TestIndex():
 
 
 def TestIndexMgr():
-    #dbConnection = ConnectToDB()
-    mgr = CMAManager(None)
-    mgr.IndexInfo()
+    dbConnection = ConnectToDB()
+    sql = f'''SELECT * FROM stock.kaipanla_index;'''
+    sql = f'''
+    SELECT A.*,B.`股票简称` FROM (SELECT * FROM stock.stockdailyinfo_2023
+    UNION ALL
+    SELECT * FROM stock.stockdailyinfo) AS A, (SELECT * FROM stock.stockbasicinfo) AS B where A.`股票代码` = B.`股票代码`
+    '''
+
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    groups = df.groupby(["股票代码","股票简称"])
+    results = []
+    for (stockID,stockName),group in groups:
+        df = group.reset_index()
+        df.dropna()
+        df.set_index("日期",drop=True,inplace=True)
+        df["MA120"] = df["收盘价"].rolling(window=120).mean()
+        df["MA120昨日"] = df["MA120"].shift()
+        df["MA120Delta"] = df["MA120"] - df["MA120昨日"]
+        df["MA120Ratio"] = (df["MA120"] - df["MA120昨日"]) / df["MA120昨日"]*10000
+        ratio = df.iloc[-1]["MA120Ratio"] 
+        if ratio >= -1 and ratio <= 1:
+            print((stockID,stockName))
+            results.append((stockID,stockName))
+    newDF = pd.DataFrame(results,columns=("股票代码","股票简称"))
+    newDF = newDF[newDF['股票简称'].str.match('[\s\S]*(ST|退|C)+?[\s\S]*') == False]
+    newDF = newDF[newDF['股票代码'].str.match('[\s\S]*(BJ|^688)+?[\s\S]*') == False]
+    newDF.to_excel("/tmp/120选股.xlsx")
+
+
+    root = "/tmp/"
+    # newdf = newDF.drop_duplicates(subset=["股票代码",],keep="first")
+    DataFrameToJPG(newDF,("股票代码","股票简称"),root,f'''120选股''')
+
+    #chuangyeBan = df[df["StockID"] == "SZ399006"].copy()
+    # chuangyeBan.set_index("日期",drop=True,inplace=True)
+    # chuangyeBan["MA120"] = chuangyeBan["收盘价"].rolling(window=120).mean()
+    # chuangyeBan["MA120昨日"] = chuangyeBan["MA120"].shift()
+    # chuangyeBan["MA120Delta"] = chuangyeBan["MA120"] - chuangyeBan["MA120昨日"]
+    # chuangyeBan["MA120Ratio"] = (chuangyeBan["MA120"] - chuangyeBan["MA120昨日"]) / chuangyeBan["MA120昨日"]*10000
+    # chuangyeBan.to_excel("/tmp/600101.xlsx")
+    # mgr = CMAManager(None)
+    # mgr.IndexInfo()
     
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
