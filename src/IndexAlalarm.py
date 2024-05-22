@@ -10,7 +10,7 @@ import json
 
 def IndexAlarm(dbConnection,tradingDays,webhook,secret):
     mgr = CMAManager(dbConnection)
-    messages = mgr.IndexInfo()
+    messages = mgr.IndexInfoToMessages(tradingDays[-1])
     t = FormatCardOfAlarm(tradingDays[-1],messages)
     content = json.dumps(t,ensure_ascii=False)
     msg_type = "interactive"

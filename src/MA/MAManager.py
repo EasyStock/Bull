@@ -1,15 +1,18 @@
 from MA.MA1 import EventLast_MA1,Predict_MA1
 from MA.MA2 import EventLast_MA2,Predict_MA2
 from MA.MACross import CMACross
-
+from writeToExcel.indexMA import CWriteIndexMAEventToXLSX
 import pandas as pd
-
+from workspace import GetFuPanRoot
+import os
 
 class CMAManager(object):
     def __init__(self,dbConnection):
         self.dbConnection = dbConnection
         self.messageToday = []
         self.messageTomorrow = []
+        self.xlsxDfToday = None
+        self.xlsxDfTomorrow = None
 
     def _getIndexInfo(self):
         sql = f'''SELECT * FROM stock.kaipanla_index;'''
@@ -66,9 +69,7 @@ class CMAManager(object):
                     message = f'''预测: 数据为 {r[0]:.2f} 涨跌幅为:{r[1]:.2f}%时, MA{N1} 与 MA{N2}将在{r[2]:.2f}点 相交！'''
                     self.messageTomorrow.append((r[0],r[1],message))
 
-    def _indexInfo(self,df,stockID,stockName):
-        self._indexInfo_(df,stockID)
-        self._indexInfo2_(df,stockID)
+    def _formatMsg(self,stockID,stockName):
         msg1 = "\n  ".join(self.messageToday)
         sortedMessage = sorted(self.messageTomorrow,key = lambda x:x[0],reverse = True)
         messageTomorrow = ""
@@ -91,12 +92,55 @@ class CMAManager(object):
 **<font color='red'>{stockName}【{stockID}】</font>** **明日信息:**
 {messageTomorrow} 
         '''
+        return message
+    
+    def _formatXlsxDF(self,stockID,stockName):
+        dfTodayData = []
+        for msg in self.messageToday:
+            result = {
+                "股票代码":stockID,
+                "股票名称":stockName,
+                "事件描述":msg,
+            }
+            dfTodayData.append(result)
+
+        dfTomorrowData = []
+        sortedMessage = sorted(self.messageTomorrow,key = lambda x:x[0],reverse = True)
+        for msg in sortedMessage:
+            result = {
+                "股票代码":stockID,
+                "股票名称":stockName,
+                "数据":msg[0],
+                "涨跌幅":msg[1],
+                "事件描述":msg[2],
+            }
+            dfTomorrowData.append(result)
+        
+        if len(dfTodayData) >0:
+            if self.xlsxDfToday is None:
+                self.xlsxDfToday = pd.DataFrame(dfTodayData)
+            else:
+                newDf = pd.DataFrame(dfTodayData)
+                self.xlsxDfToday = pd.concat([self.xlsxDfToday,newDf])
+        
+        if len(dfTomorrowData) >0:
+            if self.xlsxDfTomorrow is None:
+                self.xlsxDfTomorrow = pd.DataFrame(dfTomorrowData)
+            else:
+                newDf = pd.DataFrame(dfTomorrowData)
+                self.xlsxDfTomorrow = pd.concat([self.xlsxDfTomorrow,newDf])   
+
+    def _indexInfo(self,df,stockID,stockName):
+        self._indexInfo_(df,stockID)
+        self._indexInfo2_(df,stockID)
+        message = self._formatMsg(stockID,stockName)
+        self._formatXlsxDF(stockID,stockName)
         #print(message)
         self.messageToday = []
         self.messageTomorrow = []
         return message
 
-    def IndexInfo(self,):
+    def IndexInfoToMessages(self,today):
         messages = []
         df = self._getIndexInfo()
         indexInfo = {
@@ -108,6 +152,23 @@ class CMAManager(object):
             stockName = indexInfo[stockID]
             res = self._indexInfo(df,stockID,stockName)
             messages.append(res)
-        
+
+        folderRoot= GetFuPanRoot(today) 
+        fullPath = os.path.join(folderRoot,f"复盘摘要{today}.xlsx")
+        mode='w'
+        if_sheet_exists = None
+        if os.path.exists(fullPath) == True:
+            mode='a'
+            if_sheet_exists = 'overlay'
+
+        with pd.ExcelWriter(fullPath,engine='openpyxl',mode=mode,if_sheet_exists=if_sheet_exists) as excelWriter:
+            xlsxWriter = CWriteIndexMAEventToXLSX(today)
+            xlsxWriter.WriteIndexMAEventToXLSX(self.xlsxDfToday,self.xlsxDfTomorrow,excelWriter)
+            
         return messages
+    
+
+
+    
+
 
