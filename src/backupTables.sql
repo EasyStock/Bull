@@ -21,7 +21,7 @@ CREATE TABLE `bankuai_index_dailyinfo` (
   `总市值(元)` varchar(45) DEFAULT NULL,
   `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`板块代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `bankuai_index_score_daily` (
   `日期` varchar(45) NOT NULL,
@@ -42,14 +42,14 @@ CREATE TABLE `bankuai_index_score_daily` (
   `流通市值分数` float DEFAULT NULL,
   `总市值分数` float DEFAULT NULL,
   PRIMARY KEY (`日期`,`板块代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `bankuai_stock_match` (
   `板块代码` varchar(45) NOT NULL,
   `股票代码` varchar(45) NOT NULL,
   `更新日期` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`板块代码`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `caozuo` (
   `日期` varchar(45) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE `caozuo` (
   `盈亏` varchar(45) DEFAULT NULL,
   `备注` text,
   PRIMARY KEY (`日期`,`股票名称`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `compareindex_stock` (
   `date` varchar(45) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE `compareindex_stock` (
   `delta` float DEFAULT NULL,
   `flag` tinyint DEFAULT NULL,
   PRIMARY KEY (`date`,`indexID`,`stockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `compareindex_zai` (
   `date` varchar(45) NOT NULL,
@@ -83,14 +83,14 @@ CREATE TABLE `compareindex_zai` (
   `delta` float DEFAULT NULL,
   `flag` tinyint DEFAULT NULL,
   PRIMARY KEY (`date`,`indexID`,`stockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `cookies` (
   `name` varchar(255) NOT NULL,
   `cookie` text,
   `expiry` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `dragon` (
   `date` varchar(45) NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE `dragon` (
   `flag` varchar(45) NOT NULL,
   `reason` varchar(512) NOT NULL,
   PRIMARY KEY (`date`,`stockID`,`operator_ID`,`NET`,`flag`,`reason`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `dragon_guanlian` (
   `operatorIDs` varchar(255) NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE `dragon_guanlian` (
   `flag` varchar(45) NOT NULL,
   `reason` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`operatorIDs`,`date`,`stockID`,`flag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `fupan` (
   `日期` varchar(45) NOT NULL,
@@ -169,19 +169,19 @@ CREATE TABLE `fupan` (
   `复盘笔记` text,
   `备注` text,
   PRIMARY KEY (`日期`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `fupansummary` (
   `date` varchar(45) NOT NULL,
   `summary` longtext,
   PRIMARY KEY (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `gainian` (
   `概念名称` varchar(45) NOT NULL,
   `更新日期` varchar(45) NOT NULL,
   PRIMARY KEY (`概念名称`,`更新日期`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `index_dailyinfo` (
   `日期` varchar(45) NOT NULL,
@@ -202,14 +202,14 @@ CREATE TABLE `index_dailyinfo` (
   `总市值(元)` varchar(45) DEFAULT NULL,
   `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`指数代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `jenkins_status` (
   `date` varchar(45) NOT NULL,
   `data` tinyint(1) DEFAULT NULL,
   `analysis` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kaipanla_dieting` (
   `date` varchar(45) NOT NULL,
@@ -223,7 +223,7 @@ CREATE TABLE `kaipanla_dieting` (
   `huanshou` varchar(45) DEFAULT NULL,
   `liutong` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`date`,`stockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kaipanla_index` (
   `date` varchar(45) NOT NULL,
@@ -234,7 +234,7 @@ CREATE TABLE `kaipanla_index` (
   `last_px` float DEFAULT NULL,
   `turnover` bigint DEFAULT NULL,
   PRIMARY KEY (`date`,`StockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kaipanla_volumn` (
   `date` varchar(45) NOT NULL,
@@ -244,7 +244,7 @@ CREATE TABLE `kaipanla_volumn` (
   `ratio` varchar(45) DEFAULT NULL,
   `trends` text,
   PRIMARY KEY (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kaipanla_zhaban` (
   `date` varchar(45) NOT NULL,
@@ -259,7 +259,7 @@ CREATE TABLE `kaipanla_zhaban` (
   `huanshou` varchar(45) DEFAULT NULL,
   `liutong` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`date`,`stockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kaipanla_zhangting` (
   `date` varchar(45) NOT NULL,
@@ -277,7 +277,7 @@ CREATE TABLE `kaipanla_zhangting` (
   `huanshou` float DEFAULT NULL,
   `liutong` int DEFAULT NULL,
   PRIMARY KEY (`date`,`stockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kaipanla_ziranzhangting` (
   `date` varchar(45) NOT NULL,
@@ -294,7 +294,7 @@ CREATE TABLE `kaipanla_ziranzhangting` (
   `huanshou` varchar(45) DEFAULT NULL,
   `liutong` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`date`,`stockID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kezhuanzai_score` (
   `日期` varchar(45) NOT NULL,
@@ -308,7 +308,7 @@ CREATE TABLE `kezhuanzai_score` (
   `剩余规模分数` float DEFAULT NULL,
   `总分` float DEFAULT NULL,
   PRIMARY KEY (`日期`,`转债代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kezhuanzai_score_everyday` (
   `日期` varchar(45) NOT NULL,
@@ -318,7 +318,7 @@ CREATE TABLE `kezhuanzai_score_everyday` (
   `剩余规模分数` float DEFAULT NULL,
   `总分` float DEFAULT NULL,
   PRIMARY KEY (`日期`,`转债代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kezhuanzai_ths` (
   `日期` varchar(45) NOT NULL,
@@ -334,7 +334,7 @@ CREATE TABLE `kezhuanzai_ths` (
   `涨跌幅` float DEFAULT NULL,
   `上市日期` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`转债代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kezhuanzhai` (
   `日期` varchar(45) NOT NULL,
@@ -366,7 +366,7 @@ CREATE TABLE `kezhuanzhai` (
   `剩余规模<=3` text,
   `PB-溢价率` float DEFAULT NULL,
   PRIMARY KEY (`日期`,`转债代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `kezhuanzhai_all` (
   `日期` varchar(45) NOT NULL,
@@ -399,13 +399,13 @@ CREATE TABLE `kezhuanzhai_all` (
   `PB-溢价率` text,
   `筛选结果` text,
   PRIMARY KEY (`日期`,`转债代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `namemapping` (
   `shortName` varchar(45) NOT NULL,
   `fullName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`shortName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `newstocks` (
   `股票代码` varchar(45) NOT NULL,
@@ -427,7 +427,7 @@ CREATE TABLE `newstocks` (
   `单签收益` varchar(45) DEFAULT NULL,
   `承销商` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `percentile_bankuai` (
   `板块代码` varchar(45) NOT NULL,
@@ -447,7 +447,7 @@ CREATE TABLE `percentile_bankuai` (
   `流通市值(元)` varchar(45) DEFAULT NULL,
   `总市值(元)` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`板块代码`,`百分位数`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `percentile_stock_volumn` (
   `股票代码` varchar(45) NOT NULL,
@@ -455,13 +455,13 @@ CREATE TABLE `percentile_stock_volumn` (
   `成交量` varchar(45) DEFAULT NULL,
   `更新时间` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`股票代码`,`百分位数`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `rediandaily` (
   `日期` varchar(45) NOT NULL,
   `热点` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`日期`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `simulate_trading` (
   `日期` varchar(45) NOT NULL,
@@ -476,7 +476,7 @@ CREATE TABLE `simulate_trading` (
   `3日后卖出收益` varchar(45) DEFAULT NULL,
   `5日后卖出收益` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`名称`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stock_score_daily` (
   `日期` varchar(45) NOT NULL,
@@ -492,7 +492,7 @@ CREATE TABLE `stock_score_daily` (
   `总分2` varchar(45) DEFAULT NULL,
   `总分3` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockbasicinfo` (
   `股票代码` varchar(45) NOT NULL,
@@ -507,7 +507,7 @@ CREATE TABLE `stockbasicinfo` (
   `istTained` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`股票代码`),
   UNIQUE KEY `股票代码_UNIQUE` (`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockbasicinfo_test` (
   `股票代码` varchar(45) NOT NULL,
@@ -521,7 +521,7 @@ CREATE TABLE `stockbasicinfo_test` (
   `更新日期` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`股票代码`),
   UNIQUE KEY `股票代码_UNIQUE` (`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdaily_vma` (
   `日期` varchar(45) NOT NULL,
@@ -536,7 +536,7 @@ CREATE TABLE `stockdaily_vma` (
   `V/MA120` varchar(45) DEFAULT NULL,
   `V/MA250` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo` (
   `日期` varchar(45) NOT NULL,
@@ -555,7 +555,7 @@ CREATE TABLE `stockdailyinfo` (
   `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_2021` (
   `日期` varchar(45) NOT NULL,
@@ -574,7 +574,7 @@ CREATE TABLE `stockdailyinfo_2021` (
   `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_2022` (
   `日期` varchar(45) NOT NULL,
@@ -593,7 +593,7 @@ CREATE TABLE `stockdailyinfo_2022` (
   `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_2023` (
   `日期` varchar(45) NOT NULL,
@@ -612,7 +612,7 @@ CREATE TABLE `stockdailyinfo_2023` (
   `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   `顶底分型` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_test` (
   `日期` varchar(45) NOT NULL,
@@ -625,7 +625,7 @@ CREATE TABLE `stockdailyinfo_test` (
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_traning` (
   `日期` varchar(45) NOT NULL,
@@ -649,7 +649,7 @@ CREATE TABLE `stockdailyinfo_traning` (
   `5日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第6天开盘价-第2开盘价)/第2开盘价 X100%',
   `7日后涨幅` varchar(45) DEFAULT NULL COMMENT '(第8天开盘价-第2开盘价)/第2开盘价 X100%',
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_traning_result` (
   `stockID` varchar(45) NOT NULL,
@@ -661,7 +661,7 @@ CREATE TABLE `stockdailyinfo_traning_result` (
   `平均涨幅` varchar(45) DEFAULT NULL,
   `仓位` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`stockID`,`VMA`,`涨幅`,`几日后涨幅`,`VMA值`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockdailyinfo_tushare` (
   `日期` varchar(45) NOT NULL,
@@ -675,7 +675,7 @@ CREATE TABLE `stockdailyinfo_tushare` (
   `成交额` varchar(45) DEFAULT NULL,
   `涨跌幅` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockgainiannew` (
   `日期` varchar(45) NOT NULL,
@@ -684,7 +684,7 @@ CREATE TABLE `stockgainiannew` (
   `股票` text,
   `是否被炒作` blob,
   PRIMARY KEY (`日期`,`新概念`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockzhangting` (
   `日期` varchar(45) NOT NULL,
@@ -696,7 +696,7 @@ CREATE TABLE `stockzhangting` (
   `最终涨停时间` varchar(45) DEFAULT NULL,
   `涨停关键词` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `stockzhangting_test` (
   `日期` varchar(45) NOT NULL,
@@ -707,21 +707,23 @@ CREATE TABLE `stockzhangting_test` (
   `首次涨停时间` varchar(45) DEFAULT NULL,
   `最终涨停时间` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `thstoken` (
   `refreshToken` varchar(512) NOT NULL,
   `access_token` text,
   `expired_time` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`refreshToken`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `treadingday` (
   `交易所` varchar(45) NOT NULL,
   `日期` varchar(45) NOT NULL,
   `开市` int DEFAULT NULL,
   PRIMARY KEY (`日期`,`交易所`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jianpinh_py`@`%` SQL SECURITY DEFINER VIEW `yaogu` AS select `stockzhangting`.`股票代码` AS `股票代码`,max(`stockzhangting`.`连续涨停天数`) AS `最大连板天数`,min(`stockzhangting`.`日期`) AS `首次涨停日期`,max(`stockzhangting`.`日期`) AS `最后涨停日期` from `stockzhangting` group by `stockzhangting`.`股票代码`;
 
 CREATE TABLE `yiziban` (
   `日期` varchar(45) NOT NULL,
@@ -735,7 +737,7 @@ CREATE TABLE `yiziban` (
   `第二天表现` text,
   `第三天表现` text,
   PRIMARY KEY (`日期`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `zhanfa` (
   `日期` varchar(45) NOT NULL,
@@ -749,5 +751,15 @@ CREATE TABLE `zhanfa` (
   `盈利` varchar(45) DEFAULT NULL,
   `其他信息` text,
   PRIMARY KEY (`日期`,`战法名称`,`股票代码`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jianpinh`@`%` SQL SECURITY DEFINER VIEW `市场总体情绪` AS select `fupan`.`日期` AS `日期`,`fupan`.`红盘` AS `红盘`,`fupan`.`绿盘` AS `绿盘`,`fupan`.`两市量` AS `两市量`,`fupan`.`量比` AS `量比`,`fupan`.`增量` AS `增量`,`fupan`.`实际涨停` AS `实际涨停`,`fupan`.`跌停` AS `跌停`,`fupan`.`炸板` AS `炸板`,`fupan`.`炸板率` AS `炸板率`,`fupan`.`连板` AS `连板`,`fupan`.`备注` AS `备注` from `fupan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jianpinh`@`%` SQL SECURITY DEFINER VIEW `超短情绪指标` AS select `fupan`.`日期` AS `日期`,`fupan`.`涨停数量` AS `涨停数量`,`fupan`.`连板数量` AS `连板数量`,`fupan`.`收-5数量` AS `收-5数量`,`fupan`.`大盘红盘比` AS `大盘红盘比`,`fupan`.`亏钱效应` AS `亏钱效应`,`fupan`.`首板红盘比` AS `首板红盘比`,`fupan`.`首板大面比` AS `首板大面比`,`fupan`.`连板股的红盘比` AS `连板股的红盘比`,`fupan`.`连板比例` AS `连板比例`,`fupan`.`连板大面比` AS `连板大面比`,`fupan`.`昨日连板未涨停数的绿盘比` AS `昨日连板未涨停数的绿盘比`,`fupan`.`势能EX` AS `势能EX`,`fupan`.`动能EX` AS `动能EX`,`fupan`.`复盘笔记` AS `复盘笔记`,`fupan`.`备注` AS `备注` from `fupan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jianpinh`@`%` SQL SECURITY DEFINER VIEW `超短情绪指标2` AS select `fupan`.`日期` AS `日期`,`fupan`.`红盘` AS `红盘`,`fupan`.`绿盘` AS `绿盘`,`fupan`.`两市量` AS `两市量`,`fupan`.`实际涨停` AS `实际涨停`,`fupan`.`跌停` AS `跌停`,`fupan`.`炸板` AS `炸板`,`fupan`.`炸板率` AS `炸板率`,`fupan`.`连板` AS `连板`,`fupan`.`高度板` AS `高度板`,`fupan`.`大盘红盘比` AS `大盘红盘比`,`fupan`.`首板红盘比` AS `首板红盘比`,`fupan`.`连板股的红盘比` AS `连板股的红盘比`,`fupan`.`势能EX` AS `势能EX`,`fupan`.`动能EX` AS `动能EX`,`fupan`.`备注` AS `备注` from `fupan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jianpinh`@`%` SQL SECURITY DEFINER VIEW `超短环境1` AS select `fupan`.`日期` AS `日期`,`fupan`.`10CM首板奖励率` AS `10CM首板奖励率`,`fupan`.`20CM首板奖励率` AS `20CM首板奖励率`,`fupan`.`10CM连板奖励率` AS `10CM连板奖励率`,`fupan`.`20CM连板奖励率` AS `20CM连板奖励率`,`fupan`.`首板个数` AS `首板个数`,`fupan`.`2连板个数` AS `2连板个数`,`fupan`.`3连板个数` AS `3连板个数`,`fupan`.`3连个股` AS `3连个股`,`fupan`.`4连板及以上个数` AS `4连板及以上个数`,`fupan`.`4连及以上个股` AS `4连及以上个股`,`fupan`.`高度板` AS `高度板`,`fupan`.`动能` AS `动能`,`fupan`.`势能` AS `势能` from `fupan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jianpinh`@`%` SQL SECURITY DEFINER VIEW `超短环境2` AS select `fupan`.`日期` AS `日期`,`fupan`.`首板率` AS `首板率`,`fupan`.`连板率` AS `连板率`,`fupan`.`昨日首板溢价率` AS `昨日首板溢价率`,`fupan`.`昨日首板晋级率` AS `昨日首板晋级率`,`fupan`.`昨日2板溢价率` AS `昨日2板溢价率`,`fupan`.`昨日2板晋级率` AS `昨日2板晋级率`,`fupan`.`昨日3板溢价率` AS `昨日3板溢价率`,`fupan`.`昨日3板晋级率` AS `昨日3板晋级率`,`fupan`.`昨日4板及以上溢价率` AS `昨日4板及以上溢价率`,`fupan`.`昨日4板及以上晋级率` AS `昨日4板及以上晋级率`,`fupan`.`备注` AS `备注` from `fupan`;
 

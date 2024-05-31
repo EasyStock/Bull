@@ -75,9 +75,9 @@ class CWriteIndexMAEventToXLSX(object):
         self.mergeRow(sheet,1,40)
         startRow = 1
         endRow = startRow + size1 + size2 +5
-        fontRed = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
-        fontGreen = Font(name='宋体', size=12, italic=False, color='00FF00', bold=True)
-        fontblack = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
+        fontRed = Font(name='宋体', size=16, italic=False, color='FF0000', bold=True)
+        fontGreen = Font(name='宋体', size=16, italic=False, color='00FF00', bold=True)
+        fontblack = Font(name='宋体', size=16, italic=False, color='000000', bold=True)
         for index in range(1,endRow):
             if index >size1+1 and index < size1+5:
                 continue
@@ -92,12 +92,17 @@ class CWriteIndexMAEventToXLSX(object):
 
             cell4 = sheet.cell(row = startRow + index, column = 4)
             font = fontblack
+            defaultFill = None
             if index >= size1 + 6:
-                t = float(cell4.value)
-                if t >=0:
-                    font = fontRed
-                else:
-                    font = fontGreen
+                try:
+                    t = float(cell4.value)
+                    if t >=0:
+                        font = fontRed
+                    else:
+                        font = fontGreen
+                except:
+                    font = fontblack
+                    defaultFill = PatternFill('solid', fgColor="FFFFFF")
 
             for column in range(1,6):
                 cell = sheet.cell(row = startRow + index, column = column)
@@ -106,7 +111,7 @@ class CWriteIndexMAEventToXLSX(object):
                 if column >=8 and index > 1:
                     cell.alignment = alignment_left
                 cell.fill = PatternFill('solid', fgColor="FFFFFF")
-                if index % 2 != 0:
+                if index % 2 != 0 and defaultFill == None:
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                 else:
                     cell.fill = PatternFill('solid', fgColor="FFFFFF")

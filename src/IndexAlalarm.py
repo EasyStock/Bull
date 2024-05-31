@@ -1,7 +1,5 @@
 from mysql.connect2DB import ConnectToDB
 from DBOperating import GetTradingDateLastN
-import pandas as pd
-from MA.MAMgr import CMAMgr
 from MA.MAManager import CMAManager
 
 from message.feishu.messageformat_feishu import FormatCardOfAlarm

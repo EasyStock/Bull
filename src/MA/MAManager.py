@@ -31,7 +31,7 @@ class CMAManager(object):
 
     def _indexInfo_(self,df,stockID):
         newDf = df[df["StockID"] == stockID]
-        res1 = EventLast_MA1(newDf["last_px"],MAs=[5,10,20,30,60,120,200])
+        res1 = EventLast_MA1(newDf["last_px"],MAs=[5,10,20,])
         for key in res1:
             msg = f'''{key}, {",".join(res1[key])}'''
             self.messageToday.append(msg)
@@ -40,7 +40,7 @@ class CMAManager(object):
             msg = f'''{key}, {",".join(res3[key])}'''
             self.messageToday.append(msg)
 
-        res2 = Predict_MA1(newDf["last_px"],MAs=[5,10,20,30,60,120,200])
+        res2 = Predict_MA1(newDf["last_px"],MAs=[5,10,20,])
         self.messageTomorrow.extend(res2)
         res4 = Predict_MA2(newDf["last_px"],MAs=[5,10,20,30,60,120,200])
         self.messageTomorrow.extend(res4)
@@ -106,6 +106,13 @@ class CMAManager(object):
 
         dfTomorrowData = []
         sortedMessage = sorted(self.messageTomorrow,key = lambda x:x[0],reverse = True)
+        split = {
+                "股票代码":"",
+                "股票名称":"",
+                "数据":"",
+                "涨跌幅":"",
+                "事件描述":"",
+        }
         for msg in sortedMessage:
             result = {
                 "股票代码":stockID,
@@ -116,6 +123,8 @@ class CMAManager(object):
             }
             dfTomorrowData.append(result)
         
+        dfTomorrowData.append(split)
+        dfTomorrowData.append(split)
         if len(dfTodayData) >0:
             if self.xlsxDfToday is None:
                 self.xlsxDfToday = pd.DataFrame(dfTodayData)
