@@ -9,6 +9,7 @@ from Utility.convertDataFrameToJPG import DataFrameToJPG
 import matplotlib.pyplot as plt
 import numpy as np
 from MA.MAManager import CMAManager
+from DBOperating import GetTradingDateLastN
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))
@@ -390,6 +391,27 @@ def TestIndexMgr():
     # mgr = CMAManager(None)
     # mgr.IndexInfo()
     
+
+def SelectZhai():
+    dbConnection = ConnectToDB()
+    # from TestCode.test6 import Test
+    # Test(dbConnection)
+    from ZhaiSelector.ZhaiPattern1 import CZhaiPattern1
+    from ZhaiSelector.ZhaiPattern2 import CZhaiPattern2
+
+    root = "/tmp/"
+    tradingDays = GetTradingDateLastN(dbConnection,300)
+    params ={"startDay":tradingDays[0],"lastDay":tradingDays[-1]}
+    # select = CZhaiPattern1(dbConnection)
+    # res = select.SelectLast(params)
+    # print(res)
+
+    select = CZhaiPattern2(dbConnection)
+    res = select.SelectAll(params)
+    res.to_excel("/tmp/140以下单日涨幅大于5%.xlsx")
+    DataFrameToJPG(res,("转债代码","转债名称"),root,f'''140以下单日涨幅大于5%''')
+    print(res)
+
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
     # Test1_BuyTogether(dbConnection,10028451,10656871)
@@ -399,4 +421,4 @@ if __name__ == "__main__":
     # WriteXLS()
     #AnalysisIndex()
     #FilterZhangFu()
-    TestIndexMgr()
+    SelectZhai()

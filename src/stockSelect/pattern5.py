@@ -163,6 +163,7 @@ class CStockPattern5(object):
         yesterday = tradingDays[-2]
         res = self.GetStockData(tradingDays[0],today)
         df = pd.DataFrame(res)
+        df.sort_values("建仓距今涨幅",ascending=True,inplace=True)
         df = df[df['股票名称'].str.match('[\s\S]*(ST|退|C)+?[\s\S]*') == False]
         df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688)+?[\s\S]*') == False]
         root = GetStockFolder(tradingDays[-1])

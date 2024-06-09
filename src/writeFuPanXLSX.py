@@ -42,7 +42,7 @@ def Test1():
     tradingDays = GetTradingDateLastN(dbConnection,50)
     # detail = CFupanDetail(dbConnection,tradingDays)
     # zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1])
-    # zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
+    zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
     # gainian = CWriteZhuanZaiGaiNianToXLSX(dbConnection,tradingDays[-1])
     # detailEx = CFupanDetailEx(dbConnection,tradingDays)
     # zhangTingJiYing = CWriteZhangTingJiYingToXLSX(dbConnection,tradingDays[-1])
@@ -52,12 +52,12 @@ def Test1():
         #detail.WriteFuPanSummaryToXLSX(excelWriter)
         # zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
         # zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
-        # zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
+        zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
         #gainian.WriteZhuanZaiGainToToXLS(excelWriter)
         #detailEx.WriteFuPanDetailExToToXLS(excelWriter)
         #zhangTingJiYing.WriteZhangTingJiYingToXLS(excelWriter)
         #banKuaiSelect.BanKuaiSelect(excelWriter,tradingDays[-5:],50)
-        chuangyeban.WriteChuangYeBanMACrossToToXLS(excelWriter)
+        #chuangyeban.WriteChuangYeBanMACrossToToXLS(excelWriter)
 
 
 if __name__ == '__main__':

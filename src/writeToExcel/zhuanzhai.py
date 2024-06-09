@@ -141,6 +141,17 @@ class CZhuanZaiDetail(object):
 
         self.ConverBigVolumnOfZhuanZhaiToJEPG(ret)
         newDf = pd.DataFrame(ret,columns = ["日期","转债代码","转债名称","现价","成交额(万元)","成交额MA10","成交额MA20","PB","总市值（亿元)","溢价率","剩余规模","行业","所属概念"])
+        groups = newDf.groupby(["行业",])
+        sortedGroups = groups["行业"].count().reset_index(name='count').sort_values(['count'], ascending=False)
+        print(sortedGroups)
+        resultDfs = []
+        for _,row in sortedGroups.iterrows():
+            hangye = row["行业"]
+            df = groups.get_group(hangye).copy()
+            df.sort_values(['成交额(万元)',],axis=0,ascending=False,inplace=True)
+            resultDfs.append(df)
+    
+        newDf = pd.concat(resultDfs)
         newDf.to_excel(excelWriter, sheet_name= self.sheetName,index=False,startrow=self.rows)
 
         sheet = excelWriter.sheets[self.sheetName]
