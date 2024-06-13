@@ -162,7 +162,9 @@ def SendReportOfStock(dbConnection,tradingDays,logger):
     groups = [
         ("https://open.feishu.cn/open-apis/bot/v2/hook/4901573e-b858-434a-a787-5faa28982b1a","brYyzPbSks4OKnMgdwKvIh"), #测试API
         #("https://open.feishu.cn/open-apis/bot/v2/hook/9c3b588e-a528-4c92-a9dd-a44e29abf2fb","VaT4TcvmILA0lYAv9cjbcc"), #每日复盘群
+        #("https://open.feishu.cn/open-apis/bot/v2/hook/9e15c5be-df67-4b9e-9698-dfcaed60d9c9","tEzccdh8VJSNegxL9Ew4yf"), #指数复盘
     ]
+
     for group in groups:
         webhook = group[0]
         secret = group[1]
@@ -170,7 +172,8 @@ def SendReportOfStock(dbConnection,tradingDays,logger):
         time.sleep(3)
         SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret)
         time.sleep(3)
-        IndexAlarm(dbConnection,tradingDays,webhook,secret) #指数预测信息
+    
+    IndexAlarm(dbConnection,tradingDays,"https://open.feishu.cn/open-apis/bot/v2/hook/9e15c5be-df67-4b9e-9698-dfcaed60d9c9","tEzccdh8VJSNegxL9Ew4yf") #指数预测信息
     logger.info(f'==============结束发送股票分析结果:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 
