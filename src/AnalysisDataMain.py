@@ -196,8 +196,8 @@ def Main():
     args = parser.parse_args()
     args.options = [0,1,2,3,4]
 
-    # if getDataStatus(dbConnection,tradingDays,logger) == False:
-    #     return None
+    if getDataStatus(dbConnection,tradingDays,logger) == False:
+        return None
     
     if 0 in args.options:
         ######################

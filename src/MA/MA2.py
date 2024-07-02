@@ -43,7 +43,7 @@ class CMA2(object):
     def Predict(self):
         #预测明日均线拐头时数据的值
         dataFrame = self._buildData(self.data,self.data.index)
-        keyRow = dataFrame.iloc[-self.N-1]
+        keyRow = dataFrame.iloc[-self.N]
         lastRow1 = dataFrame.iloc[-1]
         data = self._formatNumber(keyRow[self.key0])
         zhangfu = (keyRow[self.key0] - lastRow1[self.key0]) / lastRow1[self.key0] * 100

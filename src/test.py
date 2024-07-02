@@ -402,15 +402,30 @@ def SelectZhai():
     root = "/tmp/"
     tradingDays = GetTradingDateLastN(dbConnection,300)
     params ={"startDay":tradingDays[0],"lastDay":tradingDays[-1]}
-    # select = CZhaiPattern1(dbConnection)
-    # res = select.SelectLast(params)
-    # print(res)
+    select = CZhaiPattern1(dbConnection)
+    res = select.SelectLast(params)
+    print(res)
 
     select = CZhaiPattern2(dbConnection)
     res = select.SelectAll(params)
     res.to_excel("/tmp/140以下单日涨幅大于5%.xlsx")
     DataFrameToJPG(res,("转债代码","转债名称"),root,f'''140以下单日涨幅大于5%''')
     print(res)
+
+
+def TestIndex():
+    dbConnection = ConnectToDB()
+    sql = f'''SELECT * FROM stock.index_dailyinfo where `指数代码` = "000001.SH";'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    df['收盘价(点)'] = df['收盘价(点)'].astype(float)
+
+    df["MA5"] = df["收盘价(点)"].rolling(window=5).mean()
+    
+    df["MA10"] = df["收盘价(点)"].rolling(window=5).mean()
+    df["大于MA5"] = df["收盘价(点)"] > df["MA5"]
+    df["大于MA10"] = df["收盘价(点)"] > df["MA10"]
+    df.to_excel("/tmp/000001.xlsx")
 
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
@@ -421,4 +436,4 @@ if __name__ == "__main__":
     # WriteXLS()
     #AnalysisIndex()
     #FilterZhangFu()
-    SelectZhai()
+    TestIndex()

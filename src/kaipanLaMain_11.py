@@ -17,12 +17,15 @@ def RequestKaiPanLaVolumnData(dbConnection,tradingDays,lastN = 3):
     print("\n")
 
 def RequestKaiPanLaZhaBanData(dbConnection,tradingDays,lastN = 3):
-    res = RequestZhaBanDataByDates(tradingDays,dbConnection)
-    for date in res:
-        ZhaBanCount = res[date]
-        sql5 = f'''UPDATE `stock`.`fuPan` SET `炸板` = '{ZhaBanCount}' WHERE (`日期` = '{date}');'''
-        print(sql5)
-        dbConnection.Execute(sql5)
+    for tradingDay in tradingDays:
+        sql = f'''UPDATE `stock`.`fuPan` SET `炸板` = (SELECT count(*) FROM stock.stockdaily_zhaban where `日期` = "{tradingDay}") WHERE (`日期` = "{tradingDay}");'''
+        dbConnection.Execute(sql)
+    # res = RequestZhaBanDataByDates(tradingDays,dbConnection)
+    # for date in res:
+    #     ZhaBanCount = res[date]
+    #     sql5 = f'''UPDATE `stock`.`fuPan` SET `炸板` = '{ZhaBanCount}' WHERE (`日期` = '{date}');'''
+    #     print(sql5)
+    #     dbConnection.Execute(sql5)
     print("\n")
 
 def RequestKaiPanLaZhangDieTingJiashu(dbConnection,tradingDays,lastN = 3):
