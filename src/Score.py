@@ -58,15 +58,15 @@ def Score1():
     #         "endDay":"2024-03-29",
     #     }
     # }
-
+    tradingDays = GetTradingDateLastN(dbConnection,15)
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-04-02",
-            "endDay":"2024-04-22",
+            "startDay":"2024-05-21",
+            "endDay":"2024-07-09",
         },
         "领涨分数":{
-            "startDay":"2024-04-23",
-            "endDay":"2024-06-07",
+            "startDay":"2024-07-10",
+            "endDay":f'''{tradingDays[-1]}''',
         }
     }
     mgr = CScoreMgr(dbConnection)
@@ -89,17 +89,18 @@ def Score2():
 
 def Select2():
     dbConnection = ConnectToDB()
+    tradingDays = GetTradingDateLastN(dbConnection,15)
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-04-02",
-            "endDay":"2024-04-22",
+            "startDay":"2024-05-21",
+            "endDay":"2024-07-09",
         },
         "领涨分数":{
-            "startDay":"2024-04-23",
-            "endDay":"2024-06-07",
+            "startDay":"2024-07-10",
+            "endDay":f'''{tradingDays[-1]}''',
         }
     }
-    tradingDays = GetTradingDateLastN(dbConnection,15)
+    
     select = CSelectZai(dbConnection,tradingDays)
     #select.Select(indexParam)
     select.SelectZhaiByScore(tradingDays[-1])
@@ -149,7 +150,7 @@ def ScoreStock():
         #     "endDay":"2024-02-05",
         # },
         {
-            "startDay":"2024-04-09",
+            "startDay":"2024-05-21",
             #"endDay":"2024-04-10",
             
         }

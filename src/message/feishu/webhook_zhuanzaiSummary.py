@@ -21,7 +21,7 @@ def PingJiBuFu(dbConnection,tradingDays):
     # 近5日评级不符合
     last5Days = tradingDays[-5]
     last6Days = tradingDays[-6]
-    sql = f'''SELECT  distinct(`转债代码`),`转债名称`, `评级` FROM stock.kezhuanzhai_all where `日期` >= "{last5Days}" and `评级` not in ("AAA","AA+","AA","AA-","A+") and `转债代码` not in (SELECT `转债代码` FROM stock.kezhuanzhai_all where `日期` = "{last6Days}" and `评级` not in ("AAA","AA+","AA","AA-","A+"));'''
+    sql = f'''SELECT  distinct(`转债代码`),`转债名称`, `评级` FROM stock.kezhuanzhai_all where `日期` >= "{last5Days}" and `评级` not in ("AAA","AA+","AA","AA-","A+","A") and `转债代码` not in (SELECT `转债代码` FROM stock.kezhuanzhai_all where `日期` = "{last6Days}" and `评级` not in ("AAA","AA+","AA","AA-","A+","A"));'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     title = ["**代码**","**名称**","**评级**"]

@@ -88,6 +88,7 @@ def AnalysisZhangTingReason(dbConnection):
         result ,columns = dbConnection.Query(sql)
         df = pd.DataFrame(result, columns = columns)
         count = df.shape[0]
+        reason = reason.replace('/','_')
         if count >=3:
             fullPath = f"{rootFolder}{count}_{reason}.jpg"
             jpgDataFrame = pd.DataFrame(df,columns=["股票代码","股票简称","涨停天数"])

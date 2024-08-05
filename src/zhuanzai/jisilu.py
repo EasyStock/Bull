@@ -81,8 +81,8 @@ class CJiSiLu(object):
 
     def _formatResult(self,row):
         result = ""
-        if row['现价'] > 125:
-            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('价    格:',row['现价'],"[<=125];",chr(12288),end = '')
+        if row['现价'] > 140:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('价    格:',row['现价'],"[<=140];",chr(12288),end = '')
 
         if row['PB'] < 1.2:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('平均市净率:',row['PB'],"[>=1.2];",chr(12288),end = '')
@@ -99,8 +99,8 @@ class CJiSiLu(object):
         if row['PB-溢价率'] < 1:
             result = result + '{0:{3}<10}\t{1:.2f}\t{2:<15}\n'.format('市净-溢价:',float(row['PB-溢价率']),"[>=1.0];",chr(12288),end = '')
 
-        if row['评级'] not in ["AAA","AA+","AA","AA-","A+"]:
-            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('评   级:',row['评级'],"[AAA,AA+,AA,AA-,A+];",chr(12288),end = '')
+        if row['评级'] not in ["AAA","AA+","AA","AA-","A+","A"]:
+            result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('评   级:',row['评级'],"[AAA,AA+,AA,AA-,A+,A];",chr(12288),end = '')
         
         if row['回售触发价'] <= 0:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('回售触发价:',row['回售触发价'],"[>0];",chr(12288),end = '')
@@ -210,14 +210,14 @@ class CJiSiLu(object):
 
             newDf.to_excel(fName,index=False)
 
-            newDf = newDf[newDf['现价']<=125]
+            newDf = newDf[newDf['现价']<=140]
             newDf = newDf[newDf['PB']>=1.2]
             newDf = newDf[newDf['有息负债率']>0]
             newDf = newDf[newDf['有息负债率']<70]
             #newDf = newDf[newDf['股票质押率']>=0]
             newDf = newDf[newDf['流通市值（亿元)']<=250]
             #newDf = newDf[newDf['PB-溢价率']>=1.0]
-            newDf = newDf[newDf['评级'].isin(["AAA","AA+","AA","AA-","A+"])]
+            newDf = newDf[newDf['评级'].isin(["AAA","AA+","AA","AA-","A+","A"])]
             newDf = newDf[newDf['回售触发价']>0]
             newDf = newDf[newDf['剩余年限']>1]
             newDf = newDf[newDf['剩余规模']>0.5]
