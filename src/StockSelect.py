@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # p.SelectAll()
 
     p = CStockPattern12(dbConnection)
-    # p.SelectLast()
-    # p.FillPercentages()
-    # p.UpdatedateShenglvPeilv()
+    p.SelectLast()
+    p.FillPercentages()
+    p.UpdatedateShenglvPeilv()
     p.SelectLastDayData()

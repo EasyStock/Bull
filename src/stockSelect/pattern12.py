@@ -340,7 +340,7 @@ class CStockPattern12(object):
         newDf['过往记录数量'] = newDf.apply(lambda row: self._applyLastDataCount(newDf2,row,tradingDays), axis=1)
         newDf['过往记录'] = newDf.apply(lambda row: self._applyLastData(newDf2,row,tradingDays), axis=1)
 
-        newDf.sort_values(by=["日期","3日胜率(%)","过往记录数量","3日赔率(%)"], ascending=[False,False,False,False], inplace=True)
+        newDf.sort_values(by=["日期","3日胜率(%)","3日赔率(%)","过往记录数量"], ascending=[False,False,False,False], inplace=True)
         newDf.to_excel("/tmp/lastDayData.xlsx",columns=["股票代码","股票名称","3日胜率(%)","3日赔率(%)","过往记录数量","过往记录","5日胜率(%)","5日赔率(%)","10日胜率(%)","10日赔率(%)","20日胜率(%)","20日赔率(%)","30日胜率(%)","30日赔率(%)","日期","战法名称","其他信息"])
         #root = GetStockFolder(tradingDays[-1])
         root = "/tmp/"

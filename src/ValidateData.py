@@ -76,7 +76,7 @@ def Validate_ALL(dbConnection,tradingDays):
     ValidateFuPanInfo(dbConnection,tradingDays)
     ValidateZhuanZaiInfo(dbConnection,tradingDays)
     ValidateZhuanZaiCompareIndexInfo(dbConnection,tradingDays)
-    ValidateBanKuaiInfo(dbConnection,tradingDays)
+    #ValidateBanKuaiInfo(dbConnection,tradingDays)
 
 if __name__ == "__main__":
     dbConnection = ConnectToDB()

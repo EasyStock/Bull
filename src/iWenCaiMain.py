@@ -80,7 +80,7 @@ def GetBanKuaiStockMatchData(dbConnection,tradingDays):
     for _,row in bankuai.iterrows():
         f = CFetchBanKuaiStockMatchData(dbConnection,lastDay,row["板块代码"],row["板块名称"])
         f.RequestAllPagesDataAndWriteToDB(100)
-        time.sleep
+        time.sleep(2)
 
 def GetZhaBanData(dbConnection,tradingDays):
     lastDay = tradingDays[-1]
