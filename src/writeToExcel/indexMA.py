@@ -59,6 +59,9 @@ class CWriteIndexMAEventToXLSX(object):
     
     def WriteIndexMAEventToXLSX(self,dfToday,dfTomorrow,excelWriter):
         sheetName = f"指数均线事件复盘"
+        if dfToday is None:
+            return
+            
         size1 = dfToday.shape[0]
         size2 = dfTomorrow.shape[0]
 

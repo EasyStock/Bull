@@ -105,5 +105,6 @@ if __name__ == '__main__':
     #GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays,logger)
     #TestFechVMAData(dbConnection,tradingDays)
     #GetIndexDataLastNDays(dbConnection,tradingDays,logger)
+    GetVMAData(dbConnection,tradingDays,logger)
 
-    GetZhaBanDataLastNDays(dbConnection,tradingDays,logger)
+    #GetZhaBanDataLastNDays(dbConnection,tradingDays,logger)

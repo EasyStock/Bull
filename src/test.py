@@ -427,6 +427,20 @@ def TestIndex():
     df["大于MA10"] = df["收盘价(点)"] > df["MA10"]
     df.to_excel("/tmp/000001.xlsx")
 
+
+
+def FilterZhangFuMaxZhai(start,end):
+    sql = f'''
+    select A.`转债代码`,A.`转债名称`,A.`现价{start}`,B.`现价{end}`,(B.`现价{end}`-A.`现价{start}`) as `delta` from (SELECT `转债代码`,`转债名称`,`现价` as `现价{start}` FROM stock.kezhuanzhai_all where `日期` = "{start}") AS A,(SELECT `转债代码` as `转债代码`,`现价` as `现价{end}` FROM stock.kezhuanzhai_all where `日期` = "{end}") AS B where A.`转债代码` = B.`转债代码` and A.`转债代码` in (SELECT `转债代码` FROM stock.kezhuanzhai where `日期` = "{end}") order by `delta` DESC  
+    '''
+    print(sql)
+    dbConnection = ConnectToDB()
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    root = "/tmp/"
+    DataFrameToJPG(df,("转债代码","转债名称"),root,f'''区间涨幅排名{end}''')
+    df.to_excel(f'''/tmp/区间涨幅排名{start} - {end}.xlsx''')
+
 if __name__ == "__main__":
     #dbConnection = ConnectToDB()
     # Test1_BuyTogether(dbConnection,10028451,10656871)
@@ -436,4 +450,5 @@ if __name__ == "__main__":
     # WriteXLS()
     #AnalysisIndex()
     #FilterZhangFu()
-    TestIndex()
+    #TestIndex()
+    FilterZhangFuMaxZhai("2024-09-20","2024-09-27")

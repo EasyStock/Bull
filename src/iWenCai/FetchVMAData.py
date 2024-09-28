@@ -2,6 +2,7 @@ from iWenCai.iWenCaiApi import CIWenCaiAPI
 import re
 import pandas as pd
 import datetime
+import numpy as np
 
 VMA_DATA_COLUMNS_MAP= {
     '股票代码' : '^股票代码',
@@ -55,7 +56,8 @@ class CFetchVMAData(object):
         for key in map:
             self.dataFrame[key] = df[map[key]]
         self.dataFrame["日期"] = self.today
-
+        self.dataFrame = self.dataFrame[self.dataFrame['VMA10'] != 0.0]
+        self.dataFrame = self.dataFrame[self.dataFrame['成交量'] != 0]
         self.dataFrame["涨跌幅"] = self.dataFrame["涨跌幅"].astype(float)
         self.dataFrame["成交量"] = self.dataFrame["成交量"].astype(float)
         self.dataFrame["VMA10"] = self.dataFrame["VMA10"].astype(float)

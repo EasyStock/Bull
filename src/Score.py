@@ -93,10 +93,10 @@ def Select2():
     indexParam = {
         "抗跌分数":{
             "startDay":"2024-05-21",
-            "endDay":"2024-07-09",
+            "endDay":"2024-09-18",
         },
         "领涨分数":{
-            "startDay":"2024-07-10",
+            "startDay":"2024-09-19",
             "endDay":f'''{tradingDays[-1]}''',
         }
     }
