@@ -89,6 +89,9 @@ def GetFuPanList(dbConnection,tradingDay):
     sql = f'''SELECT * FROM stock.stockzhangting where 日期 = "{tradingDay}" order by `连续涨停天数` DESC, `首次涨停时间` ASC ,`最终涨停时间` ASC;'''
     data, columns = dbConnection.Query(sql)
     df = pd.DataFrame(data,columns=columns)
+    df = df[df['股票简称'].str.match('[\s\S]*(ST|退)+?[\s\S]*') == False]
+    df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688)+?[\s\S]*') == False]
+    
     df["明日预期"] = ""
 
     rootDir = GetStockFolder(tradingDay)

@@ -24,6 +24,9 @@ from Score import ScoreZaiEveryDay
 from bankuai.bankuaiMgr import CPercentileBanKuai
 from CompareWithIndex.StockCompareWithIndex import CStockCompareWithIndex
 from IndexAlalarm import IndexAlarm
+from tools import ToolMain
+from VMAMain import VMAMain
+from Score import ScoreMain
 
 import pytz
 import datetime
@@ -216,6 +219,10 @@ def Main():
         SendReportOfKeZhuanZai(dbConnection,tradingDays,logger)
         
         ######################
+
+        VMAMain()
+        ScoreMain()
+        ToolMain()
 
     else:
         if 1 in args.options:

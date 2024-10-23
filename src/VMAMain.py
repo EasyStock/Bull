@@ -7,7 +7,7 @@ import datetime
 import pytz
 
 
-def Main():
+def VMAMain():
     logger = StartToInitLogger("VMA")
     dbConnection = ConnectToDB()
     now = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
@@ -57,4 +57,4 @@ if __name__ == '__main__':
     # UpdateVMAData_Process(dbConnection,3,True) #更新每日数据表
     #TrainAllData_MultiProcess(dbConnection,VMAs = (60,),gailvThreshold = 80)
     # #
-    Main()
+    VMAMain()
