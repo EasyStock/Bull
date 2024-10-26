@@ -17,7 +17,7 @@ from kaipanLaMain_11 import RequestKaiPanLaVolumnData,RequestKaiPanLaZhangDieTin
 from message.feishu.webhook_zhuanzai import SendKeZhuanZaiYuJing,SendKeZhuanZaiNewGaiNian,Send5DaysKeZhuanZaiNewGaiNian,SendNDaysKeZhuanZaiQiangShu,SendNewStocks,SendReDianOfToday,SendZhuanZaiPingJiChanged
 from message.feishu.webhook_zhuanzaiSummary import ZhuanZaiSummary
 from message.feishu.webhook_stock import SendNewGaiNianOfStock,SendMeiRiFuPan_Stock
-from writeFuPanXLSX import WriteFuPanSummaryToXLSX
+from writeFuPanXLSX import WriteToXLSXMain
 from ValidateData import Validate_ALL
 from VMA.VMAMgr import VAMSelector
 from Score import ScoreZaiEveryDay
@@ -109,7 +109,7 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     fupanSummary.WirteFupanSummary()
 
     #写复盘摘要到Excel
-    WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
+    WriteToXLSXMain(dbConnection,tradingDays)
 
     VAMSelector(dbConnection,tradingDays[-1:])
     logger.info(f'==============结束分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
