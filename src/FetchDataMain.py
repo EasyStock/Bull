@@ -2,7 +2,7 @@ from ColoredLog import StartToInitLogger
 from mysql.connect2DB import ConnectToDB
 from fupan.tradingDate import GetTradingDateLastN
 from kaipanla.kaipanlaDataMgr import RequestIndexData
-from iWenCaiMain import GetBanKuaiZhishuDataLastNDays,GetKeZhuanZaiDailyDataLastNDays,GetVMAData,GetIndexDataLastNDays,GetBanKuaiStockMatchData,GetZhaBanDataLastNDays
+from iWenCaiMain import iWenCaiMain,GetBanKuaiStockMatchData
 from thsData.constants_10jqka import eng_10jqka_CookieList
 
 from zhuanzai.jisilu import CJiSiLu
@@ -124,12 +124,9 @@ def GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger):
 
     _GetDaLiangLanbBanData(dbConnection,tradingDays,logger) 
     _GetNoZhangTingLanBanData(dbConnection,tradingDays[-1],logger)
-    GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays[-3:],logger)
-    #GetBanKuaiStockMatchData(dbConnection,tradingDays)
-    GetIndexDataLastNDays(dbConnection,tradingDays[-3:],logger)
-    GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays[-3:],logger)
-    GetZhaBanDataLastNDays(dbConnection,tradingDays[-3:],logger)
-    GetVMAData(dbConnection,tradingDays,logger)
+
+
+    iWenCaiMain()
     logger.info(f'==============结束从同花顺上获取数据:{datetime.datetime.utcnow()}==============================\n')
 
 def GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger):

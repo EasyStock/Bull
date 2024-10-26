@@ -215,7 +215,7 @@ class CJiSiLu(object):
             newDf = newDf[newDf['有息负债率']>0]
             newDf = newDf[newDf['有息负债率']<70]
             #newDf = newDf[newDf['股票质押率']>=0]
-            newDf = newDf[newDf['流通市值（亿元)']<=250]
+            newDf = newDf[newDf['流通市值（亿元)']<=350]
             #newDf = newDf[newDf['PB-溢价率']>=1.0]
             newDf = newDf[newDf['评级'].isin(["AAA","AA+","AA","AA-","A+","A"])]
             newDf = newDf[newDf['回售触发价']>0]

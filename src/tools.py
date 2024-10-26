@@ -15,7 +15,7 @@ def FilterZhangFuMaxZhai(dbConnection,start,end,root = "/tmp/"):
     print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
-    DataFrameToJPG(df,("转债代码","转债名称"),root,f'''转债区间涨幅排名{end}''')
+    DataFrameToJPG(df[:150],("转债代码","转债名称"),root,f'''转债区间涨幅排名{end}''')
     df.to_excel(f'''{root}/区间涨幅排名{start} - {end}.xlsx''')
 
 def FilterZhangFuMaxStock(dbConnection,start,end,root = "/tmp/"):
@@ -38,7 +38,7 @@ def FilterZhangFuMaxStock(dbConnection,start,end,root = "/tmp/"):
 
     df.sort_values(f"涨幅",axis=0,ascending=False,inplace=True)
     df.reset_index(inplace=True,drop=True)
-    DataFrameToJPG(df,("股票代码","股票简称"),root,f'''股票区间涨幅排名{end}''')
+    DataFrameToJPG(df[:150],("股票代码","股票简称"),root,f'''股票区间涨幅排名{end}''')
     df.to_excel(f'''{root}/股票区间涨幅排名{start} - {end}.xlsx''')
 
 

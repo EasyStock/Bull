@@ -10,6 +10,7 @@ from iWenCai.FetchIndex import CFetchIndexDataMgr
 from iWenCai.FetchBanKuaiStockMatch import CFetchBanKuaiStockMatchData
 from bankuai.bankuaiMgr import GetAllBasicBanKuaiData
 from iWenCai.FetchZhaBanData import CFetchZhaBanDailyData
+from iWenCai.FetchYeWu import CFetchYeWuData
 import time
 
 def GetBanKuaiZhishuData(dbConnection,tradingDays):
@@ -93,18 +94,26 @@ def GetZhaBanDataLastNDays(dbConnection,tradingDays,logger):
         f = CFetchZhaBanDailyData(dbConnection,treadingDay)
         f.RequestAllPagesDataAndWriteToDB()
 
-if __name__ == '__main__':
+def GetYeWuData(dbConnection, tradingDays):
+    lastDay = tradingDays[-1]
+    f = CFetchYeWuData(dbConnection,lastDay)
+    f.RequestAllPagesDataAndWriteToDB()
+
+    
+def iWenCaiMain():
     logger = StartToInitLogger("爱问财获取数据")
     dbConnection = ConnectToDB()
-    lastN = 3
+    lastN = 5
     tradingDays = GetTradingDateLastN(dbConnection,lastN)
-
-    #GetBanKuaiZhishuData(dbConnection,tradingDays)
-    #GetBanKuaiZhishuDataLastNDays(dbConnection,lastN)
-    #TestGetDailyData(dbConnection)
-    #GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays,logger)
-    #TestFechVMAData(dbConnection,tradingDays)
-    #GetIndexDataLastNDays(dbConnection,tradingDays,logger)
+    GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays[-3:],logger)
+    GetIndexDataLastNDays(dbConnection,tradingDays[-3:],logger)
+    GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays[-3:],logger)
+    GetZhaBanDataLastNDays(dbConnection,tradingDays[-3:],logger)
     GetVMAData(dbConnection,tradingDays,logger)
 
-    #GetZhaBanDataLastNDays(dbConnection,tradingDays,logger)
+    GetYeWuData(dbConnection,tradingDays)
+
+
+if __name__ == '__main__':
+    iWenCaiMain()
+    
