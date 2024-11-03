@@ -137,7 +137,7 @@ def Test1():
 
 if __name__ == '__main__':
     dbConnection = ConnectToDB()
-    tradingDays = GetTradingDateLastN(dbConnection,15)
+    tradingDays = GetTradingDateLastN(dbConnection,45)
     # WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
     #Test1()
-    WriteStockYeWuSummaryToXLSX(dbConnection,tradingDays)
+    WriteToXLSXMain(dbConnection,tradingDays)

@@ -66,8 +66,13 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
     if df.empty:
         return
 
+    if len(results) >=5:
+        results = results[:5]
+        
     for result in results:
         gainian = result[0]
+        if len(gainian) == 0:
+            continue
         sql1 = f'''INSERT IGNORE INTO `stock`.`stockgainiannew` (`日期`, `新概念`) VALUES ('{tradingDays[-1]}', '{gainian}');'''
         dbConnection.Execute(sql1)
 
@@ -77,7 +82,7 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
         jpgDataFrame = pd.DataFrame(results1,columns=columns)
         if not jpgDataFrame.empty:
             folderRoot= GetStockFolder(tradingDays[-1])
-            fileName = f'''新增概念_{gainian}'''
+            fileName = f'''新增概念_{gainian}'''.replace("/", "")
             DataFrameToJPG(jpgDataFrame,columns,folderRoot,fileName)
 
         msg = FormatCardOfNewGaiNian(tradingDays[-1],gainian,results1,["**股票代码**","**股票简称**"])

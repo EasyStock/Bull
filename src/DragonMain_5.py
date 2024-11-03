@@ -4,6 +4,7 @@ from fupan.tradingDate import GetTradingDateLastN
 import time
 from eastmoney.dragonMonitor import CDragonMonitor
 from eastmoney.dragonDupliacte import CDragonDuplicate
+from eastmoney.beijiaosuo import CBeiJiaoSuoDataFetcher
 
 
 def FetchDragonDataByDate(date,dbConnection):
@@ -69,6 +70,14 @@ def Test():
     #DragonDuplicate_ALL(tradingDays,dbConnection)
     #   
 if __name__ == "__main__":
-    DragonDaily()
+    #DragonDaily()
+    fetcher = CBeiJiaoSuoDataFetcher()
+    dbConnection = ConnectToDB()
+    #fetcher.FetcheData(dbConnection)
+    for momey in range(1000000,10000000,100000):
+        year = 2021
+        shouyi1, shouyi2, shouyi3 = fetcher.shouYi(dbConnection,year,momey)
+        print(f"{year} 年: 投资金额: {momey/10000:.1f} 万元, 平均价收益: {shouyi1:.2f},平均价收益率{shouyi1/momey*100:.2f}%       开盘价收益: {shouyi2:.2f}, 开盘价收益率{shouyi2/momey*100:.2f}% ,         收盘价收益: {shouyi3:.2f} 收盘价收益率{shouyi3/momey*100:.2f}%")
+
 
     

@@ -49,7 +49,7 @@ class CFetchYeWuData(object):
         self.dataFrame["范围"] = self.dataFrame["范围"]
         self.dataFrame["行业"] = self.dataFrame["行业"]
         sqls = self._DataFrameToSqls_INSERT_OR_REPLACE(self.dataFrame,"stockyewu")
-        step = 1
+        step = 200
         groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
         for sql in groupedSql:
             self.dbConnection.Execute(sql)
