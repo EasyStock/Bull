@@ -180,8 +180,11 @@ class CVMASelecter(object):
             res,data = self._Select(stockID,stockName,date,zhangDiefu,key,vma)
             if res == True:
                 results.append(data)
-        folderRoot= GetFuPanRoot(date) 
         datas = []
+        rootFolder =os.path.join(GetFuPanRoot(date),"XLSX")
+        if os.path.exists(rootFolder) == False:
+            os.makedirs(rootFolder)
+
         fullPath = os.path.join(folderRoot,f"复盘摘要{date}.xlsx")
         mode='w'
         if_sheet_exists = None

@@ -155,7 +155,7 @@ class CJiSiLu(object):
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
         'Columns':'1,70,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,44,46,47,50,52,53,54,55,56,57,58,59,60,62,63,64,67,71,69,72,74',
-        "Connection": "keep-alive",
+        "Connection": "close",
         "Host": "www.jisilu.cn",
         "Init": "1",
         'Referer': 'https://www.jisilu.cn/web/data/cb/list',
@@ -171,8 +171,7 @@ class CJiSiLu(object):
         "if-modified-since":"Fri, 27 Oct 2023 12:57:15 GMT",
         }
         url='https://www.jisilu.cn/webapi/cb/list/'
-        requests.adapters.DEFAULT_RETRIES = 5
-        response = requests.request("GET",url,headers=sse_head,verify = False)
+        response = requests.request("GET",url,headers=sse_head)
         #print(response, response.text)
         if len(response.text)!=0:
             j = response.json()
@@ -204,7 +203,10 @@ class CJiSiLu(object):
             folder = GetZhuanZaiFolder(self.today)
             fName = f"{folder}/每日原始数据_{self.today}.xlsx"
             sqls = DataFrameToSqls_REPLACE(df_all,"kezhuanzhai_all")
-            for sql in sqls:
+            step = 200
+            grouped_sqls = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+            
+            for sql in grouped_sqls:
                 if self.dbConnection.Execute(sql) == False:
                     sys.exit(1)
 

@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from workspace import workSpaceRoot,GetFuPanRoot
+import os
 
 HTML_PART1 = '''
 
@@ -1156,7 +1157,10 @@ def Summary(dbConnection,tradingDays):
     #print(newDf)
     #newDf.to_csv("/tmp/AAA.CSV",index=False)
     htmlStr = FormatToHTML(newDf,tradingDays)
-    stockFolder = GetFuPanRoot(lastDay)
+    stockFolder =os.path.join(GetFuPanRoot(lastDay),"XLSX")
+    if os.path.exists(stockFolder) == False:
+        os.makedirs(stockFolder)
+        
     fileName = f'''{stockFolder}/复盘摘要_{lastDay}.htm'''
     with open(fileName,"w+") as f:
         f.write(htmlStr)

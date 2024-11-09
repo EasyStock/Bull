@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 from workspace import workSpaceRoot,GetFuPanRoot
-
+import os
 
 
 class CFupanSummary(object):
@@ -1130,7 +1130,10 @@ class CFupanSummary(object):
         tail = self.ForamtTail()
 
         Summary = f'''{head}{title}{warning}{summaryOfToday}{yizi}{marking}{chaoduan1}{chaoduan2}{qingxu1}{qingxu2}{redian1}{redian2}{lianban}{shouban}{tail}'''
-        stockFolder = GetFuPanRoot(self.today)   
+        stockFolder =os.path.join(GetFuPanRoot(self.today),"XLSX")
+        if os.path.exists(stockFolder) == False:
+            os.makedirs(stockFolder)
+
         fileName = f'''{stockFolder}/复盘摘要_{self.today}.htm'''
         with open(fileName,"w+") as f:
             f.write(Summary)

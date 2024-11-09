@@ -162,7 +162,9 @@ class CMAManager(object):
             res = self._indexInfo(df,stockID,stockName)
             messages.append(res)
 
-        folderRoot= GetFuPanRoot(today) 
+        folderRoot =os.path.join(GetFuPanRoot(today),"XLSX")
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
         fullPath = os.path.join(folderRoot,f"复盘摘要{today}.xlsx")
         mode='w'
         if_sheet_exists = None
