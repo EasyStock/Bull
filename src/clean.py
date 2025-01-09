@@ -1,12 +1,10 @@
 import os
-import json
 import shutil
-from ColoredLog import StartToInitLogger
-import logging
-logger = logging.getLogger()
+import re
 
-# cleanDir = [".git",".DS_Store",".gitignore"]
-cleanDir = ["__pycache__",".DS_Store"]
+
+cleanDir = [".git",".DS_Store",".gitignore"]
+#cleanDir = ["__pycache__",".DS_Store"]
 
 def ToSizeInfo(size):
     if size < 1024:
@@ -54,28 +52,41 @@ def ScanFolder(folder,printFullPath = False,deleteUseless = False):
                 if deleteUseless:
                     os.remove(path)
                     msg = f'''remove file:{path}'''
-                    logger.info(msg)
-                print(path)
+                    print(msg)
+                #print(path)
+            if re.match(r'^\._',file) is not None:
+                os.remove(path)
+                msg = f'''remove file:{path}'''
+                print(msg)
+
             if printFullPath:
                 print(path)
+            
+
         for dir in dirs:
             path = os.path.join(root,dir)
             if dir in cleanDir:
                 if deleteUseless:
                     shutil.rmtree(path)
                     msg = f'''remove folder:{path}'''
-                    logger.info(msg)
+                    print(msg)
 
                 print(path)
+
+            if re.match(r'^\._',dir) is not None:
+                os.remove(path)
+                msg = f'''remove file:{path}'''
+                print(msg)
+
             if printFullPath:
                 print(path)
 
     
 def RemoveUselessFiles(folder):
-    logging.info(f'''start to remove useless folder: {folder}''')
+    print(f'''start to remove useless folder: {folder}''')
     size  = getSize(folder)
-    # ScanFolder(folder,False,True)
-    # ScanFolder(folder,False,False)
+    ScanFolder(folder,False,True)
+    ScanFolder(folder,False,False)
     folerInfo = size[1]
     for info in folerInfo:
         last = info[info.rfind("/")+1:]
@@ -83,22 +94,22 @@ def RemoveUselessFiles(folder):
             if os.path.isdir(info):
                 try:
                     msg = f'''remove FOLDER:{info}'''
-                    logger.info(msg)
+                    print(msg)
                     shutil.rmtree(info)
                 except:
-                    logger.warning(info)
+                    print(info)
                     #os.rmdir(info)
             elif os.path.isfile(info):
                 msg = f'''remove FILE:{info}'''
                 try:
                     os.remove(info)
-                    logger.info(msg)
+                    print(msg)
                 except:
-                    logger.error(msg)
+                    print(msg)
 
     size1  = getSize(folder)
     msg = f'''{folder} before: {ToSizeInfo(size[0])}, after: {ToSizeInfo(size1[0])} total remove : {ToSizeInfo(size[0] - size1[0])}'''
-    logging.error(msg)
+    print(msg)
     t = size1[1]
     s = sorted(t.items(),key = lambda x:x[1],reverse = True)
     u = s
@@ -106,7 +117,7 @@ def RemoveUselessFiles(folder):
         u = s[:10]
     for k in u:
         msg = f'''{k[0]} : {ToSizeInfo(k[1])}'''
-        logging.info(msg)
+        print(msg)
 
     #logging.info(json.dumps(size[1],indent=3))
 
@@ -116,7 +127,7 @@ def CalcSize(folder):
     s = sorted(t.items(),key = lambda x:x[1],reverse = True)
     for k in s:
         msg = f'''{k[0]} : {ToSizeInfo(k[1])}'''
-        logging.info(msg)
+        print(msg)
 
 def RemoveBigFolder(folder):
     files = os.listdir(folder)
@@ -128,7 +139,7 @@ def RemoveBigFolder(folder):
             RemoveUselessFiles(fullPath)
 
 if __name__ == "__main__":
-    folder = '/Volumes/Data/Code/EasyStock/Bull/src'
-    StartToInitLogger("CalcSize")
+    #folder = '/Volumes/Data/Code/EasyStock/Bull/src'
+    folder = "/vol2/1000/"
     #RemoveBigFolder(folder)
     RemoveUselessFiles(folder)

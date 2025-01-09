@@ -516,6 +516,7 @@ class CZhuanQianXiaoXing(object):
         return False
     
     def _isBingDian(self,df):
+        df.fillna(0, inplace=True)
         lastRow1 = df.iloc[-1]
         lastRow2 = df.iloc[-2]
         lastRow3 = df.iloc[-3]

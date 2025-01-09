@@ -96,8 +96,8 @@ class CJiSiLu(object):
         if row['流通市值（亿元)'] > 250:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('流通市值:',row['流通市值（亿元)'],"[<=250];",chr(12288),end = '')
 
-        if row['PB-溢价率'] < 1:
-            result = result + '{0:{3}<10}\t{1:.2f}\t{2:<15}\n'.format('市净-溢价:',float(row['PB-溢价率']),"[>=1.0];",chr(12288),end = '')
+        # if row['PB-溢价率'] < 1:
+        #     result = result + '{0:{3}<10}\t{1:.2f}\t{2:<15}\n'.format('市净-溢价:',float(row['PB-溢价率']),"[>=1.0];",chr(12288),end = '')
 
         if row['评级'] not in ["AAA","AA+","AA","AA-","A+","A"]:
             result = result + '{0:{3}<10}\t{1:{3}<8}\t{2:<15}\n'.format('评   级:',row['评级'],"[AAA,AA+,AA,AA-,A+,A];",chr(12288),end = '')

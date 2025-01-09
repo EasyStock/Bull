@@ -61,11 +61,11 @@ def Score1():
     tradingDays = GetTradingDateLastN(dbConnection,15)
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-05-21",
-            "endDay":"2024-09-18",
+            "startDay":"2024-11-12",
+            "endDay":"2024-11-26",
         },
         "领涨分数":{
-            "startDay":"2024-09-19",
+            "startDay":"2024-11-27",
             "endDay":f'''{tradingDays[-1]}''',
         }
     }
@@ -92,11 +92,11 @@ def Select2():
     tradingDays = GetTradingDateLastN(dbConnection,15)
     indexParam = {
         "抗跌分数":{
-            "startDay":"2024-05-21",
-            "endDay":"2024-09-18",
+            "startDay":"2024-11-13",
+            "endDay":"2024-11-26",
         },
         "领涨分数":{
-            "startDay":"2024-09-19",
+            "startDay":"2024-11-27",
             "endDay":f'''{tradingDays[-1]}''',
         }
     }
@@ -150,7 +150,7 @@ def ScoreStock():
         #     "endDay":"2024-02-05",
         # },
         {
-            "startDay":"2024-05-21",
+            "startDay":"2024-09-23",
             #"endDay":"2024-04-10",
             
         }

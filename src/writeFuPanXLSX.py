@@ -21,7 +21,7 @@ def WriteFuPanSummaryToXLSX(dbConnection,tradingDays):
 
     fullPath = os.path.join(rootFolder,f'''复盘摘要{tradingDays[-1]}.xlsx''')
     detail = CFupanDetail(dbConnection,tradingDays)
-    zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1])
+    zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1],tradingDays[-2])
     gainian = CWriteZhuanZaiGaiNianToXLSX(dbConnection,tradingDays[-1])
     zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
     detailEx = CFupanDetailEx(dbConnection,tradingDays)
@@ -113,8 +113,8 @@ def Test1():
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,50)
     # detail = CFupanDetail(dbConnection,tradingDays)
-    # zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1])
-    zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
+    zhangTing = CWriteZhangTingTiDuiToXLSX(tradingDays[-1],tradingDays[-2])
+    #zhuanzai = CZhuanZaiDetail(dbConnection,tradingDays)
     # gainian = CWriteZhuanZaiGaiNianToXLSX(dbConnection,tradingDays[-1])
     # detailEx = CFupanDetailEx(dbConnection,tradingDays)
     # zhangTingJiYing = CWriteZhangTingJiYingToXLSX(dbConnection,tradingDays[-1])
@@ -124,14 +124,14 @@ def Test1():
     with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
         #detail.WriteFuPanSummaryToXLSX(excelWriter)
         # zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
-        # zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
+        zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
         #zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
         #gainian.WriteZhuanZaiGainToToXLS(excelWriter)
         #detailEx.WriteFuPanDetailExToToXLS(excelWriter)
         #zhangTingJiYing.WriteZhangTingJiYingToXLS(excelWriter)
         #banKuaiSelect.BanKuaiSelect(excelWriter,tradingDays[-5:],50)
         #chuangyeban.WriteChuangYeBanMACrossToToXLS(excelWriter)
-        yewu.WriteYeWuToToXLS(excelWriter)
+        #yewu.WriteYeWuToToXLS(excelWriter)
         
 
 
@@ -139,5 +139,5 @@ if __name__ == '__main__':
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,45)
     # WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
-    #Test1()
-    WriteToXLSXMain(dbConnection,tradingDays)
+    Test1()
+    #WriteToXLSXMain(dbConnection,tradingDays)

@@ -374,6 +374,7 @@ class CScoreMgr(object):
         sql = f'''select A.`转债代码`,B.`转债名称`,A.`成交量分数`,A.`抗跌分数`,A.`领涨分数`,A.`剩余规模分数`,A.`总分`,C.`现价` as `现价\n{self.date}`,C.`涨跌幅` as `涨跌幅\n{self.date}`,C.`成交额(万元)` as `成交额(万元)\n{self.date}`,C.`溢价率` as `溢价率\n{self.date}`,C.`PB`,C.`剩余规模` as `剩余规模\n{self.date}`,C.`流通市值（亿元)`,C.`行业`,B.`现价` as `价格\n({self.diDianDate})`, C.`到期税前收益率` as `到期税前收益率\n{self.date}`,B.`正股代码`,B.`正股名称` from kezhuanzai_score As A,kezhuanzhai AS B, (select * from kezhuanzhai_all where `日期` = "{self.date}") AS C where (A.`日期` = "{self.date}") and (B.`日期` = "{self.diDianDate}")  and (A.`转债代码` = B.`转债代码`) and (A.`转债代码` = C.`转债代码`) order by A.`总分` DESC;'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
+        df = df[df[f'''现价\n{self.date}''']<=135]
         avg1 = df["成交量分数"].mean()
         avg2 = df["抗跌分数"].mean()
         avg3 = df["领涨分数"].mean()

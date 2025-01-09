@@ -27,9 +27,10 @@ alignment_left = Alignment(
      )
 
 class CWriteZhangTingTiDuiToXLSX(object):
-    def __init__(self,date):
+    def __init__(self,date,yesterday):
         self.rows = 0
         self.date = date
+        self.yesterday = yesterday
         self.sheetName = f'''涨停梯队'''
         self.title = f'''涨停梯队复盘表 ({self.date})'''
     
@@ -39,18 +40,20 @@ class CWriteZhangTingTiDuiToXLSX(object):
         sheet.column_dimensions['C'].width = 15
         sheet.column_dimensions['D'].width = 15
         sheet.column_dimensions['E'].width = 15
-        sheet.column_dimensions['F'].width = 20
-        sheet.column_dimensions['G'].width = 20
-        sheet.column_dimensions['H'].width = 85
+        sheet.column_dimensions['F'].width = 22
+        sheet.column_dimensions['G'].width = 22
+        sheet.column_dimensions['H'].width = 22
+        sheet.column_dimensions['I'].width = 22
+        sheet.column_dimensions['J'].width = 85
     
     def formatRowHeight(self,sheet,rowIndex,height):
         sheet.row_dimensions[rowIndex].height=height
 
     def mergeRow(self,sheet,rowIndex,rowHight = 32):
-        mergeCell = f'A{rowIndex}:H{rowIndex}'
+        mergeCell = f'A{rowIndex}:J{rowIndex}'
         sheet.merge_cells(mergeCell)
         self.formatRowHeight(sheet,rowIndex,rowHight)
-        for column in range(1,9):
+        for column in range(1,11):
             cell = sheet.cell(row = rowIndex, column = column)
             cell.border = border
 
@@ -142,8 +145,14 @@ class CWriteZhangTingTiDuiToXLSX(object):
     
     def WriteZhangTingXLSX(self,dbConnection,excelWriter):
         sheetName = f"涨停复盘"
-        sql = f'''SELECT `日期`,`股票代码`,`股票简称`,`连续涨停天数` as `涨停天数`,`涨停关键词` as `连板数`,`首次涨停时间`,`最终涨停时间`,`涨停原因类别` as `涨停原因`  FROM stock.stockzhangting where `日期` = "{self.date}" order by `连续涨停天数` DESC ,`首次涨停时间` ASC , `涨停关键词` DESC ;'''
+        sql = f'''
+        select A.`日期`,A.`股票代码`,A.`股票简称`,A.`涨停天数`,A.`连板数`,A.`首次涨停时间` as `首次涨停时间({str(self.date)[5:]})`,B.`首次涨停时间` as `首次涨停时间({str(self.yesterday)[5:]})`, A.`最终涨停时间` as `最终涨停时间({str(self.date)[5:]})`,B.`最终涨停时间` as `最终涨停时间({str(self.yesterday)[5:]})`,A.`涨停原因`
+        FROM
+        (select `日期`,`股票代码`,`股票简称`,`连续涨停天数` as `涨停天数`,`涨停关键词` as `连板数`,`首次涨停时间`,`最终涨停时间`,`涨停原因类别` as `涨停原因` FROM stock.stockzhangting where `日期` = '{self.date}') AS A
+        LEFT JOIN (select `日期`,`股票代码`,`股票简称`,`连续涨停天数` as `涨停天数`,`涨停关键词` as `连板数`,`首次涨停时间`,`最终涨停时间` FROM stock.stockzhangting where `日期` = '{self.yesterday}') AS B ON A.`股票代码` = B.`股票代码` order by A.`涨停天数` DESC ,A.`首次涨停时间` ASC , A.`涨停原因` DESC ;
+        '''
         results, columns = dbConnection.Query(sql)
+
         df = pd.DataFrame(results,columns=columns)
         df.to_excel(excelWriter, sheet_name= sheetName,index=False,startrow=1)
         sheet = excelWriter.sheets[sheetName]
@@ -157,7 +166,7 @@ class CWriteZhangTingTiDuiToXLSX(object):
         startRow = 1
         endRow = startRow + df.shape[0] +1
         for index in range(1,endRow):
-            for column in range(1,9):
+            for column in range(1,11):
                 cell = sheet.cell(row = startRow + index, column = column)
                 cell.border = border
                 cell.alignment = alignment
@@ -168,6 +177,16 @@ class CWriteZhangTingTiDuiToXLSX(object):
                     cell.fill = PatternFill('solid', fgColor="CCEEFF")
                 cell.font = Font(name='宋体', size=12, italic=False, color='000000', bold=True)
                 cell.border = border
-
+            cellF = sheet.cell(row = startRow + index, column = 6)
+            cellG = sheet.cell(row = startRow + index, column = 7)
+            if cellF.value < cellG.value:
+                cellF.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                cellG.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+            
+            cellH = sheet.cell(row = startRow + index, column = 8)
+            cellI = sheet.cell(row = startRow + index, column = 9)
+            if cellH.value < cellI.value:
+                cellH.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                cellI.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
 
         self.formatColumnsWidth(sheet)

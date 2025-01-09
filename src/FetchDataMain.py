@@ -33,7 +33,7 @@ def _GetDailyDataEx(dbConnection,date,logger):
 
     stockBasicInfo_sqls = daily.FormateBacicInfoToSQL('stockBasicInfo')
     stockDailyInfo_sqls = daily.FormateDailyInfoToSQL('stockDailyInfo')
-    step = 300
+    step = 200
     groupedStockBasicInfo_sqls = [" ".join(stockBasicInfo_sqls[i:i+step]) for i in range(0,len(stockBasicInfo_sqls),step)]
     groupedStockStockDailyInfo_sqls = [" ".join(stockDailyInfo_sqls[i:i+step]) for i in range(0,len(stockDailyInfo_sqls),step)]
     printcount = 1500
