@@ -40,10 +40,10 @@ class CWriteZhangTingTiDuiToXLSX(object):
         sheet.column_dimensions['C'].width = 15
         sheet.column_dimensions['D'].width = 15
         sheet.column_dimensions['E'].width = 15
-        sheet.column_dimensions['F'].width = 22
-        sheet.column_dimensions['G'].width = 22
-        sheet.column_dimensions['H'].width = 22
-        sheet.column_dimensions['I'].width = 22
+        sheet.column_dimensions['F'].width = 25
+        sheet.column_dimensions['G'].width = 25
+        sheet.column_dimensions['H'].width = 25
+        sheet.column_dimensions['I'].width = 25
         sheet.column_dimensions['J'].width = 85
     
     def formatRowHeight(self,sheet,rowIndex,height):
@@ -83,9 +83,22 @@ class CWriteZhangTingTiDuiToXLSX(object):
         startIndex = self.rows + 1
         endIndex = self.rows + lines
         for line in range(startIndex,endIndex+1):
-            for column in range(1,9):
+            for column in range(1,11):
                 cell = sheet.cell(row = line, column = column)
                 self.formatContextStyle(cell)
+
+                cellF = sheet.cell(row = line, column = 6)
+                cellG = sheet.cell(row = line, column = 7)
+                if cellF.value < cellG.value:
+                    cellF.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                    cellG.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                
+                cellH = sheet.cell(row = line, column = 8)
+                cellI = sheet.cell(row = line, column = 9)
+                if cellH.value < cellI.value:
+                    cellH.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                    cellI.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                    
 
     def WriteZhangTingTiDuiToXLSX(self,datas,excelWriter:pd.ExcelWriter):
         tmp = pd.DataFrame()
@@ -131,7 +144,12 @@ class CWriteZhangTingTiDuiToXLSX(object):
         reasons = list(set(reasons))
         reasonResults = {}
         for reason in reasons:
-            sql = f'''select A.`日期`,A.`股票代码`,A.`股票简称`,A.`连续涨停天数` as `涨停天数`,A.`涨停关键词` as `连板数`,A.`首次涨停时间`,A.`最终涨停时间`,A.`涨停原因类别` as `涨停原因` from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{self.date}' and A.`涨停原因类别` like '%{reason}%' order by `连续涨停天数`DESC ,`最终涨停时间` ASC;'''
+            sql = f'''
+        select A.`日期`,A.`股票代码`,A.`股票简称`,A.`涨停天数`,A.`连板数`,A.`首次涨停时间` as `首次涨停时间({str(self.date)[5:]})`,B.`首次涨停时间` as `首次涨停时间({str(self.yesterday)[5:]})`, A.`最终涨停时间` as `最终涨停时间({str(self.date)[5:]})`,B.`最终涨停时间` as `最终涨停时间({str(self.yesterday)[5:]})`,A.`涨停原因`
+        FROM
+        (select `日期`,`股票代码`,`股票简称`,`连续涨停天数` as `涨停天数`,`涨停关键词` as `连板数`,`首次涨停时间`,`最终涨停时间`,`涨停原因类别` as `涨停原因` FROM stock.stockzhangting where `日期` = '{self.date}' and `涨停原因类别` like '%{reason}%') AS A
+        LEFT JOIN (select `日期`,`股票代码`,`股票简称`,`连续涨停天数` as `涨停天数`,`涨停关键词` as `连板数`,`首次涨停时间`,`最终涨停时间` FROM stock.stockzhangting where `日期` = '{self.yesterday}' and `涨停原因类别` like '%{reason}%' ) AS B ON A.`股票代码` = B.`股票代码` order by A.`涨停天数` DESC ,A.`首次涨停时间` ASC , A.`涨停原因` DESC ;
+        '''
             result ,columns = dbConnection.Query(sql)
             df = pd.DataFrame(result, columns = columns)
             count = df.shape[0]
