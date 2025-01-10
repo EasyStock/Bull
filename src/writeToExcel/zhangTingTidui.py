@@ -90,14 +90,14 @@ class CWriteZhangTingTiDuiToXLSX(object):
                 cellF = sheet.cell(row = line, column = 6)
                 cellG = sheet.cell(row = line, column = 7)
                 if cellF.value < cellG.value:
-                    cellF.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
-                    cellG.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                    cellF.font = Font(name='宋体', size=14, italic=False, color='FF0000', bold=True)
+                    cellG.font = Font(name='宋体', size=14, italic=False, color='FF0000', bold=True)
                 
                 cellH = sheet.cell(row = line, column = 8)
                 cellI = sheet.cell(row = line, column = 9)
                 if cellH.value < cellI.value:
-                    cellH.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
-                    cellI.font = Font(name='宋体', size=12, italic=False, color='FF0000', bold=True)
+                    cellH.font = Font(name='宋体', size=14, italic=False, color='FF0000', bold=True)
+                    cellI.font = Font(name='宋体', size=14, italic=False, color='FF0000', bold=True)
                     
 
     def WriteZhangTingTiDuiToXLSX(self,datas,excelWriter:pd.ExcelWriter):
