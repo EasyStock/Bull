@@ -3,8 +3,8 @@ import shutil
 import re
 
 
-cleanDir = [".git",".DS_Store",".gitignore"]
-#cleanDir = ["__pycache__",".DS_Store"]
+#cleanDir = [".git",".DS_Store",".gitignore"]
+cleanDir = ["__pycache__",".DS_Store"]
 
 def ToSizeInfo(size):
     if size < 1024:
@@ -139,7 +139,7 @@ def RemoveBigFolder(folder):
             RemoveUselessFiles(fullPath)
 
 if __name__ == "__main__":
-    #folder = '/Volumes/Data/Code/EasyStock/Bull/src'
-    folder = "/vol2/1000/"
+    folder = '/Volumes/Data/Code/EasyStock/Bull/src'
+    #folder = "/vol2/1000/"
     #RemoveBigFolder(folder)
     RemoveUselessFiles(folder)
