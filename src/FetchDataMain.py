@@ -14,6 +14,7 @@ from thsData2.fetchDaliangDataFromTHS2 import CFetchDaliangDataFromTHS2
 from thsData2.fetchDaliangLanbanDataFromTHS2 import CFetchDaliangLanBanDataFromTHS2
 from thsData.fetchNoZhangTingLanBanData import CFetchNoZhangTingData
 from eastmoney.dragon import CDragonFetcher
+from sse.fetchETFDailyData import CFetchETFDailyData
 
 import random
 import datetime
@@ -151,6 +152,20 @@ def updateFinishedStatus(dbConnection,tradingDays):
     sql =f'''REPLACE INTO `stock`.`jenkins_status` (`date`, `data`, `analysis`) VALUES ('{tradingDays[-1]}', '1', '0');'''
     dbConnection.Execute(sql)
 
+
+def FetchETFDailyData(dbConnection,tradingDays):
+    fe = CFetchETFDailyData(dbConnection,tradingDays[-1])
+    fe.FetchAllDatas()
+
+
+def FetchAllETFDailyData():
+    dbConnection = ConnectToDB()
+    lastN = 500
+    tradingDays = GetTradingDateLastN(dbConnection,lastN)
+    for tradingDay in tradingDays:
+        fe = CFetchETFDailyData(dbConnection,tradingDay)
+        fe.FetchAllDatas()
+
 #####################################入口函数######################################################
     
 if __name__ == "__main__":
@@ -185,6 +200,9 @@ if __name__ == "__main__":
         GetDataFromKEastMonenyAndWriteToDB(dbConnection,tradingDays,logger)
         ###################### 
 
+        #获取ETF日线数据
+        FetchETFDailyData(dbConnection,tradingDays)
+
         updateFinishedStatus(dbConnection,tradingDays)
     else:
         if 1 in args.options:
@@ -198,6 +216,11 @@ if __name__ == "__main__":
         if 3 in args.options:
             #从开盘啦上获取数据
             GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger)
+
+            #获取ETF日线数据
+            FetchETFDailyData(dbConnection,tradingDays)
+
+            #FetchAllETFDailyData()
 
         if 4 in args.options:
             #从东方财富网上获取数据

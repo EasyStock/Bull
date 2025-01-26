@@ -62,7 +62,7 @@ def InitLogger(fileName):
     formatter = logging.Formatter('%(asctime)s - [%(levelname)-8s] - %(message)s (%(filename)s %(lineno)d)')
     handler.setFormatter(formatter)
 
-    FORMAT = "[$BOLD%(asctime)-20s$RESET][%(levelname)-18s]  %(message)s ($BOLD%(filename)s$RESET:%(lineno)d)"
+    FORMAT = "[$BOLD%(asctime)-20s$RESET][%(levelname)-6s]  %(message)s"
     COLOR_FORMAT = formatter_message(FORMAT, True)
     color_formatter = ColoredFormatter(COLOR_FORMAT)
     console = logging.StreamHandler()
