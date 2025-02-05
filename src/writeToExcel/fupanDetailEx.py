@@ -121,6 +121,7 @@ class CFupanDetailEx(object):
         column1 = ["红盘","绿盘","两市量","实际涨停","跌停","炸板","炸板率","连板","2连板个数","3连板个数","4连板及以上个数","高度板","动能","势能"]
         df1 = pd.DataFrame(df,columns = column1)
         df1.dropna(inplace= True)
+        df.dropna(inplace= True)
         df1['炸板率'] = df['炸板率'].apply(lambda x:x[:-1]).astype(float)
         df1['两市量'] = df['两市量'].apply(lambda x:x[:-1]).astype(float)
         for c in column1:
