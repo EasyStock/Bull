@@ -112,6 +112,9 @@ class CFetchETFDailyData(object):
             time.sleep(3)
 
         df = pd.DataFrame(self.rowDatas)
+        if df.empty == True:
+            return
+        
         resDf = pd.DataFrame()
         resDf["日期"] = df["STAT_DATE"]
         resDf["基金代码"] = df["SEC_CODE"]
