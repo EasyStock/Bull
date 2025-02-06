@@ -14,7 +14,7 @@ from thsData2.fetchDaliangDataFromTHS2 import CFetchDaliangDataFromTHS2
 from thsData2.fetchDaliangLanbanDataFromTHS2 import CFetchDaliangLanBanDataFromTHS2
 from thsData.fetchNoZhangTingLanBanData import CFetchNoZhangTingData
 from eastmoney.dragon import CDragonFetcher
-from sse.fetchETFDailyData import CFetchETFDailyData
+from SSE.fetchETFDailyData import CFetchETFDailyData
 
 import random
 import datetime
