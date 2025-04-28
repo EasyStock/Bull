@@ -14,6 +14,8 @@ from stockSelect.pattern8 import CStockPattern8  # 吸筹跌破反包战法
 from stockSelect.pattern9 import CStockPattern9  # 吸筹跌破反包战法
 from stockSelect.pattern10 import CStockPattern10  # 倍量
 from stockSelect.pattern12 import CStockPattern12  # 51020上穿战法
+from stockSelect.N_Pattern import CNPattern,CNPatternEx
+from stockSelect.pattern13 import CPattern13
 
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
@@ -32,8 +34,18 @@ if __name__ == "__main__":
     # p = CStockPattern9(dbConnection)
     # p.SelectAll()
 
-    p = CStockPattern12(dbConnection)
-    p.SelectLast()
-    p.FillPercentages()
-    p.UpdatedateShenglvPeilv()
-    p.SelectLastDayData()
+    # p = CStockPattern12(dbConnection)
+    # p.SelectLast()
+    # p.FillPercentages()
+    # p.UpdatedateShenglvPeilv()
+    # p.SelectLastDayData()
+
+    p = CNPattern(dbConnection)
+    p.Select()
+    
+    p = CNPatternEx(dbConnection)
+    p.Select()
+
+
+    # p = CPattern13(dbConnection)
+    # p.Select()

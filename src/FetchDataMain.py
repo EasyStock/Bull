@@ -154,9 +154,13 @@ def updateFinishedStatus(dbConnection,tradingDays):
 
 
 def FetchETFDailyData(dbConnection,tradingDays):
-    fe = CFetchETFDailyData(dbConnection,tradingDays[-1])
-    fe.FetchAllDatas()
-
+    if len(tradingDays) > 5:
+        for i in range(5):
+            fe = CFetchETFDailyData(dbConnection,tradingDays[-i])
+            fe.FetchAllDatas()
+    else:
+            fe = CFetchETFDailyData(dbConnection,tradingDays[-1])
+            fe.FetchAllDatas()
 
 def FetchAllETFDailyData():
     dbConnection = ConnectToDB()

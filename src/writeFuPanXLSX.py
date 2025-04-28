@@ -123,8 +123,8 @@ def Test1():
     yewu = CWriteYeWuToXLSX(dbConnection,tradingDays[-1])
     with pd.ExcelWriter(fullPath,engine='openpyxl',mode='w+') as excelWriter:
         #detail.WriteFuPanSummaryToXLSX(excelWriter)
-        # zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
         zhangTing.WriteZhangTingXLSX(dbConnection,excelWriter)
+        zhangTing.AnalysisZhangTingReason(dbConnection,excelWriter)
         #zhuanzai.WriteZhuanZaiInfoToExcel(excelWriter,2000)
         #gainian.WriteZhuanZaiGainToToXLS(excelWriter)
         #detailEx.WriteFuPanDetailExToToXLS(excelWriter)
@@ -138,6 +138,6 @@ def Test1():
 if __name__ == '__main__':
     dbConnection = ConnectToDB()
     tradingDays = GetTradingDateLastN(dbConnection,45)
-    # WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
-    Test1()
+    WriteFuPanSummaryToXLSX(dbConnection,tradingDays)
+    #Test1()
     #WriteToXLSXMain(dbConnection,tradingDays)

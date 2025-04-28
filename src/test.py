@@ -1,4 +1,4 @@
-from mysql.connect2DB import ConnectToDB
+from mysql.connect2DB import ConnectToDB,DataFrameToSqls_REPLACE
 import pandas as pd
 from thsData.fetchZhangTingFromTHS import CFetchZhangTingDataFromTHS
 import numpy as np
@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from MA.MAManager import CMAManager
 from DBOperating import GetTradingDateLastN
+import re
 
 def Test1_BuyTogether(dbConnection,operatorID1, operatorID2):
     sql = f'''select * from `stock`.`dragon` where (operator_ID = {operatorID1} or operator_ID = {operatorID2})  and `flag` = "B" and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID2} and `flag` = "B" and (sell = "nan" or sell = 0) and (date,stockID) in (select date,stockID from `stock`.`dragon` where operator_ID = {operatorID1} and `flag` = "B" and (sell = "nan" or sell = 0)))
@@ -441,14 +442,276 @@ def FilterZhangFuMaxZhai(start,end):
     DataFrameToJPG(df,("转债代码","转债名称"),root,f'''区间涨幅排名{end}''')
     df.to_excel(f'''/tmp/区间涨幅排名{start} - {end}.xlsx''')
 
+
+def HongShanBing():
+    dbConnection = ConnectToDB()
+    sql = f'''    SELECT A.*,B.`股票简称` FROM (SELECT * FROM stock.stockdailyinfo) AS A, (SELECT * FROM stock.stockbasicinfo) AS B where A.`股票代码` = B.`股票代码`'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    groups = df.groupby(["股票代码",])
+
+    result = []
+    for stockID, group in groups:
+        if group.shape[0] <10:
+            continue
+
+        group["开盘价"] = group["开盘价"].astype("float")
+        group["收盘价"] = group["收盘价"].astype("float")
+        group["最低价"] = group["最低价"].astype("float")
+        group["成交量"] = group["成交量"].astype("float")
+        group["昨日收盘价"] = group["收盘价"].shift()
+        group["涨跌额"] = group["收盘价"] - group["昨日收盘价"]
+
+        group["昨日成交量"] = group["成交量"].shift()
+        group["涨跌量"] = group["成交量"] - group["昨日成交量"]
+
+        if group.iloc[-1]["涨跌额"] <=0 or group.iloc[-2]["涨跌额"] <=0:
+            continue
+
+        if group.iloc[-1]["涨跌量"] <=0 or group.iloc[-2]["涨跌量"] <=0:
+            continue
+
+        if group.iloc[-1]["收盘价"] <=group.iloc[-1]["开盘价"] or group.iloc[-2]["收盘价"] <=group.iloc[-2]["开盘价"] or group.iloc[-3]["收盘价"] <=group.iloc[-3]["开盘价"]:
+            continue
+
+        if group.iloc[-1]["涨跌额"] <= group.iloc[-2]["涨跌额"]:
+            continue
+
+        if group.iloc[-1]["涨跌量"] <= group.iloc[-2]["涨跌量"]:
+            continue
+
+
+        if group.iloc[-2]["涨跌额"] <= group.iloc[-3]["涨跌额"]:
+            continue
+
+        if group.iloc[-2]["涨跌量"] <= group.iloc[-3]["涨跌量"]:
+            continue
+        
+        group[-15:].to_excel(f'''/tmp/红三兵{stockID[0]}.xlsx''')
+        result.append({"股票代码":stockID[0],"股票名称":group.iloc[-1]["股票简称"]})
+        print(f"================================{stockID[0]} Done!!!!================================")
+
+    newdf = pd.DataFrame(result)
+    DataFrameToJPG(newdf,("股票代码","股票名称"),"/tmp/",f'''红三兵''')
+
+
+
+
+def MATest():
+    dbConnection = ConnectToDB()
+    sql = f'''
+    SELECT * FROM stock.stockdailyinfo_2021
+    UNION ALL
+    SELECT * FROM stock.stockdailyinfo_2022
+    UNION ALL
+    SELECT * FROM stock.stockdailyinfo_2023
+    UNION ALL
+    SELECT * FROM stock.stockdailyinfo_2024
+    UNION ALL
+    SELECT * FROM stock.stockdailyinfo
+    '''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    df.drop_duplicates()
+    groups = df.groupby(["股票代码",])
+
+    result = []
+    for stockID, group in groups:
+        if group.shape[0] <10:
+            continue
+
+        group["开盘价"] = group["开盘价"].astype("float").round(3)
+        group["收盘价"] = group["收盘价"].astype("float").round(3)
+        group["最低价"] = group["最低价"].astype("float").round(3)
+        group["成交量"] = group["成交量"].astype("float").round(3)
+
+        group["MA5"] = group["收盘价"].rolling(window=5).mean().round(3)
+        group["收盘价-MA5"] = (group["收盘价"] - group["MA5"]).round(3)
+
+        group["MA10"] = group["收盘价"].rolling(window=10).mean().round(3)
+        group["收盘价-MA10"] = (group["收盘价"] - group["MA10"]).round(3)
+
+        group["MA20"] = group["收盘价"].rolling(window=20).mean().round(3)
+        group["收盘价-MA20"] = (group["收盘价"] - group["MA20"]).round(3)
+
+        group["MA30"] = group["收盘价"].rolling(window=30).mean().round(3)
+        group["收盘价-MA30"] = (group["收盘价"] - group["MA30"]).round(3)
+
+        group["MA60"] = group["收盘价"].rolling(window=60).mean().round(3)
+        group["收盘价-MA60"] = (group["收盘价"] - group["MA60"]).round(3)
+
+        group["MA120"] = group["收盘价"].rolling(window=120).mean().round(3)
+        group["收盘价-MA120"] = (group["收盘价"] - group["MA120"]).round(3)
+
+        group["MA250"] = group["收盘价"].rolling(window=250).mean().round(3)
+        group["收盘价-MA250"] = (group["收盘价"] - group["MA250"]).round(3)
+        
+        columns = ["日期","股票代码","收盘价","MA5","MA10","MA20","MA30","MA60","MA120","MA250","收盘价-MA5","收盘价-MA10","收盘价-MA20","收盘价-MA30","收盘价-MA60","收盘价-MA120","收盘价-MA250"]
+        newdf = pd.DataFrame(data=group, columns=columns)
+        sqls = DataFrameToSqls_REPLACE(datas=newdf,tableName="stock_daily_info_mas")
+        step = 300
+        groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+        for sql in groupedSql:
+            dbConnection.Execute(sql)
+        
+        print("stockID: " + str(stockID))
+
+
+    print("================================end================================")
+
+
+def MATest_statistics():
+    dbConnection = ConnectToDB()
+    sql = f'''
+    SELECT * FROM stock.stock_daily_info_mas;
+    '''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    df.drop_duplicates()
+
+    groups = df.groupby(["日期",])
+    result = []
+    for date, group in groups:
+        if group.shape[0] <10:
+            continue
+        
+        print(f'''================================开始处理{date[0]}================================''')
+        group["收盘价"] = group["收盘价"].astype("float").round(3)
+
+        group["MA5"] = group["MA5"].astype("float").round(3)
+        group["MA10"] = group["MA10"].astype("float").round(3)
+        group["MA20"] = group["MA10"].astype("float").round(3)
+        group["MA30"] = group["MA10"].astype("float").round(3)
+        group["MA60"] = group["MA10"].astype("float").round(3)
+        group["MA120"] = group["MA10"].astype("float").round(3)
+        group["MA250"] = group["MA10"].astype("float").round(3)
+
+        group["收盘价-MA5"] = group["收盘价-MA5"].astype("float").round(3)
+        group["收盘价-MA10"] = group["收盘价-MA10"].astype("float").round(3)
+        group["收盘价-MA20"] = group["收盘价-MA20"].astype("float").round(3)
+        group["收盘价-MA30"] = group["收盘价-MA30"].astype("float").round(3)
+        group["收盘价-MA60"] = group["收盘价-MA60"].astype("float").round(3)
+        group["收盘价-MA120"] = group["收盘价-MA120"].astype("float").round(3)
+        group["收盘价-MA250"] = group["收盘价-MA250"].astype("float").round(3)
+
+        group["MA5乖离率"] = group["收盘价-MA5"]/group["收盘价"]*100
+        group["MA10乖离率"] = group["收盘价-MA10"]/group["收盘价"]*100
+        group["MA20乖离率"] = group["收盘价-MA20"]/group["收盘价"]*100
+        group["MA30乖离率"] = group["收盘价-MA30"]/group["收盘价"]*100
+        group["MA60乖离率"] = group["收盘价-MA60"]/group["收盘价"]*100
+        group["MA120乖离率"] = group["收盘价-MA120"]/group["收盘价"]*100
+        group["MA250乖离率"] = group["收盘价-MA250"]/group["收盘价"]*100
+
+
+        shenzheng = group[group['股票代码'].str.match('^00.*') == True].copy()
+        shenzheng["股票市场"] = "中小板"
+
+        shangzheng = group[group['股票代码'].str.match('^60.*') == True].copy()
+        shangzheng["股票市场"] = "主板"
+
+        chuangyeBan = group[group['股票代码'].str.match('^30.*') == True].copy()
+        chuangyeBan["股票市场"] = "创业板"
+
+        kezhuangBan = group[group['股票代码'].str.match('^68.*') == True].copy()
+        kezhuangBan["股票市场"] = "科创板"
+
+        beijiaosuo = group[group['股票代码'].str.match('.*BJ') == True].copy()
+        beijiaosuo["股票市场"] = "北交所"
+
+        others = group[group['股票代码'].str.match('^00.*|^60.*|^30.*|^68.*|.*BJ') == False]
+
+        if others.shape[0] > 0:
+            raise Exception("unknown 类型")
+        
+
+        allDF = [shenzheng,shangzheng,chuangyeBan,kezhuangBan,beijiaosuo]
+        for shiChangDF in allDF:
+            r = {}
+            r["日期"] = date[0]
+            if shiChangDF.empty:
+                continue
+
+            r["股票市场"] = shiChangDF.iloc[0]["股票市场"]
+            count = shiChangDF.shape[0]
+            r[f'''总数'''] = count
+            
+            
+            columns = ["MA5","MA10","MA20","MA30","MA60","MA120","MA250"]
+            for column in columns:
+                basicColumns = ["日期","股票代码","收盘价"]
+                basicColumns.append(column)
+                key1 = f'''收盘价-{column}'''
+                key2 = f'''{column}乖离率'''
+                basicColumns.append(key1)
+                basicColumns.append(key2)
+                newDF = pd.DataFrame(data=shiChangDF, columns=basicColumns)
+                newDF.dropna(inplace=True)
+                if newDF.empty:
+                    r[f'''大于{column}数量'''] = ""
+                    r[f'''大于{column}百分比'''] = ""
+                    r[f'''{column}平均乖离率'''] = ""
+                    continue
+
+                count1 = newDF[newDF[key1] >= 0].shape[0]
+                r[f'''大于{column}数量'''] = count1
+                r[f'''大于{column}百分比'''] = f'''{count1/count*100:.2f}'''
+                r[f'''{column}平均乖离率'''] = f'''{newDF[key2].mean():.2f}'''
+            
+            result.append(r)
+    
+            
+    resultDf = pd.DataFrame(data=result)
+    print(resultDf)
+    sqls = DataFrameToSqls_REPLACE(datas=resultDf,tableName="stock_daily_info_mas_stastics")
+    step = 300
+    groupedSql = [" ".join(sqls[i:i+step]) for i in range(0,len(sqls),step)]
+    for sql in groupedSql:
+        dbConnection.Execute(sql)
+
+
+def N_statistics():
+    dbConnection = ConnectToDB()
+    sql = f'''
+    SELECT * FROM stock.stockzhangting where `日期` >= "2025-04-01"
+    '''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    print(df)
+    groups = df.groupby(["股票代码",])
+    result = []
+    for stockID, group in groups:
+        if group.shape[0] >= 2:
+            continue
+
+        result.append([group.iloc[0]["股票代码"],group.iloc[0]["股票简称"]])
+    
+    newDF = pd.DataFrame(data = result,columns=("股票代码","股票简称"))
+    DataFrameToJPG(newDF,("股票代码","股票简称"),"/tmp/",f'''N型备选''')
+    print(result)
+
+    # To DO ：
+    # 先涨停，然后三根阴线
+
 if __name__ == "__main__":
-    #dbConnection = ConnectToDB()
-    # Test1_BuyTogether(dbConnection,10028451,10656871)
-    # Test1_SellTogether(dbConnection,10028451,10656871)
-    #UpdateData(dbConnection)
-    #WriteXLS()
-    # WriteXLS()
-    #AnalysisIndex()
-    #FilterZhangFu()
-    #TestIndex()
-    FilterZhangFuMaxZhai("2024-09-20","2024-09-27")
+    # dbConnection = ConnectToDB()
+    # # Test1_BuyTogether(dbConnection,10028451,10656871)
+    # # Test1_SellTogether(dbConnection,10028451,10656871)
+    # #UpdateData(dbConnection)
+    # #WriteXLS()
+    # # WriteXLS()
+    # #AnalysisIndex()
+    # #FilterZhangFu()
+    # #TestIndex()
+    # tradingDays = GetTradingDateLastN(dbConnection,3)
+    #FilterZhangFuMaxZhai("2024-09-20","2024-10-08")
+    # import textwrap
+
+    # text = '危楼高百尺，手可摘星辰。不敢高声语，恐惊天上人。'
+    # width = 12
+    # wrapped_text = textwrap.wrap(text, width)
+    # for line in wrapped_text:
+    #     print(line)
+    HongShanBing()
+    # MATest()
+    # MATest_statistics()
+    #N_statistics()
