@@ -112,9 +112,9 @@ class CFetchDataFromTHS2(object):
         self.condition = condition
         self.codelist = ""
         self.indexNameLimit = ""
-        self.logid = "ba3afeb2557781f4d95e5f28aa5024c5"
+        self.logid = "10baacb6322e6783d37d3d12e0d0d6291"
         self.ret = 'json_all'
-        self.sessignid = "ba3afeb2557781f4d95e5f28aa5024c5"
+        self.sessignid = "10baacb6322e6783d37d3d12e0d0d6291"
         self.dateRange0 = "20220902"
         self.dateRange1 = "20220902"
         self.iwc_token = "0ac9665417016889621435948"
@@ -143,7 +143,8 @@ class CFetchDataFromTHS2(object):
         'Pragma': 'no-cache',
         'Referer': 'http://www.iwencai.com',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)',
-        "hexin-v":v
+        "hexin-v":v,
+        "Cookie": "other_uid=Ths_iwencai_Xuangu_1drlkslkp3tsos9aqg6jqww8t35ngijw; ta_random_userid=9lpymr2sgu; cid=d47f21233341e678c876d879694df0801746533872; u_ukey=A10702B8689642C6BE607730E11E6E4A; u_uver=1.0.0; u_dpass=QEUvYONrurEqt1CbfhRaz%2BfXDGkxudI%2BsXOE%2BmpwF0iSR9GvU9ALtcQ3lSQVRQvVHi80LrSsTFH9a%2B6rtRvqGg%3D%3D; u_did=C445ABCC484249B5B20EAA41373D9408; u_ttype=WEB; ttype=WEB; user=MDp5dWNob25naHVhbmc6Ok5vbmU6NTAwOjI1MDY3OTM3MDo3LDExMTExMTExMTExLDQwOzQ0LDExLDQwOzYsMSw0MDs1LDEsNDA7MSwxMDEsNDA7MiwxLDQwOzMsMSw0MDs1LDEsNDA7OCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSw0MDsxMDIsMSw0MDoyNzo6OjI0MDY3OTM3MDoxNzQ2NTM0NDg4Ojo6MTQzMDEzNjkwMDo2MDQ4MDA6MDoxMTA4NDI0YzI5NWJmMGM1N2UwNGM3YTFkMzMwNTE2MmU6ZGVmYXVsdF80OjA%3D; userid=240679370; u_name=yuchonghuang; escapename=yuchonghuang; ticket=25e81d76ff814f9ab38ffcc21005a072; user_status=0; utk=c800111133b7f16573b981f001ee35f0; v=Ax5d9o7r-lBaYi43-H3fi7z9ab9l3-OEdKKWK8initNY5LBhMG8yaUQz5m2b"
         }
         return headers
 

@@ -35,7 +35,7 @@ def DataFrameToSqls_REPLACE(datas,tableName):
     sqls = []
     for _, row in datas.iterrows():
         index_str = '''`,`'''.join(row.index)
-        value_str = '''","'''.join(str(x) for x in row.values)
+        value_str = '''","'''.join(str(x)  for x in row.values)
         sql = '''REPLACE INTO `{0}` (`{1}`) VALUES ("{2}");'''.format(tableName,index_str,value_str)
         sqls.append(sql)
     return sqls
