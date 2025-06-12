@@ -17,6 +17,14 @@ from stockSelect.pattern12 import CStockPattern12  # 51020上穿战法
 from stockSelect.N_Pattern import CNPattern,CNPatternEx
 from stockSelect.pattern13 import CPattern13
 
+
+def StockSelectMain():
+    dbConnection = ConnectToDB()
+    p = CNPattern(dbConnection)
+    p.Select()
+
+    
+
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
     # p = CStockPattern1(dbConnection)

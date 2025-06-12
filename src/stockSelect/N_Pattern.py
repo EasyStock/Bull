@@ -2,6 +2,7 @@ import datetime
 import pytz
 import pandas as pd
 from Utility.convertDataFrameToJPG import DataFrameToJPG
+from workspace import GetStockFolder
 
 class CNPattern(object):
     '''
@@ -79,8 +80,9 @@ class CNPattern(object):
         df = df[df['股票简称'].str.match('[\s\S]*(ST|退)+?[\s\S]*') == False]
         df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688|^30)+?[\s\S]*') == False]
         df.sort_values("结果",ascending=False,inplace=True)
-        df.to_excel('/tmp/patternN.xlsx',index=False)
-        DataFrameToJPG(df,("股票代码","股票简称"),"/tmp/","patternN")
+        root = GetStockFolder(tradingDays[-1])
+        #df.to_excel('/tmp/patternN.xlsx',index=False)
+        DataFrameToJPG(df,("股票代码","股票简称"),root,"N型选股器")
         print(df)
 
 
@@ -179,4 +181,3 @@ class CNPatternEx(object):
         df.to_excel('/tmp/patternNEX.xlsx',index=False)
         DataFrameToJPG(df,("股票代码","股票简称"),"/tmp/","patternNEX")
         print(df)
-

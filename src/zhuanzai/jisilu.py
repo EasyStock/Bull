@@ -10,6 +10,7 @@ from workspace import workSpaceRoot,WorkSpaceFont,GetZhuanZaiFolder
 import re
 import time
 import pytz
+from Utility.convertDataFrameToJPG import DataFrameToJPG
 
 NAME_MAP = {
     "bond_nm":"转债名称",
@@ -308,13 +309,15 @@ class CJiSiLu(object):
             df = GetKeZhuanzai(self.dbConnection,self.today,categrateMap[key])
             remain.extend(categrateMap[key])
             jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
-            self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_{key}.jpg")
+            #self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_{key}.jpg")
+            DataFrameToJPG(jpgDataFrame,columns=["转债代码","转债名称"],rootPath=folderRoot,fileName=f'''{self.today}_{key}''')
             #self.logger.info(str(df))
         
         self.logger.info(f"\n==========剩余=============")
         df = GetKeZhuanzai_remain(self.dbConnection,self.today,remain)
         jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
-        self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_剩余.jpg")
+        #self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_剩余.jpg")
+        DataFrameToJPG(jpgDataFrame,columns=["转债代码","转债名称"],rootPath=folderRoot,fileName=f'''{self.today}_剩余''')
         #self.logger.info(str(df))
 
 

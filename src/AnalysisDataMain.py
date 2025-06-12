@@ -27,6 +27,7 @@ from IndexAlalarm import IndexAlarm
 from tools import ToolMain
 from VMAMain import VMAMain
 from Score import ScoreMain
+from StockSelect import StockSelectMain
 
 import pytz
 import datetime
@@ -112,6 +113,9 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     WriteToXLSXMain(dbConnection,tradingDays)
 
     VAMSelector(dbConnection,tradingDays[-1:])
+
+    #筛选股票
+    StockSelectMain()
     logger.info(f'==============结束分析股票:{datetime.datetime.now(pytz.timezone("Asia/Shanghai"))}==============================\n')
 
 def SendReportOfKeZhuanZai(dbConnection,tradingDays,logger):
