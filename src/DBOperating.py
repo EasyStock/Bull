@@ -227,6 +227,19 @@ def zhuanqianxiaoying_yestoday(dbConnection,yestoday,today):
     return df
 
 
+def kezhuanzhaiHangye(dbConnection,today):
+    # 可转债三级行业数据
+    sql = f'''SELECT B.`转债代码`,B.`转债名称`, B.`现价`,A.`行业` FROM stock.stockyewu AS A,stock.kezhuanzhai_all AS B where B.`日期`= "{today}" and A.`股票简称` = B.`正股名称`'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    return df
+
+def kezhuanzhaizhangTing(dbConnection,today):
+    # 可转债涨停数据
+    sql = f'''SELECT A.`转债代码`,A.`转债名称`,A.`现价` FROM stock.kezhuanzhai_all AS A, stock.stockzhangting AS B  where A.`日期` = "{today}" and  B.`日期`= "{today}" and A.`正股名称` = B.`股票简称`'''
+    results, columns = dbConnection.Query(sql)
+    df = pd.DataFrame(results,columns=columns)
+    return df
 
 
 def migrateDataFrom(srcConnection,destConnection,tableName,drop = False):

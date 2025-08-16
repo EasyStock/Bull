@@ -75,7 +75,7 @@ class CNPattern(object):
     
     def Select(self):
         tradingDays = self.GetTradingDates()
-        res = self.GetStockData(tradingDays[-20])
+        res = self.GetStockData(tradingDays[-30])
         df = pd.DataFrame(res,columns = ["股票代码","股票简称","结果"])
         df = df[df['股票简称'].str.match('[\s\S]*(ST|退)+?[\s\S]*') == False]
         df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688|^30)+?[\s\S]*') == False]
@@ -173,7 +173,7 @@ class CNPatternEx(object):
     
     def Select(self):
         tradingDays = self.GetTradingDates()
-        res = self.GetStockData(tradingDays[-20])
+        res = self.GetStockData(tradingDays[-30])
         df = pd.DataFrame(res,columns = ["股票代码","股票简称","结果"])
         df = df[df['股票简称'].str.match('[\s\S]*(ST|退)+?[\s\S]*') == False]
         df = df[df['股票代码'].str.match('[\s\S]*(BJ|^688|^30)+?[\s\S]*') == False]

@@ -115,16 +115,18 @@ class CIWenCaiAPI(object):
             component = components[0]
             datas = component["data"]["datas"]
             return datas
-        except:
+        except Exception as e:
+            print(e)
             return self.RequestOnePage(perPage,page)
 
     def RequestOnePagereAndTry(self,perPage,page,totalPages,existingSize,totalSize,retryCount = 1):
         datas = self.RequestOnePage(perPage,page)
         size = len(datas)
         logger.error(f"一共有{totalSize:^5d}条数据,已经获取第 【{page:^5d}】页数据, 每页 【{perPage:^5d}】条, 本次总共获取了 【{size:^5d}】 条数据, 总共获取了【{existingSize+size:^8d}】 条数据, 第{retryCount}次尝试")
-        if page != totalPages and size != perPage and retryCount <=5:
-            retryCount = retryCount + 1
-            return self.RequestOnePagereAndTry(perPage,page,totalPages,totalSize,retryCount)
+        newRetryCount = retryCount
+        if page != totalPages and size != perPage and newRetryCount <=5:
+            newRetryCount = newRetryCount + 1
+            return self.RequestOnePagereAndTry(perPage,page,totalPages,totalSize,newRetryCount)
         
         return datas
 

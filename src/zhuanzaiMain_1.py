@@ -22,6 +22,8 @@ def GetFromJisiluAndWriteToDB(logger):
     jisiLu.GetFromJisiluAndWriteToDB()
     jisiLu.GetNewStockCalendar()
     jisiLu.Categrate(CATEGRAGTE_KE_ZHUAN_ZAI)
+    jisiLu.CategrateByHangYe()
+    jisiLu.GetZhangTing()
 
     tradingDays = GetTradingDateLastN(dbConnection,3)
     comparer = CCompareWithIndex(dbConnection,logger)

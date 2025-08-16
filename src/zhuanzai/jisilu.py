@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import datetime
 from mysql.connect2DB import DataFrameToSqls_REPLACE
-from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain
+from DBOperating import GetTradingDateLastN,GetKeZhuanzai,GetKeZhuanzai_remain,kezhuanzhaiHangye,kezhuanzhaizhangTing
 import os
 import sys
 from workspace import workSpaceRoot,WorkSpaceFont,GetZhuanZaiFolder
@@ -319,6 +319,39 @@ class CJiSiLu(object):
         #self.ConvertDataFrameToJPG(jpgDataFrame,f"{folderRoot}{self.today}_剩余.jpg")
         DataFrameToJPG(jpgDataFrame,columns=["转债代码","转债名称"],rootPath=folderRoot,fileName=f'''{self.today}_剩余''')
         #self.logger.info(str(df))
+
+
+    def CategrateByHangYe(self):
+        result = GetTradingDateLastN(self.dbConnection,15)
+        self.today = result[-1]
+        folderRoot= GetZhuanZaiFolder(self.today)
+        folderRoot = f'''{folderRoot}/按行业归类/'''
+        if os.path.exists(folderRoot) == False:
+            os.makedirs(folderRoot)
+
+        df = kezhuanzhaiHangye(self.dbConnection,self.today)
+        df[['一级行业', '二级行业', '三级行业']] = df['行业'].str.split('-', expand=True, n=2)
+
+        def _ProcessHangYe(df,name):
+            groups = df.groupby(name)
+            for hangye, group in groups:
+                group.sort_values('现价',axis=0,ascending=True,inplace=True)
+                jpgDataFrame = pd.DataFrame(group,columns=["转债代码","转债名称"])
+                DataFrameToJPG(jpgDataFrame,columns=["转债代码","转债名称"],rootPath=folderRoot,fileName=f'''{name}_{hangye}''')
+
+        _ProcessHangYe(df,"一级行业")
+        _ProcessHangYe(df,"二级行业")
+        _ProcessHangYe(df,"三级行业")
+
+
+    def GetZhangTing(self):
+        result = GetTradingDateLastN(self.dbConnection,15)
+        self.today = result[-1]
+        folderRoot= GetZhuanZaiFolder(self.today)
+        df = kezhuanzhaizhangTing(self.dbConnection,self.today)
+        df.sort_values('现价',axis=0,ascending=True,inplace=True)
+        jpgDataFrame = pd.DataFrame(df,columns=["转债代码","转债名称"])
+        DataFrameToJPG(jpgDataFrame,columns=["转债代码","转债名称"],rootPath=folderRoot,fileName=f'''正股涨停可转债''')
 
 
 ########################################################################################################################

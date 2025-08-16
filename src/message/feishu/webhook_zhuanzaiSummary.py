@@ -6,6 +6,8 @@ from message.feishu.messageformat_feishu import ForamtKeZhuanZaiSummary,ForamtKe
 import pandas as pd
 import json
 import re
+from Utility.convertDataFrameToJPG import DataFrameToJPG
+from workspace import workSpaceRoot,GetZhuanZaiFolder
 
 def PingJi(dbConnection,tradingDays):
     # 评级变动
@@ -189,7 +191,12 @@ def ReDianOfToday(dbConnection,tradingDays):
         for redian in redians:
             sql2 = f'''SELECT distinct(A.`转债代码`),A.`转债名称`, A.`现价` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`日期` = "{today}" and B.`所属概念` like '%{redian}%';'''
             results2, columns = dbConnection.Query(sql2)
-            data[redian] = pd.DataFrame(results2,columns = columns)
+            df = pd.DataFrame(results2,columns = columns)
+            data[redian] = df
+
+            folderRoot= GetZhuanZaiFolder(tradingDays[-1])
+            fileName = f'''新增概念_{redian}_{tradingDays[-1]}'''.replace("/", "")
+            DataFrameToJPG(df,columns,folderRoot,fileName)
 
     redian = ForamtKeZhuanZaiSummary_ReDianToday(data)
     return redian
