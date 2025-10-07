@@ -18,3 +18,39 @@ docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Dat
 docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Data/ -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_Debian1 -e LANG=C.UTF-8 jenkins_agent:3.0 /bin/bash -c "curl -sO http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/jenkinsAgent%5FDebian1/jenkins-agent.jnlp -secret 81f8c6b5aedcac73511a324d6bab7c419b9a57bd5f13c231bd4fd090e5076e4f -workDir /home/jenkins/"
 docker run -d  --network my-net --privileged=true -v /Volumes/Data/:/Volumes/Data/ -v /Volumes/Data/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_Debian2 -e LANG=C.UTF-8 jenkins_agent:3.0 /bin/bash -c "curl -sO http://192.168.31.58:8080/jnlpJars/agent.jar && java -jar agent.jar -jnlpUrl http://192.168.31.58:8080/computer/jenkinsAgent%5FDebian2/jenkins-agent.jnlp -secret 5fe18d4ef81fbbe291aee69408d003d4cf9a3813b3da68e69e3be824d79e82fc -workDir /home/jenkins/"
 
+
+
+
+docker login --username=yuchonghuang registry.cn-hangzhou.aliyuncs.com
+docker pull registry.cn-hangzhou.aliyuncs.com/jianpinh/jenkins-agent:[镜像版本号]
+
+
+# 1. 查看现有镜像
+docker images
+
+# 2. 导出镜像
+/var/lib/mysql/home/user/backup/my-app-v1.0.tar my-app:latest
+
+# 3. 在另一台机器上导入
+docker load -i /home/user/backup/my-app-v1.0.tar
+
+# 4. 验证导入成功
+docker images | grep my-app
+
+# 5. 运行测试
+docker run -d --name test-container my-app:latest
+
+
+docker run -d  --privileged=true -v /vol2/1000/复盘/:/Volumes/Data/ -v /vol2/1000/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_ubuntu1 -e LANG=C.UTF-8 jenkins_agent:4.0 /bin/bash -c "curl -sO http://192.168.31.253:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://192.168.31.253:8080/ -secret cc4c30f5a17255bbc2c8f6ab4486518a296becd5a1922d644a7538e30fe04824 -name jenkins-node1 -webSocket -workDir /home/jenkins/"
+docker run -d  --privileged=true -v /vol2/1000/复盘/:/Volumes/Data/ -v /vol2/1000/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_ubuntu2 -e LANG=C.UTF-8 jenkins_agent:4.0 /bin/bash -c "curl -sO http://192.168.31.253:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://192.168.31.253:8080/ -secret ecd653043cdc7bb3cdf3f4719f1fd0f4cb07d29937874c72aa670108958bd92e -name jenkins-node2 -webSocket -workDir /home/jenkins/"
+
+
+
+
+docker run --name mysql -d -p 3306:3306 --restart=always \
+-v /vol2/1000/Docker/mysql/log:/var/log/mysql \
+-v /vol2/1000/Docker/mysql/data:/var/lib/mysql \
+-v /vol2/1000/Docker/mysql/conf:/etc/mysql/conf.d \
+-v /etc/localtime:/etc/localtime:ro \
+-e MYSQL_ROOT_PASSWORD=P@ss1234 \
+mysql:latest

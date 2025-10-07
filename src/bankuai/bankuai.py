@@ -3,6 +3,7 @@ import pandas as pd
 import datetime
 import pytz
 from workspace import GetStockFolder
+from Utility.convertDataFrameToJPG import DataFrameToJPG
 
 class CBanKuaiFinishedRatio(object):
     def __init__(self,dbConnection):
@@ -37,6 +38,12 @@ class CBanKuaiFinishedRatio(object):
         newDf1["最高价"] = newDf1["最高价"].astype(float)
         newDf1["成交量"] = newDf1["成交量"].astype(float)
         newDf1[['一级行业', '二级行业', '三级行业']] = newDf1['行业'].str.split('-', expand=True, n=2)
+        return newDf1
+    
+    def GetBanKuaiIndex(self,date):
+        sql = f'''SELECT `板块代码` AS `行业代码`,`板块名称` AS `行业` FROM stock.bankuai_index_dailyinfo where `日期` = "{date}";'''
+        result1,columns1 = self.dbConnection.Query(sql)
+        newDf1=pd.DataFrame(result1,columns=columns1)
         return newDf1
     
 
@@ -78,11 +85,17 @@ class CBanKuaiFinishedRatio(object):
             res_hangYe.append(result)
 
 
+        hangYeInfoDF = self.GetBanKuaiIndex(endDate)
         resultDF = pd.DataFrame(data=res_hangYe,columns=["行业","总数","高于完成率","低于完成率","开始时间","结束时间","高于","低于"])
+        resultDF = pd.merge(resultDF, hangYeInfoDF, on='行业', how='inner')
+
         resultDF.sort_values(['高于完成率',"总数"],axis=0,ascending=False,inplace=True)
         resultDF.reset_index(drop=True,inplace=True)
         root = GetStockFolder(endDate)
         resultDF.to_excel(f'''{root}{startDate}-{endDate}-{name}完成率.xlsx''')
+        DataFrameToJPG(resultDF,("行业代码","行业"),f'''{root}''',f'''{startDate}-{endDate}-{name}完成率''')
+
+
 
     def FininshedRatio(self,startDate,endDate = None):
         if endDate is None:

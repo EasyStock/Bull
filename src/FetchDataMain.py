@@ -194,9 +194,6 @@ if __name__ == "__main__":
         #从同花顺上获取数据
         GetDataFromTHSAndWriteToDB(dbConnection,tradingDays,logger)
 
-        #从集思录上获取数据
-        GetDataFromJisiluAndWriteToDB(dbConnection,logger)
-
         #从开盘啦上获取数据
         GetDataFromKaiPanLaAndWriteToDB(dbConnection,tradingDays,logger)
 
@@ -207,6 +204,9 @@ if __name__ == "__main__":
         #获取ETF日线数据
         FetchETFDailyData(dbConnection,tradingDays)
 
+        #从集思录上获取数据
+        GetDataFromJisiluAndWriteToDB(dbConnection,logger)
+        
         updateFinishedStatus(dbConnection,tradingDays)
     else:
         if 1 in args.options:

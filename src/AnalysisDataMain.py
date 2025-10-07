@@ -49,6 +49,8 @@ def AnalysisDataOfKeZhuanZhai(dbConnection,tradingDays,logger):
     #可转债各个概念归类
     jisiLu = CJiSiLu(logger,dbConnection)
     jisiLu.Categrate(CATEGRAGTE_KE_ZHUAN_ZAI)
+    jisiLu.CategrateByHangYe()
+    jisiLu.GetZhangTing()
 
     #和指数相比，计算强弱
     comparer = CCompareWithIndex(dbConnection,logger)

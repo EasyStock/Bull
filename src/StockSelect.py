@@ -16,6 +16,8 @@ from stockSelect.pattern10 import CStockPattern10  # 倍量
 from stockSelect.pattern12 import CStockPattern12  # 51020上穿战法
 from stockSelect.N_Pattern import CNPattern,CNPatternEx
 from stockSelect.pattern13 import CPattern13
+from stockSelect.pattern14 import CPattern14
+
 from stockSelect.Fibonacci_Pattern import CFibonacciPattern
 from stockSelect.lowerHigherPattern import CLowerHigherPattern
 from stockSelect.BollPattern import CBOLLPattern
@@ -33,6 +35,14 @@ def StockSelectMain():
     p = CBOLLPattern(dbConnection=dbConnection)
     p.Select()
 
+    b = CBanKuaiFinishedRatio(dbConnection=dbConnection)
+    b.FininshedRatio("2025-09-18")
+
+
+    p = CPattern14(dbConnection)
+    p.SelectLastDay(30)
+    p.SelectLastDay(20)
+    p.SelectLastDay(10)
 
 
 if __name__ == "__main__":
@@ -68,14 +78,21 @@ if __name__ == "__main__":
     # p = CPattern13(dbConnection)
     # p.Select()
 
+    # p = CPattern14(dbConnection)
+    # p.SelectLastDay(30)
+    # p.SelectLastDay(20)
+    # p.SelectLastDay(10)
+
     # p = CFibonacciPattern(dbConnection=dbConnection)
     # p.Select()
 
     # p = CLowerHigherPattern(dbConnection=dbConnection)
     # p.Select()
 
-    p = CBOLLPattern(dbConnection=dbConnection)
-    p.Select()
+    # p = CBOLLPattern(dbConnection=dbConnection)
+    # p.Select()
     
     # b = CBanKuaiFinishedRatio(dbConnection=dbConnection)
-    # b.FininshedRatio("2024-10-08")
+    # b.FininshedRatio("2025-09-18")
+
+    StockSelectMain()
