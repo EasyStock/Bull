@@ -135,7 +135,7 @@ class CFetchDailyDataFromTHS2(object):
 
 
 
-# def GetDailyDataMgr(date,v,stockBasicInfo,stockDailyInfo):
+# def GetDailyDataMgr(date,v,stockbasicinfo,stockdailyinfo):
 #     step = 100
 #     sql_Basic = []
 #     sql_Daily = []
@@ -145,10 +145,10 @@ class CFetchDailyDataFromTHS2(object):
 #         logger.error(f"ready to fetch page:{pageID}")
 #         dailyFetcher = CFetchDailyDataFromTHS2(date,v)
 #         dailyFetcher.RequestDailyData(pageID,step)
-#         basicSqls = dailyFetcher.FormateBacicInfoToSQL(stockBasicInfo)
+#         basicSqls = dailyFetcher.FormateBacicInfoToSQL(stockbasicinfo)
 #         sql_Basic.extend(basicSqls)
             
-#         dailySqls = dailyFetcher.FormateDailyInfoToSQL(stockDailyInfo)
+#         dailySqls = dailyFetcher.FormateDailyInfoToSQL(stockdailyinfo)
 #         sql_Daily.extend(dailySqls)
 
 #         totalSize  = totalSize + dailyFetcher.dataSize

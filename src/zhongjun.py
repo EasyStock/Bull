@@ -59,7 +59,7 @@ def ConvertDataFrameToJPG(df,fullPath):
 def FetchData(dbConnection,lastN):
     lastNDates = GetTradingDateLastN(dbConnection,lastN)
     print(lastNDates)
-    #sql = f''' SELECT A.*,B.`股票简称`,B.`上市天数` FROM stock.stockdailyinfo As A, `stock`.`stockBasicInfo` AS B where A.`股票代码` = B.`股票代码` and A.`股票代码` NOT REGEXP '^8.*' and `日期` >= "{lastNDates[0]}";'''
+    #sql = f''' SELECT A.*,B.`股票简称`,B.`上市天数` FROM stock.stockdailyinfo As A, `stock`.`stockbasicinfo` AS B where A.`股票代码` = B.`股票代码` and A.`股票代码` NOT REGEXP '^8.*' and `日期` >= "{lastNDates[0]}";'''
     sql = f'''SELECT `转债代码`,`转债名称` FROM stock.kezhuanzhai where `日期`='2022-04-07' order by `PB` DESC;'''
     print(sql)
     datas,columns = dbConnection.Query(sql)

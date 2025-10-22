@@ -407,7 +407,7 @@ class CFupanSummary(object):
         reasons = list(set(reasons))
         reasonResults = {}
         for reason in reasons:
-            sql = f"select count(*) from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{self.today}' and A.`涨停原因类别` like '%{reason}%' ;"
+            sql = f"select count(*) from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{self.today}' and A.`涨停原因类别` like '%{reason}%' ;"
             result ,_ = self.dbConnection.Query(sql)
             count = result[0][0]
             reasonResults[reason] = count

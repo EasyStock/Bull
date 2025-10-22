@@ -127,7 +127,7 @@ def NewGaiNian5Days(dbConnection,tradingDays):
     for result in results:
         date = result[0]
         gaiNian = result[1]
-        sql2 = f'''SELECT distinct(A.`转债代码`),A.`转债名称` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`>'{last5Days}' and B.`所属概念` like '%{gaiNian}%';'''
+        sql2 = f'''SELECT distinct(A.`转债代码`),A.`转债名称` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`>'{last5Days}' and B.`所属概念` like '%{gaiNian}%';'''
         results2, _ = dbConnection.Query(sql2)
         data.append((date,gaiNian,results2))
     
@@ -189,7 +189,7 @@ def ReDianOfToday(dbConnection,tradingDays):
     for result in results:
         redians = result[1].split(';')
         for redian in redians:
-            sql2 = f'''SELECT distinct(A.`转债代码`),A.`转债名称`, A.`现价` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`日期` = "{today}" and B.`所属概念` like '%{redian}%';'''
+            sql2 = f'''SELECT distinct(A.`转债代码`),A.`转债名称`, A.`现价` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and A.`日期` = "{today}" and B.`所属概念` like '%{redian}%';'''
             results2, columns = dbConnection.Query(sql2)
             df = pd.DataFrame(results2,columns = columns)
             data[redian] = df

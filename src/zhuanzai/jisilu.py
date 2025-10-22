@@ -286,11 +286,11 @@ class CJiSiLu(object):
                     sys.exit(1)
         
         lastDay = dates[-2]
-        sql1 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{self.today}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{lastDay}') order by `PB` DESC;"
+        sql1 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{self.today}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{lastDay}') order by `PB` DESC;"
         result1,columns1 = self.dbConnection.Query(sql1)
         newDf1=pd.DataFrame(result1,columns=columns1)
         
-        sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{self.today}') order by `PB` DESC;"
+        sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{self.today}') order by `PB` DESC;"
         result2,columns2 = self.dbConnection.Query(sql2)
         newDf2=pd.DataFrame(result2,columns=columns2)
         name = f'{folderRoot}{self.today}_变化量.xlsx'

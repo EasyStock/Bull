@@ -84,7 +84,7 @@ def AnalysisZhangTingReason(dbConnection):
     reasonResults = {}
     rootFolder = GetStockFolder(date)
     for reason in reasons:
-        sql = f'''select A.`日期`,A.`股票代码`,A.`股票简称`,A.`连续涨停天数` as `涨停天数`,A.`涨停关键词` as `连板数`,A.`首次涨停时间`,A.`最终涨停时间`,A.`涨停原因类别` as `涨停原因` from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and A.`涨停原因类别` like '%{reason}%' order by `连续涨停天数`DESC ,`最终涨停时间` ASC;'''
+        sql = f'''select A.`日期`,A.`股票代码`,A.`股票简称`,A.`连续涨停天数` as `涨停天数`,A.`涨停关键词` as `连板数`,A.`首次涨停时间`,A.`最终涨停时间`,A.`涨停原因类别` as `涨停原因` from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and A.`涨停原因类别` like '%{reason}%' order by `连续涨停天数`DESC ,`最终涨停时间` ASC;'''
         result ,columns = dbConnection.Query(sql)
         df = pd.DataFrame(result, columns = columns)
         count = df.shape[0]

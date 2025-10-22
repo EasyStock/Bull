@@ -32,18 +32,18 @@ def _GetDailyDataEx(dbConnection,date,logger):
     daily = CFetchDailyDataFromTHS2(date,v)
     daily.RequestDailyData_MultiPages()
 
-    stockBasicInfo_sqls = daily.FormateBacicInfoToSQL('stockBasicInfo')
-    stockDailyInfo_sqls = daily.FormateDailyInfoToSQL('stockDailyInfo')
+    stockbasicinfo_sqls = daily.FormateBacicInfoToSQL('stockbasicinfo')
+    stockdailyinfo_sqls = daily.FormateDailyInfoToSQL('stockdailyinfo')
     step = 200
-    groupedStockBasicInfo_sqls = [" ".join(stockBasicInfo_sqls[i:i+step]) for i in range(0,len(stockBasicInfo_sqls),step)]
-    groupedStockStockDailyInfo_sqls = [" ".join(stockDailyInfo_sqls[i:i+step]) for i in range(0,len(stockDailyInfo_sqls),step)]
+    groupedstockbasicinfo_sqls = [" ".join(stockbasicinfo_sqls[i:i+step]) for i in range(0,len(stockbasicinfo_sqls),step)]
+    groupedStockStockDailyInfo_sqls = [" ".join(stockdailyinfo_sqls[i:i+step]) for i in range(0,len(stockdailyinfo_sqls),step)]
     printcount = 1500
-    for index, sql in enumerate(groupedStockBasicInfo_sqls):
+    for index, sql in enumerate(groupedstockbasicinfo_sqls):
         # msg = f'''BasicInfo index: [{(index+1)*step:^5d}]'''
         # if index*step %printcount == 0:
         #     logger.info(msg)
         
-        # if index %(len(stockBasicInfo_sqls)-1) == 0 and index != 0:
+        # if index %(len(stockbasicinfo_sqls)-1) == 0 and index != 0:
         #     logger.warning(msg)
 
         dbConnection.Execute(sql)
@@ -53,7 +53,7 @@ def _GetDailyDataEx(dbConnection,date,logger):
         # if index*step %printcount == 0:
         #     logger.info(msg) 
 
-        # if index %(len(stockDailyInfo_sqls)-1) == 0 and index != 0:
+        # if index %(len(stockdailyinfo_sqls)-1) == 0 and index != 0:
         #     logger.warning(msg)
 
         dbConnection.Execute(sql)

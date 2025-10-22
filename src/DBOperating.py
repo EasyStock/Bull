@@ -8,14 +8,14 @@ import pytz
 def GetTradingDateLastN(dbConnection,N):
     today = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).date()
     end = today.strftime("%Y-%m-%d")
-    sql = f"SELECT `日期` FROM stock.treadingDay where `开市` =1 and `交易所`='SSE' and `日期`<='{end}'"
+    sql = f"SELECT `日期` FROM stock.treadingday where `开市` =1 and `交易所`='SSE' and `日期`<='{end}'"
     #print(sql)
     res,_ = dbConnection.Query(sql)
     results = [r[0] for r in res]
     return results[-N:]
 
 def GetZhangTingData(dbConnection,date):
-    sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+    sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
     #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
@@ -37,14 +37,14 @@ def GetZhangTingDataBy(dbConnection,date,reasons, gaiNians):
         else:
             gai = gai+ " OR "+ f"B.`所属概念` like '%{r}%' "
             
-    sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+    sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
     if zhangTing != "" and gai != "":
-        sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing} or {gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+        sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing} or {gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
     else:
         if zhangTing != "":
-            sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+            sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
         elif gai != "":
-            sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+            sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
             
     #print(sql)
     results, columns = dbConnection.Query(sql)
@@ -66,14 +66,14 @@ def GetRemainZhangTingDataBy(dbConnection,date,reasons, gaiNians):
         else:
             gai = gai+ " and "+ f"B.`所属概念` not like '%{r}%' "
             
-    sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+    sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
     if zhangTing != "" and gai != "":
-        sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing}) and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+        sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing}) and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
     else:
         if zhangTing != "":
-            sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+            sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({zhangTing}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
         elif gai != "":
-            sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+            sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{date}' and ({gai}) order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
         
     #print(sql)
     results, columns = dbConnection.Query(sql)
@@ -83,7 +83,7 @@ def GetRemainZhangTingDataBy(dbConnection,date,reasons, gaiNians):
 
 def Get10CMShouBanZhangTingData(dbConnection,yestoday,today):
     #获取10CM首板涨停
-    sql = f"select A.*, B.`股票简称` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码` in (select `股票代码` from `stockZhangting` where `股票代码` REGEXP '^60|^00' and `日期` = '{yestoday}' and `连续涨停天数`=1) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
+    sql = f"select A.*, B.`股票简称` from `stockdailyinfo` AS A,`stockbasicinfo` As B where A.`股票代码` in (select `股票代码` from `stockzhangting` where `股票代码` REGEXP '^60|^00' and `日期` = '{yestoday}' and `连续涨停天数`=1) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
     #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
@@ -92,7 +92,7 @@ def Get10CMShouBanZhangTingData(dbConnection,yestoday,today):
     
 def Get20CMShouBanZhangTingData(dbConnection,yestoday,today):
     #获取20CM首板涨停
-    sql = f"select A.*, B.`股票简称` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码` in (select `股票代码` from `stockZhangting` where `股票代码` REGEXP '^30|^68' and `日期` = '{yestoday}' and `连续涨停天数`=1) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
+    sql = f"select A.*, B.`股票简称` from `stockdailyinfo` AS A,`stockbasicinfo` As B where A.`股票代码` in (select `股票代码` from `stockzhangting` where `股票代码` REGEXP '^30|^68' and `日期` = '{yestoday}' and `连续涨停天数`=1) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================昨日{yestoday}  20CM首板涨停奖励率========================\n{str(df)}\n {df.shape}"
@@ -100,7 +100,7 @@ def Get20CMShouBanZhangTingData(dbConnection,yestoday,today):
 
 def Get10CMLianBanZhangTingData(dbConnection,yestoday,today):
     #获取10CM连板涨停
-    sql = f"select A.*, B.`股票简称` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码` in (select `股票代码` from `stockZhangting` where `股票代码` REGEXP '^60|^00' and `日期` = '{yestoday}' and `连续涨停天数`>=2) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
+    sql = f"select A.*, B.`股票简称` from `stockdailyinfo` AS A,`stockbasicinfo` As B where A.`股票代码` in (select `股票代码` from `stockzhangting` where `股票代码` REGEXP '^60|^00' and `日期` = '{yestoday}' and `连续涨停天数`>=2) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================昨日({yestoday})  10CM连板涨停奖励率========================\n {str(df)} \n {df.shape}"
@@ -108,56 +108,56 @@ def Get10CMLianBanZhangTingData(dbConnection,yestoday,today):
 
 def Get20CMLianBanZhangTingData(dbConnection,yestoday,today):
     #获取20CM连板涨停
-    sql = f"select A.*, B.`股票简称` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码` in (select `股票代码` from `stockZhangting` where `股票代码` REGEXP '^30|^68' and `日期` = '{yestoday}' and `连续涨停天数`>=2) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
+    sql = f"select A.*, B.`股票简称` from `stockdailyinfo` AS A,`stockbasicinfo` As B where A.`股票代码` in (select `股票代码` from `stockzhangting` where `股票代码` REGEXP '^30|^68' and `日期` = '{yestoday}' and `连续涨停天数`>=2) and A.`日期` = '{today}' and A.`股票代码` = B.`股票代码` order by A.`涨跌幅` DESC;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================昨日({yestoday})  20CM连板涨停奖励率========================\n {str(df)} \n {df.shape}"
     return (df,msg)
 
 def Get1LianBan(dbConnection,today):
-    sql = f"select * from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`=1 order by `首次涨停时间`;"
+    sql = f"select * from `stockzhangting` where `日期` = '{today}' and `连续涨停天数`=1 order by `首次涨停时间`;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================今日{today} 首板涨停========================\n {str(df)} \n {df.shape}"
     return (df,msg)
 
 def Get2LianBan(dbConnection,today):
-    sql = f"select * from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`=2 order by `首次涨停时间`;"
+    sql = f"select * from `stockzhangting` where `日期` = '{today}' and `连续涨停天数`=2 order by `首次涨停时间`;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================今日{today}  2连板涨停========================\n {str(df)} \n {df.shape}"
     return (df,msg)
 
 def Get3LianBan(dbConnection,today):
-    sql = f"select * from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`=3 order by `首次涨停时间`;"
+    sql = f"select * from `stockzhangting` where `日期` = '{today}' and `连续涨停天数`=3 order by `首次涨停时间`;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================今日{today}  3连板涨停========================\n {str(df)} \n {df.shape}"
     return (df,msg)
 
 def Get4AndMoreLianBan(dbConnection,today):
-    sql = f"select * from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`>=4 order by `连续涨停天数`DESC,`首次涨停时间` ASC;"
+    sql = f"select * from `stockzhangting` where `日期` = '{today}' and `连续涨停天数`>=4 order by `连续涨停天数`DESC,`首次涨停时间` ASC;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================今日{today}  4连板及以上涨停========================\n {str(df)} \n {df.shape}"
     return (df,msg)
 
 def GaoWeiFailed(dbConnection,yestoday,today):
-    sql = f"select * from `stockZhangting` where `日期` = '{yestoday}' and `连续涨停天数`>=3 and `股票代码` not in (select `股票代码` from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`>=3) order by `连续涨停天数` DESC;"
+    sql = f"select * from `stockzhangting` where `日期` = '{yestoday}' and `连续涨停天数`>=3 and `股票代码` not in (select `股票代码` from `stockzhangting` where `日期` = '{today}' and `连续涨停天数`>=3) order by `连续涨停天数` DESC;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     msg = f"\n==================昨日({yestoday})  3板及以上，今日({today})断板========================\n {str(df)} \n {df.shape}"
     return (df,msg)
 
 def ZhangTingFengdan(dbConnection,today):
-    sql = f"select * from `stockZhangting` where `日期` = '{today}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+    sql = f"select * from `stockzhangting` where `日期` = '{today}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     return df
 
 def DongNeng(dbConnection,yestoday,today):
-    sqlY = f"select count(*) from `stockZhangting` where `日期` = '{yestoday}'"
-    sqlT = f"select count(*) from `stockZhangting` where `日期` = '{today}' and `连续涨停天数`>=2;"
+    sqlY = f"select count(*) from `stockzhangting` where `日期` = '{yestoday}'"
+    sqlT = f"select count(*) from `stockzhangting` where `日期` = '{today}' and `连续涨停天数`>=2;"
     resultsY, _ = dbConnection.Query(sqlY)
     resultsT, _ = dbConnection.Query(sqlT)
     #print(resultsY,resultsT)
@@ -175,9 +175,9 @@ def GetKeZhuanzai(dbConnection,today,gaiNians):
         else:
             gai = gai+ " OR "+ f"B.`所属概念` like '%{r}%' "
     
-    sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' order by `PB` DESC;"
+    sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' order by `PB` DESC;"
     if gai != "":
-        sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and ({gai}) order by `PB` DESC;" 
+        sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and ({gai}) order by `PB` DESC;" 
     
     #print(sql)
     results, columns = dbConnection.Query(sql)
@@ -192,9 +192,9 @@ def GetKeZhuanzai_remain(dbConnection,today,gaiNians):
         else:
             gai = gai+ " and "+ f"B.`所属概念` not like '%{r}%' "
     
-    sql = f"SELECTA.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' order by `PB` DESC;"
+    sql = f"SELECTA.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' order by `PB` DESC;"
     if gai != "":
-        sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and ({gai}) order by `PB` DESC;" 
+        sql = f"SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and ({gai}) order by `PB` DESC;" 
     
     #print(sql)
     results, columns = dbConnection.Query(sql)
@@ -202,7 +202,7 @@ def GetKeZhuanzai_remain(dbConnection,today,gaiNians):
     return df
 
 def GetTodayMarketingData(dbConnection,today):
-    sql = f"select A.*, B.`股票简称`,B.`上市天数` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码`=B.`股票代码` and `日期`= '{today}' and B.`上市天数`>1;"
+    sql = f"select A.*, B.`股票简称`,B.`上市天数` from `stockdailyinfo` AS A,`stockbasicinfo` As B where A.`股票代码`=B.`股票代码` and `日期`= '{today}' and B.`上市天数`>1;"
     #print(sql)
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
@@ -273,15 +273,15 @@ def migrateDataFrom(srcConnection,destConnection,tableName,drop = False):
 
 def OneKeyMigrateData(dbConnection,destConnection):
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`treadingday`",True)
-    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockZhangting`",True)
-    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockDailyInfo`",True) # 数据量大
-    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockBasicInfo`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockzhangting`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockdailyinfo`",True) # 数据量大
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockbasicinfo`",True)
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`nameMapping`",True)
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`kezhuanzhai`",True)
     migrateDataFrom(dbConnection, destConnection, "`stock`.`fuPan`",True)
     
     
-    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockDailyInfo_Tushare`",True)
+    #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockdailyinfo_Tushare`",True)
 
 if __name__ == "__main__":
     dbConnection = ConnectToDB()
@@ -302,7 +302,7 @@ if __name__ == "__main__":
     # Get4AndMoreLianBan(dbConnection,result[-1])
     # GaoWeiFailed(dbConnection,result[-2],result[-1])
     # print(DongNeng(dbConnection,result[-2],result[-1]))
-    # print(isTableExist(dbConnection,"stock.treadingDay"))
+    # print(isTableExist(dbConnection,"stock.treadingday"))
     OneKeyMigrateData(dbConnection,destConnection)
 
     

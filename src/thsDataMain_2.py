@@ -42,12 +42,12 @@ def GetDailyData(dbConnection,logger):
     v = GetTHS_V()
     dailyFetcher = CFetchDailyDataFromTHS(cookie,v)
     dailyFetcher.GetDailyData()
-    basicSqls = dailyFetcher.FormateBacicInfoToSQL('stockBasicInfo') 
+    basicSqls = dailyFetcher.FormateBacicInfoToSQL('stockbasicinfo') 
     for sql in basicSqls: 
         logger.info(sql)
         dbConnection.Execute(sql)
         
-    dailySqls = dailyFetcher.FormateDailyInfoToSQL('stockDailyInfo') 
+    dailySqls = dailyFetcher.FormateDailyInfoToSQL('stockdailyinfo') 
     for sql in dailySqls: 
         logger.info(sql)
         dbConnection.Execute(sql)
@@ -65,7 +65,7 @@ def GetZhangTingData(dbConnection,logger):
     v = GetTHS_V()
     dailyFetcher = CFetchZhangTingDataFromTHS(cookie,v)
     dailyFetcher.GetZhangTingData()
-    zhangTingSql = dailyFetcher.FormateZhangTingInfoToSQL('stockZhangting') 
+    zhangTingSql = dailyFetcher.FormateZhangTingInfoToSQL('stockzhangting') 
     for sql in zhangTingSql:
         logger.info(sql)
         dbConnection.Execute(sql) 
@@ -103,7 +103,7 @@ def GetLiangDaLanBanDaData(dbConnection,logger):
 
 
 def Test(dbConnection):
-    sql = 'select `股票代码`,`所属概念` from `stockBasicInfo`;'
+    sql = 'select `股票代码`,`所属概念` from `stockbasicinfo`;'
     results,_ = dbConnection.Query(sql)
     all = {}
     for result in results:

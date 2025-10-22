@@ -122,7 +122,7 @@ class CZhuanZaiDetail(object):
         ret = []
         exceptGaiNian = ["融资融券","转融券标的","深股通","沪股通","富时罗素概念","富时罗素概念股","标普道琼斯A股","MSCI概念",]
         for stockID in stockIDs:
-            sql1 = f'''select A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`成交额(万元)`,A.`PB`,A.`总市值（亿元)`,A.`溢价率`,A.`剩余规模`,A.`行业`,B.`股票代码`,`股票简称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and A.`转债代码` = "{stockID}" and A.`日期` > "{self.tradingDays[-30]}" order by A.`日期` ASC; '''
+            sql1 = f'''select A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`成交额(万元)`,A.`PB`,A.`总市值（亿元)`,A.`溢价率`,A.`剩余规模`,A.`行业`,B.`股票代码`,`股票简称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and A.`转债代码` = "{stockID}" and A.`日期` > "{self.tradingDays[-30]}" order by A.`日期` ASC; '''
             results, columns = self.dbConnection.Query(sql1)
             df1 = pd.DataFrame(results,columns=columns)
             df1.dropna(inplace= True)

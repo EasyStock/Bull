@@ -27,7 +27,7 @@ def _getDataBySql(dbConnection,sql):
 
 def GetDataByGaiNian(dbConnection,gainian,date):
     sql1 = f'''SELECT A.*,B.`连续涨停天数` FROM stock.stockbasicinfo As A, stockzhangting As B where A.`所属概念` like "%{gainian}%" and A.`股票代码` = B.`股票代码` and A.`更新日期` = B.`日期` order by B.`连续涨停天数` DESC,B.`首次涨停时间` ASC,B.`最终涨停时间` ASC;'''
-    sql2 = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{date}' and (B.`所属概念` like '%{gainian}%'  OR B.`所属概念` like '%{gainian}%' ) order by `PB` DESC;'''
+    sql2 = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,A.`正股名称`,B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{date}' and (B.`所属概念` like '%{gainian}%'  OR B.`所属概念` like '%{gainian}%' ) order by `PB` DESC;'''
     sql3 = f'''select * from stock.stockbasicinfo where `所属概念` like "%{gainian}%" ;'''
 
     fodler = GetStockFolder(date)

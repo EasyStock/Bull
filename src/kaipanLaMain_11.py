@@ -39,8 +39,8 @@ def RequestKaiPanLaZhangDieTingJiashu(dbConnection,tradingDays,lastN = 3):
 
 def CalcZhaBanRatio(dbConnection,tradingDays):
     #计算炸板率
-    for treadingDay in tradingDays:
-        sql = f'''SELECT `实际涨停`,`炸板` FROM stock.fupan WHERE (`日期` = '{treadingDay}');'''
+    for treadingday in tradingDays:
+        sql = f'''SELECT `实际涨停`,`炸板` FROM stock.fupan WHERE (`日期` = '{treadingday}');'''
         result2,_ = dbConnection.Query(sql)
         if len(result2) == 0:
             continue
@@ -49,7 +49,7 @@ def CalcZhaBanRatio(dbConnection,tradingDays):
         ratio = 0
         if (zhangTingCount+zhaBanCount) != 0:
             ratio = zhaBanCount*100.0 / (zhangTingCount+zhaBanCount)
-        sql5 = f'''UPDATE `stock`.`fuPan` SET `炸板率` = '{ratio:.1f}%' WHERE (`日期` = '{treadingDay}');'''
+        sql5 = f'''UPDATE `stock`.`fuPan` SET `炸板率` = '{ratio:.1f}%' WHERE (`日期` = '{treadingday}');'''
         print(sql5)
         dbConnection.Execute(sql5)
     print("\n")

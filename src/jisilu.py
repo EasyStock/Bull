@@ -128,11 +128,11 @@ def GetFromJisiluAndWriteToDB():
             dbConnection.Execute(sql)
     
     lastDay = dates[-2]
-    sql1 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{lastDay}') order by `PB` DESC;"
+    sql1 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{today}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{lastDay}') order by `PB` DESC;"
     result1,columns1 = dbConnection.Query(sql1)
     newDf1=pd.DataFrame(result1,columns=columns1)
     
-    sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{today}') order by `PB` DESC;"
+    sql2 = f"SELECT A.*, B.`所属概念` FROM `stock`.`kezhuanzhai` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{lastDay}' and `转债代码` not in (SELECT `转债代码` FROM kezhuanzhai where `日期`='{today}') order by `PB` DESC;"
     result2,columns2 = dbConnection.Query(sql2)
     newDf2=pd.DataFrame(result2,columns=columns2)
     name = '/Volumes/Data/Downloads/可转债每日选股/%s_变化量.xlsx'%(datetime.date.today())

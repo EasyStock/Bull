@@ -39,7 +39,8 @@ class CMySqlConnection(object):
             columns = [item[0] for item in cursor.description]
             #print('query data successfully!') 
             return (results,columns)
-        except:
+        except Exception as e:
+            print(e)
             print('query data failed, Error: unable to fecth data')
             
     

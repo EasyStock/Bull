@@ -32,25 +32,25 @@ def GetDailyDataEx(dbConnection,date,logger):
     daily = CFetchDailyDataFromTHS2(date,v)
     daily.RequestDailyData_MultiPages()
 
-    stockBasicInfo_sqls = daily.FormateBacicInfoToSQL('stockBasicInfo')
-    stockDailyInfo_sqls = daily.FormateDailyInfoToSQL('stockDailyInfo')
+    stockbasicinfo_sqls = daily.FormateBacicInfoToSQL('stockbasicinfo')
+    stockdailyinfo_sqls = daily.FormateDailyInfoToSQL('stockdailyinfo')
     printcount = 1500
-    for index, sql in enumerate(stockBasicInfo_sqls):
+    for index, sql in enumerate(stockbasicinfo_sqls):
         msg = f'''BasicInfo index: [{index+1:^5d}],{sql}'''
         if index %printcount == 0:
             logger.info(msg)
         
-        if index %(len(stockBasicInfo_sqls)-1) == 0 and index != 0:
+        if index %(len(stockbasicinfo_sqls)-1) == 0 and index != 0:
             logger.warning(msg)
 
         dbConnection.Execute(sql)
 
-    for index, sql in enumerate(stockDailyInfo_sqls): 
+    for index, sql in enumerate(stockdailyinfo_sqls): 
         msg = f'''DailyData index: [{index+1:^5d}],{sql}'''
         if index %printcount == 0:
             logger.info(msg) 
 
-        if index %(len(stockDailyInfo_sqls)-1) == 0 and index != 0:
+        if index %(len(stockdailyinfo_sqls)-1) == 0 and index != 0:
             logger.warning(msg)
 
         dbConnection.Execute(sql)

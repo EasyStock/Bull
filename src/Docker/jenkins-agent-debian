@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:stable-slim
 
 RUN apt-get update
 RUN apt-get install -y curl
@@ -6,6 +6,9 @@ RUN apt install default-jdk -y
 
 RUN apt-get install python3 -y
 RUN apt-get install python3-pip -y 
+
+RUN apt-get install nodejs npm -y
+RUN npm install jsdom
 
 RUN pip3 install openpyxl --break-system-packages
 RUN pip3 install requests --break-system-packages
@@ -17,7 +20,7 @@ RUN pip3 install pymysql --break-system-packages
 RUN pip3 install pandas --break-system-packages
 RUN pip3 install pyparsing --break-system-packages
 RUN pip3 install matplotlib --break-system-packages
-
+RUN pip3 install cryptography --break-system-packages
 
 RUN mkdir -p /home/jenkins
 RUN mkdir -p /home/jenkins
@@ -25,7 +28,7 @@ RUN mkdir -p /home/jenkins
 RUN mkdir -p /root/.fonts
 COPY ./SimHei.ttf /root/.fonts/
 WORKDIR /home/jenkins
-RUN apt -y install nodejs npm
+
 
 RUN echo "--------build jenkins agent done--------------"
 CMD /bin/bash

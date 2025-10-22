@@ -219,7 +219,7 @@ class CZhuanQianXiaoXing(object):
 
     def DailyDataOfToday(self):
         # 10CM 
-        sql = f'''select A.*, B.`股票简称`,B.`上市天数` from `stockDailyInfo` AS A,`stockBasicInfo` As B where A.`股票代码`=B.`股票代码` and `日期`= '{self.today}'  and A.`股票代码` REGEXP '^60|^00' and B.`股票简称` not like "%ST%";'''
+        sql = f'''select A.*, B.`股票简称`,B.`上市天数` from `stockdailyinfo` AS A,`stockbasicinfo` As B where A.`股票代码`=B.`股票代码` and `日期`= '{self.today}'  and A.`股票代码` REGEXP '^60|^00' and B.`股票简称` not like "%ST%";'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         df = df[df['涨跌幅'] != '--']

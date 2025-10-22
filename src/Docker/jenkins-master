@@ -41,8 +41,8 @@ docker images | grep my-app
 docker run -d --name test-container my-app:latest
 
 
-docker run -d  --privileged=true -v /vol2/1000/复盘/:/Volumes/Data/ -v /vol2/1000/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_ubuntu1 -e LANG=C.UTF-8 jenkins_agent:4.0 /bin/bash -c "curl -sO http://192.168.31.253:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://192.168.31.253:8080/ -secret cc4c30f5a17255bbc2c8f6ab4486518a296becd5a1922d644a7538e30fe04824 -name jenkins-node1 -webSocket -workDir /home/jenkins/"
-docker run -d  --privileged=true -v /vol2/1000/复盘/:/Volumes/Data/ -v /vol2/1000/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_ubuntu2 -e LANG=C.UTF-8 jenkins_agent:4.0 /bin/bash -c "curl -sO http://192.168.31.253:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://192.168.31.253:8080/ -secret ecd653043cdc7bb3cdf3f4719f1fd0f4cb07d29937874c72aa670108958bd92e -name jenkins-node2 -webSocket -workDir /home/jenkins/"
+docker run -d  --privileged=true -v /vol2/1000/复盘/:/Volumes/Data/ -v /vol2/1000/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_ubuntu1 -e LANG=C.UTF-8 jenkins_agent:5.0 /bin/bash -c "curl -sO http://192.168.31.253:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://192.168.31.253:8080/ -secret cc4c30f5a17255bbc2c8f6ab4486518a296becd5a1922d644a7538e30fe04824 -name jenkins-node1 -webSocket -workDir /home/jenkins/"
+docker run -d  --privileged=true -v /vol2/1000/复盘/:/Volumes/Data/ -v /vol2/1000/Docker/Data/Code:/home/jenkins/Code --name jenkinsAgent_ubuntu2 -e LANG=C.UTF-8 jenkins_agent:5.0 /bin/bash -c "curl -sO http://192.168.31.253:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://192.168.31.253:8080/ -secret ecd653043cdc7bb3cdf3f4719f1fd0f4cb07d29937874c72aa670108958bd92e -name jenkins-node2 -webSocket -workDir /home/jenkins/"
 
 
 

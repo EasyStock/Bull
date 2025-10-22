@@ -340,7 +340,7 @@ class CScoreMgr(object):
             self.diDianDate = d   #最低点的时候价格
 
         maxDate = max(dates)
-        sql = f"SELECT `日期` FROM stock.treadingDay where `开市` =1 and `交易所`='SSE' and `日期`>='{maxDate}'"
+        sql = f"SELECT `日期` FROM stock.treadingday where `开市` =1 and `交易所`='SSE' and `日期`>='{maxDate}'"
         res,_ = self.dbConnection.Query(sql)
         results = [r[0] for r in res]
         self.date = results[0]

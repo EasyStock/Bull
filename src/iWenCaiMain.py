@@ -19,9 +19,9 @@ def GetBanKuaiZhishuData(dbConnection,tradingDays):
     f.RequestAllPagesDataAndWriteToDB(100)
 
 def GetBanKuaiZhishuDataLastNDays(dbConnection,tradingDays,logger):
-    for treadingDay in tradingDays:
-        logger.info(f"============================开始获取板块指数{treadingDay}====================================")
-        f = CFetchBanKuaiData(dbConnection,treadingDay)
+    for treadingday in tradingDays:
+        logger.info(f"============================开始获取板块指数{treadingday}====================================")
+        f = CFetchBanKuaiData(dbConnection,treadingday)
         f.RequestAllPagesDataAndWriteToDB(100)
 
 def GetVMAData(dbConnection,tradingDays,logger):
@@ -59,9 +59,9 @@ def TestFechVMAData(dbConnection,tradingDays):
     f.RequestAllPagesDataAndWriteToDB(100)
 
 def GetKeZhuanZaiDailyDataLastNDays(dbConnection,tradingDays,logger):
-    for treadingDay in tradingDays:
-        logger.info(f"============================开始获取可转债数据: {treadingDay}====================================")
-        f = CFetchKeZhuanZaiDailyData(dbConnection,treadingDay)
+    for treadingday in tradingDays:
+        logger.info(f"============================开始获取可转债数据: {treadingday}====================================")
+        f = CFetchKeZhuanZaiDailyData(dbConnection,treadingday)
         f.RequestAllPagesDataAndWriteToDB(100)
 
 def GetIndexData(dbConnection,tradingDays):
@@ -70,9 +70,9 @@ def GetIndexData(dbConnection,tradingDays):
     f.RequestAllPagesDataAndWriteToDB()
 
 def GetIndexDataLastNDays(dbConnection,tradingDays,logger):
-    for treadingDay in tradingDays:
-        logger.info(f"============================开始获取指数数据: {treadingDay}====================================")
-        f = CFetchIndexDataMgr(dbConnection,treadingDay)
+    for treadingday in tradingDays:
+        logger.info(f"============================开始获取指数数据: {treadingday}====================================")
+        f = CFetchIndexDataMgr(dbConnection,treadingday)
         f.RequestAllPagesDataAndWriteToDB()
 
 def GetBanKuaiStockMatchData(dbConnection,tradingDays):
@@ -89,9 +89,9 @@ def GetZhaBanData(dbConnection,tradingDays):
     f.RequestAllPagesDataAndWriteToDB()
 
 def GetZhaBanDataLastNDays(dbConnection,tradingDays,logger):
-    for treadingDay in tradingDays:
-        logger.info(f"============================开始获取炸板数据: {treadingDay}====================================")
-        f = CFetchZhaBanDailyData(dbConnection,treadingDay)
+    for treadingday in tradingDays:
+        logger.info(f"============================开始获取炸板数据: {treadingday}====================================")
+        f = CFetchZhaBanDailyData(dbConnection,treadingday)
         f.RequestAllPagesDataAndWriteToDB()
 
 def GetYeWuData(dbConnection, tradingDays):

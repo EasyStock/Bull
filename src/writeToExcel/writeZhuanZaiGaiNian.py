@@ -39,7 +39,7 @@ class CWriteZhuanZaiGaiNianToXLSX(object):
 
 
     def _getZhuanZaiData(self):
-        sql = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,B.`所属概念` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{self.date}' and  A.`现价` <= 135 ;'''
+        sql = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,B.`所属概念` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{self.date}' and  A.`现价` <= 135 ;'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         reasons = []
@@ -53,7 +53,7 @@ class CWriteZhuanZaiGaiNianToXLSX(object):
         for reason in reasons:
             if reason in exceptGaiNian:
                 continue
-            sql = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,B.`所属概念` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockBasicInfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{self.date}'and B.`所属概念` like '%{reason}%' and  A.`现价` <= 135 ;'''
+            sql = f'''SELECT A.`日期`,A.`转债代码`,A.`转债名称`,A.`现价`,B.`所属概念` FROM `stock`.`kezhuanzhai_all` as A,`stock`.`stockbasicinfo` AS B where A.`正股名称`=B.`股票简称` and `日期`='{self.date}'and B.`所属概念` like '%{reason}%' and  A.`现价` <= 135 ;'''
             result ,columns = self.dbConnection.Query(sql)
             df = pd.DataFrame(result, columns = columns)
             count = df.shape[0]

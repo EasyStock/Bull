@@ -1,0 +1,37 @@
+FROM fedora:latest
+
+RUN dnf update -y
+RUN dnf install -y curl
+RUN dnf install -y java-21-openjdk.x86_64
+
+RUN dnf install -y python3
+RUN dnf install -y python3-pip 
+
+RUN dnf install -y nodejs npm
+
+
+RUN pip3 install openpyxl --break-system-packages
+RUN pip3 install requests --break-system-packages
+RUN pip3 install sqlparse --break-system-packages
+RUN pip3 install schedule --break-system-packages
+RUN pip3 install selenium --break-system-packages
+RUN pip3 install PyExecJS --break-system-packages
+RUN pip3 install pymysql --break-system-packages
+RUN pip3 install pandas --break-system-packages
+RUN pip3 install pyparsing --break-system-packages
+RUN pip3 install matplotlib --break-system-packages
+RUN pip3 install cryptography --break-system-packages
+
+
+RUN mkdir -p /home/jenkins
+RUN mkdir -p /home/jenkins
+
+RUN mkdir -p /root/.fonts
+COPY ./SimHei.ttf /root/.fonts/
+WORKDIR /home/jenkins
+RUN npm install jsdom
+
+
+RUN echo "--------build jenkins agent done--------------"
+CMD /bin/bash
+

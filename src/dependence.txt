@@ -6,3 +6,4 @@ pyparsing
 openpyxl
 matplotlib
 sqlparse
+cryptography

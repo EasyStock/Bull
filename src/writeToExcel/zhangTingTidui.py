@@ -133,7 +133,7 @@ class CWriteZhangTingTiDuiToXLSX(object):
             self.formatColumnsWidth(sheet)
 
     def AnalysisZhangTingReason(self,dbConnection,excelWriter:pd.ExcelWriter):
-        sql = f"select A.*,B.`所属概念`from `stockZhangting`AS A, `stockBasicInfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{self.date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
+        sql = f"select A.*,B.`所属概念`from `stockzhangting`AS A, `stockbasicinfo` As B where A.`股票代码`= B.`股票代码` and `日期` = '{self.date}' order by `连续涨停天数` DESC,`首次涨停时间` ASC;"
         results, columns = dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         reasons = []

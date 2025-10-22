@@ -14,7 +14,7 @@ def FetchTushareDailyDailyDataLastN(stockID, lastN):
     return df
 
 def fetchAllStockIDs(dbConnection):
-    sql = "select `股票代码` from `stockBasicInfo`;"
+    sql = "select `股票代码` from `stockbasicinfo`;"
     results,_ = dbConnection.Query(sql)
     stockIDs = [result[0] for result in results]
     return stockIDs
@@ -23,7 +23,7 @@ def FetchAllInOne():
     dbConnection = ConnectToDB()
     stockIDs = fetchAllStockIDs(dbConnection)
     lastN=30
-    tushareTableName = 'stockDailyInfo_Tushare'
+    tushareTableName = 'stockdailyinfo_Tushare'
     count = len(stockIDs)
     for index, stockID in enumerate(stockIDs):
         logger.info(f'index: {index+1:05d}, total: {count}, fetch {stockID} begin!')
@@ -37,7 +37,7 @@ def UpdateTradingDate():
     dbConnection = ConnectToDB()
     tushare = fethTushareDailyData()
     df = tushare.FetchTreadingDate('20220101','20251231')
-    sqls = DataFrameToSqls_REPLACE(df,'treadingDay')
+    sqls = DataFrameToSqls_REPLACE(df,'treadingday')
     for sql in sqls:
         dbConnection.Execute(sql)
         logger.info(sql)
