@@ -278,7 +278,7 @@ def OneKeyMigrateData(dbConnection,destConnection):
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockbasicinfo`",True)
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`nameMapping`",True)
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`kezhuanzhai`",True)
-    migrateDataFrom(dbConnection, destConnection, "`stock`.`fuPan`",True)
+    migrateDataFrom(dbConnection, destConnection, "`stock`.`fupan`",True)
     
     
     #migrateDataFrom(dbConnection, destConnection, "`stock`.`stockdailyinfo_Tushare`",True)

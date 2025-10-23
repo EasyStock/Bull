@@ -135,7 +135,7 @@ def NewGaiNian_Stock(dbConnection,tradingDays,receive_id=debug_receive_id):
 
 
 def MeiRiFuPan_Stock(dbConnection,tradingDays,receive_id=debug_receive_id):
-    sql = f'''SELECT * FROM stock.fuPan where `日期` = "{tradingDays[-1]}" ;'''
+    sql = f'''SELECT * FROM stock.fupan where `日期` = "{tradingDays[-1]}" ;'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     if df.empty:

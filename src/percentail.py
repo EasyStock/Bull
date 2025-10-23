@@ -9,7 +9,7 @@ def CalcPercentail():
     pd.set_option('display.unicode.east_asian_width',True)
     pd.set_option('display.width',360)
     dbConnection = ConnectToDB()
-    sql = '''SELECT * FROM stock.fuPan;'''
+    sql = '''SELECT * FROM stock.fupan;'''
     data, columns = dbConnection.Query(sql)
     df = pd.DataFrame(data=data,columns=columns)
     df.dropna(inplace= True)

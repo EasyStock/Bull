@@ -170,7 +170,7 @@ class CFuPan(object):
                   )
         index_str = '''`,`'''.join(row)
         value_str = '''","'''.join(str(x) for x in values)
-        sql = '''REPLACE INTO `{0}` (`{1}`) VALUES ("{2}");'''.format("fuPan",index_str,value_str)
+        sql = '''REPLACE INTO `{0}` (`{1}`) VALUES ("{2}");'''.format("fupan",index_str,value_str)
         self.logger.info(sql)
         self.dbConnection.Execute(sql)
         

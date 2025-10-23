@@ -11,19 +11,19 @@ def RequestKaiPanLaVolumnData(dbConnection,tradingDays,lastN = 3):
     res = RequestVolumnDataByDates(tradingDays,dbConnection)
     for date in res:
         liangshiLiang, zhengliang, ratio = res[date]
-        sql5 = f'''UPDATE `stock`.`fuPan` SET `两市量` = '{liangshiLiang}', `量比` = '{ratio}', `增量` = '{zhengliang}' WHERE (`日期` = '{date}');'''
+        sql5 = f'''UPDATE `stock`.`fupan` SET `两市量` = '{liangshiLiang}', `量比` = '{ratio}', `增量` = '{zhengliang}' WHERE (`日期` = '{date}');'''
         print(sql5)
         dbConnection.Execute(sql5)
     print("\n")
 
 def RequestKaiPanLaZhaBanData(dbConnection,tradingDays,lastN = 3):
     for tradingDay in tradingDays:
-        sql = f'''UPDATE `stock`.`fuPan` SET `炸板` = (SELECT count(*) FROM stock.stockdaily_zhaban where `日期` = "{tradingDay}") WHERE (`日期` = "{tradingDay}");'''
+        sql = f'''UPDATE `stock`.`fupan` SET `炸板` = (SELECT count(*) FROM stock.stockdaily_zhaban where `日期` = "{tradingDay}") WHERE (`日期` = "{tradingDay}");'''
         dbConnection.Execute(sql)
     # res = RequestZhaBanDataByDates(tradingDays,dbConnection)
     # for date in res:
     #     ZhaBanCount = res[date]
-    #     sql5 = f'''UPDATE `stock`.`fuPan` SET `炸板` = '{ZhaBanCount}' WHERE (`日期` = '{date}');'''
+    #     sql5 = f'''UPDATE `stock`.`fupan` SET `炸板` = '{ZhaBanCount}' WHERE (`日期` = '{date}');'''
     #     print(sql5)
     #     dbConnection.Execute(sql5)
     print("\n")
@@ -32,7 +32,7 @@ def RequestKaiPanLaZhangDieTingJiashu(dbConnection,tradingDays,lastN = 3):
     res = RequestZhangDieTingJiashu(tradingDays,dbConnection)
     for date in res:
         zhangTingCount, dieTingCount = res[date]
-        sql5 = f'''UPDATE `stock`.`fuPan` SET  `实际涨停` = '{int(zhangTingCount)}', `跌停` = '{int(dieTingCount)}'  WHERE (`日期` = '{date}');'''
+        sql5 = f'''UPDATE `stock`.`fupan` SET  `实际涨停` = '{int(zhangTingCount)}', `跌停` = '{int(dieTingCount)}'  WHERE (`日期` = '{date}');'''
         print(sql5)
         dbConnection.Execute(sql5)
     print("\n")
@@ -49,7 +49,7 @@ def CalcZhaBanRatio(dbConnection,tradingDays):
         ratio = 0
         if (zhangTingCount+zhaBanCount) != 0:
             ratio = zhaBanCount*100.0 / (zhangTingCount+zhaBanCount)
-        sql5 = f'''UPDATE `stock`.`fuPan` SET `炸板率` = '{ratio:.1f}%' WHERE (`日期` = '{treadingday}');'''
+        sql5 = f'''UPDATE `stock`.`fupan` SET `炸板率` = '{ratio:.1f}%' WHERE (`日期` = '{treadingday}');'''
         print(sql5)
         dbConnection.Execute(sql5)
     print("\n")

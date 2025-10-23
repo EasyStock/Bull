@@ -98,12 +98,12 @@ def SendNewGaiNianOfStock(dbConnection,tradingDays,webhook,secret):
 def SendMeiRiFuPan_Stock(dbConnection,tradingDays,webhook,secret):
     #每日复盘
     last3Days = tuple(tradingDays[-3:])
-    sql = f'''SELECT * FROM stock.fuPan where `日期` in {last3Days} ;'''
+    sql = f'''SELECT * FROM stock.fupan where `日期` in {last3Days} ;'''
     results, columns = dbConnection.Query(sql)
     df = pd.DataFrame(results,columns=columns)
     if df.empty:
         return
-    sql2 = f'''SELECT max(`连板数量`) as `最高连板数量`,min(`连板数量`) as `最低连板数量`,avg(`连板数量`) as `平均连板数量`,max(`高度板`) as `最大高度板`,max(`2连板个数`) as `最大2连板个数` FROM (SELECT * FROM stock.fuPan order by `日期` DESC limit 30) as A;'''
+    sql2 = f'''SELECT max(`连板数量`) as `最高连板数量`,min(`连板数量`) as `最低连板数量`,avg(`连板数量`) as `平均连板数量`,max(`高度板`) as `最大高度板`,max(`2连板个数`) as `最大2连板个数` FROM (SELECT * FROM stock.fupan order by `日期` DESC limit 30) as A;'''
     results2, _ = dbConnection.Query(sql2)
     df['最高连板数量'] = results2[0][0]
     df['最低连板数量'] = results2[0][1]

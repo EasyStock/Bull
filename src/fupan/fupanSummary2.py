@@ -357,7 +357,7 @@ class CFupanSummary(object):
         return head
 
     def _QueryMarkingData(self):
-        sql = f'''SELECT * FROM stock.fuPan order by `日期` DESC limit 30;'''
+        sql = f'''SELECT * FROM stock.fupan order by `日期` DESC limit 30;'''
         results, columns = self.dbConnection.Query(sql)
         df = pd.DataFrame(results,columns=columns)
         df = df.iloc[::-1]
