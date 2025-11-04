@@ -53,6 +53,10 @@ class CUpdateVMAData(object):
 
         UNION ALL
 
+        SELECT * FROM stock.stockdailyinfo_2024 where `股票代码` = "{self.stockID}"
+
+        UNION ALL
+        
         SELECT * FROM stock.stockdailyinfo where `股票代码` = "{self.stockID}" ;
         '''
         results, columns = self.dbConnection.Query(sql)

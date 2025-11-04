@@ -7,3 +7,4 @@ openpyxl
 matplotlib
 sqlparse
 cryptography
+selenium

@@ -250,7 +250,7 @@ class CStockPattern12(object):
         groups = newDf.groupby(["股票代码","股票名称"])
         for (stockID,stockName), group in groups:
             minDay = group["日期"].min()
-            sql1 = f'''SELECT `日期`,`股票代码`,`开盘价`,`收盘价` ,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo where `股票代码` = "{stockID}" and `日期` > "{minDay}"  UNION SELECT `日期`,`股票代码`,`开盘价`,`收盘价` ,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo_2023 where `股票代码` = "{stockID}" and `日期` > "{minDay}" order by `日期`;'''
+            sql1 = f'''SELECT `日期`,`股票代码`,`开盘价`,`收盘价` ,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo where `股票代码` = "{stockID}" and `日期` > "{minDay}"  UNION SELECT `日期`,`股票代码`,`开盘价`,`收盘价` ,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo_2024 where `股票代码` = "{stockID}" and `日期` > "{minDay}" order by `日期`;'''
             result1,columns1 = self.dbConnection.Query(sql1)
             newDf1=pd.DataFrame(result1,columns=columns1)
             if newDf1.empty:

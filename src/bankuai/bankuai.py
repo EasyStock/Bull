@@ -20,12 +20,15 @@ class CBanKuaiFinishedRatio(object):
     
 
     def GetBanKuaiData(self,date):
+
         sql1 = f'''
         SELECT B.`日期`,A.`股票代码`,A.`股票简称` As `股票名称` ,A.`行业`,B.`开盘价`,B.`收盘价` ,B.`最低价`,B.`最高价`,B.`成交量` FROM stock.stockyewu AS A,(
             SELECT `日期`,`股票代码`,`开盘价`,`收盘价`,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo_2022 where `日期` = "{date}" 
             UNION 
             SELECT `日期`,`股票代码`,`开盘价`,`收盘价`,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo_2023 where `日期` = "{date}" 
-            UNION 
+            UNION
+            SELECT `日期`,`股票代码`,`开盘价`,`收盘价`,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo_2024 where `日期` = "{date}" 
+            UNION  
             SELECT `日期`,`股票代码`,`开盘价`,`收盘价` ,`最低价`,`最高价`,`成交量` FROM stock.stockdailyinfo where `日期` = "{date}"
             ) AS B where A.`股票代码` = B.`股票代码` 
         '''
