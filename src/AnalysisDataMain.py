@@ -105,7 +105,7 @@ def AnalysisDataOfStock(dbConnection,tradingDays,logger):
     #写上几天几板数据
     GetAllJiTianJiBan(dbConnection,tradingDays)
     
-    _updateKaiPanLaData(dbConnection,tradingDays,3)
+   #_updateKaiPanLaData(dbConnection,tradingDays,3)
     
     #写复盘总结
     fupanSummary = CFupanSummary(dbConnection,tradingDays[-1])

@@ -92,7 +92,7 @@ if __name__ == "__main__":
     # p = CBOLLPattern(dbConnection=dbConnection)
     # p.Select()
     
-    # b = CBanKuaiFinishedRatio(dbConnection=dbConnection)
-    # b.FininshedRatio("2025-09-18")
+    b = CBanKuaiFinishedRatio(dbConnection=dbConnection)
+    b.FininshedRatio("2024-10-08")
 
-    StockSelectMain()
+    #StockSelectMain()

@@ -6,9 +6,11 @@ RUN dnf install -y java-21-openjdk.x86_64
 
 RUN dnf install -y python3
 RUN dnf install -y python3-pip 
-
 RUN dnf install -y nodejs npm
 
+
+RUN dnf install -y chromium chromedriver
+RUN pip3 install selenium --break-system-packages
 
 RUN pip3 install openpyxl --break-system-packages
 RUN pip3 install requests --break-system-packages

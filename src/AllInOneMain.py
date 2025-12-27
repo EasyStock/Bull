@@ -29,7 +29,7 @@ def AllInOne():
     FupanDaily()
     DragonDaily()
     WriteJiTianJiBan()
-    OneKeyKaiPanLa()
+    #OneKeyKaiPanLa()
     #refreshAccessToken()
     #FengDan()
     WriteSummary()
